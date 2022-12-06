@@ -236,6 +236,8 @@ ul {
 @media only screen and (max-width: 450px) {
 	.header-bar li:nth-of-type(2) {
 		font-size: 1.4rem;
+		text-align: center;
+		line-height: 1.4;
 	}
 	.header-bar li:last-of-type {
 		font-size: 1.8rem;
