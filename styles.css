@@ -59,6 +59,10 @@ ul {
 	font-size: 1.6rem;
 }
 
+.header-bar br {
+	display: none;
+}
+
 .header-bar span {
 	font-weight: 500;
 }
@@ -235,5 +239,11 @@ ul {
 	}
 	.header-bar li:last-of-type {
 		font-size: 1.8rem;
+	}
+	.divider {
+		display: none;
+	}
+	.header-bar br {
+		display: block;
 	}
 }
