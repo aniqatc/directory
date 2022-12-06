@@ -14,7 +14,7 @@ body {
 	height: 100%;
 	font-size: 62.5%;
 	font-family: "IBM Plex Sans", sans-serif;
-	background: rgba(255, 255, 255);
+	background: rgb(248, 248, 248);
 	color: #121212;
 	line-height: 1;
 }
@@ -26,7 +26,6 @@ img {
 
 a {
 	text-decoration: none;
-	display: block;
 	color: black;
 }
 
@@ -194,6 +193,28 @@ ul {
 	cursor: pointer;
 }
 
+footer {
+	margin: 4rem auto;
+}
+
+.footer-text {
+	font-size: 1.2rem;
+	font-weight: 400;
+	background: rgb(209, 209, 209);
+	border: 1px solid #121212;
+	padding: 1rem;
+	width: fit-content;
+	margin: 0 auto;
+}
+
+.footer-text span {
+	font-weight: 600;
+}
+
+.footer-text a:hover {
+	animation: color-change 4s ease-in-out infinite;
+}
+
 @keyframes color-change {
 	0% {
 		color: #ff8e5d;
@@ -202,7 +223,7 @@ ul {
 		color: #5b89f6;
 	}
 	50% {
-		color: #e4ce3d;
+		color: #d0bf50;
 	}
 	75% {
 		color: rgb(214, 123, 241);
