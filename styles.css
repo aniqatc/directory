@@ -13,8 +13,8 @@ html,
 body {
 	height: 100%;
 	font-size: 62.5%;
-	font-family: "DM Sans", sans-serif;
-	background: #ededed;
+	font-family: "IBM Plex Sans", sans-serif;
+	background: rgba(255, 255, 255);
 	color: #121212;
 	line-height: 1;
 }
@@ -42,10 +42,9 @@ ul {
 }
 
 .avatar {
-	height: 5rem;
-	width: 5rem;
+	height: 4rem;
+	width: 4rem;
 	border-radius: 50%;
-	border: 2px solid #121212;
 }
 
 .header-bar {
@@ -53,17 +52,15 @@ ul {
 	align-items: center;
 	gap: 2rem;
 	justify-content: space-evenly;
-	background: rgb(255, 255, 255);
-	padding: 1rem;
-	box-shadow: 1px 1px rgba(0, 0, 0, 1);
+	padding: 4rem 1rem 0 1rem;
 }
 
 .header-bar li {
-	font-size: 1.8rem;
+	font-size: 1.6rem;
 }
 
 .header-bar span {
-	font-weight: 700;
+	font-weight: 500;
 }
 
 .header-bar li:last-of-type {
@@ -215,9 +212,6 @@ ul {
 @media only screen and (max-width: 1000px) {
 	.project-cards-wrapper {
 		grid-template-columns: repeat(2, auto);
-	}
-	.header-bar li:nth-of-type(2) {
-		font-size: 1.6rem;
 	}
 	.header-bar li:last-of-type {
 		font-size: 2rem;
