@@ -215,9 +215,20 @@ ul {
 	.project-cards-wrapper {
 		grid-template-columns: repeat(2, auto);
 	}
+	.header-bar li:nth-of-type(2) {
+		font-size: 1.6rem;
+	}
+	.header-bar li:last-of-type {
+		font-size: 2rem;
+	}
 }
 
 @media only screen and (max-width: 650px) {
+	.header-bar li:last-of-type {
+		display: grid;
+		grid-template-columns: repeat(2, auto);
+	}
+
 	.project-cards-wrapper {
 		grid-template-columns: auto;
 	}
