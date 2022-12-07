@@ -161,6 +161,14 @@ code {
 	background: #02d083;
 }
 
+.design {
+	background: rgb(106, 106, 221);
+}
+
+.frontend {
+	background: rgb(67, 67, 136);
+}
+
 .project-title {
 	text-align: center;
 	margin: 1.6rem auto;
