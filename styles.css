@@ -104,6 +104,11 @@ ul {
 	box-shadow: 5px 5px 0 rgba(0, 0, 0, 1), -1px -1px 1px 1px rgba(0, 0, 0, 1);
 }
 
+.project-card:first-of-type {
+	background: #121212;
+	color: white;
+}
+
 .project-card:hover {
 	transform: scale(1.05);
 }
@@ -200,10 +205,6 @@ footer {
 .footer-text {
 	font-size: 1.2rem;
 	font-weight: 400;
-	background: rgb(209, 209, 209);
-	border: 1px solid #121212;
-	padding: 1rem;
-	width: fit-content;
 	margin: 0 auto;
 	text-align: center;
 }
@@ -239,9 +240,6 @@ footer {
 	.project-cards-wrapper {
 		grid-template-columns: repeat(2, auto);
 	}
-	.header-bar li:last-of-type {
-		font-size: 2rem;
-	}
 }
 
 @media only screen and (max-width: 650px) {
@@ -261,9 +259,7 @@ footer {
 		text-align: center;
 		line-height: 1.4;
 	}
-	.header-bar li:last-of-type {
-		font-size: 1.8rem;
-	}
+
 	.divider {
 		display: none;
 	}
