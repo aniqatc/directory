@@ -40,6 +40,11 @@ ul {
 	list-style-type: none;
 }
 
+code {
+	background: rgb(240, 240, 240);
+	padding: 0.2rem;
+}
+
 .avatar {
 	height: 4rem;
 	width: 4rem;
@@ -87,19 +92,20 @@ ul {
 	align-items: center;
 	gap: 2rem;
 	margin-top: 5rem;
+	grid-auto-flow: dense;
 }
 
 .project-card {
 	background: white;
-	width: 31rem;
-	height: 35rem;
+	width: 32rem;
+	height: 38rem;
 	padding: 2rem;
 	border-radius: 20px;
 	box-shadow: 0 1px 32px rgba(0, 0, 0, 0.1);
 	transition: all 200ms ease-in-out;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: center;
 	box-shadow: 5px 5px 0 rgba(0, 0, 0, 1), -1px -1px 1px 1px rgba(0, 0, 0, 1);
 }
@@ -107,6 +113,7 @@ ul {
 .project-card:first-of-type {
 	background: #121212;
 	color: white;
+	padding: 3rem;
 }
 
 .project-card:hover {
@@ -151,13 +158,17 @@ ul {
 	background: #e18399;
 }
 
+.figma {
+	background: #02d083;
+}
+
 .project-title {
 	text-align: center;
-	margin: 2rem auto;
+	margin: 1.6rem auto;
 }
 
 .project-title h1 {
-	font-size: 3rem;
+	font-size: 2.5rem;
 	margin: 0;
 }
 
@@ -165,6 +176,12 @@ ul {
 	font-size: 1.6rem;
 	font-weight: 400;
 	margin: 0;
+}
+
+.date {
+	color: rgb(85, 85, 85);
+	align-self: end;
+	margin-bottom: 0.5rem;
 }
 
 .project-desc p {
@@ -196,6 +213,10 @@ ul {
 .project-links button:hover {
 	animation: color-change 4s ease-in-out infinite;
 	cursor: pointer;
+}
+
+.first-card-links button {
+	border: 1px solid white;
 }
 
 footer {
@@ -232,7 +253,7 @@ footer {
 	}
 
 	100% {
-		color: #e18399;
+		color: #02d083;
 	}
 }
 
