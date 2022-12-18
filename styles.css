@@ -158,7 +158,8 @@ code {
 .date {
 	color: rgb(85, 85, 85);
 	align-self: end;
-	margin-bottom: 0.5rem;
+	margin-bottom: 1rem;
+	font-size: 1.2rem;
 }
 
 .project-desc p {
