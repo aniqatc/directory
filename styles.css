@@ -13,7 +13,7 @@ html,
 body {
 	height: 100%;
 	font-size: 62.5%;
-	font-family: "IBM Plex Sans", sans-serif;
+	font-family: 'IBM Plex Sans', sans-serif;
 	background: rgb(248, 248, 248);
 	color: #121212;
 	line-height: 1;
@@ -98,7 +98,7 @@ code {
 	background: white;
 	width: 32rem;
 	height: 38rem;
-	padding: 2rem;
+	padding: 2rem 1rem;
 	border-radius: 20px;
 	box-shadow: 0 1px 32px rgba(0, 0, 0, 0.1);
 	transition: all 200ms ease-in-out;
@@ -165,6 +165,7 @@ code {
 .project-desc p {
 	font-size: 1.2rem;
 	line-height: 1.4;
+	padding: 0 2rem;
 }
 
 .project-links {
@@ -256,6 +257,10 @@ footer {
 
 .figma {
 	background: #02d083;
+}
+
+.json {
+	background: rgb(190, 190, 190);
 }
 
 .design {
