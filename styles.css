@@ -79,6 +79,11 @@ code {
 
 .header-bar i {
 	transition: all 200ms ease-in;
+	background: rgb(0, 0, 0);
+	padding: 0.5rem;
+	border-radius: 50%;
+	color: #fff;
+	font-size: 1.6rem;
 }
 .header-bar i:hover {
 	animation: color-change 4s ease-in-out infinite;
@@ -281,6 +286,10 @@ footer {
 	.header-bar li:last-of-type {
 		display: grid;
 		grid-template-columns: repeat(2, auto);
+	}
+
+	#social-icon {
+		display: none;
 	}
 
 	.project-cards-wrapper {
