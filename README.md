@@ -5,6 +5,14 @@ A temporary <a href="https://aniqa.dev" target="_blank">directory</a> for all th
 <br/>
 <h2>Current Listings Include:</h2>
 
+<b><a href="https://keyboard.aniqa.dev" target="_blank">Themed Keyboard</a></b><br/>
+A fun, interactive virtual keyboard with <b>eight</b> unique themes (along with two full-keyboard animations) that can be accessed via keypresses or mouse clicks with the ability to add, edit, and save <b>Markdown</b> content in the input container. Fully responsive on screens above 380px and uses <code>localStorage</code> to save the user's theme preference and any Markdown or plain text written in input container.
+
+<div align="center">
+<img src="https://github.com/aniqatc/keyboard/raw/main/themes/theme-7.png" style="width:600px;"></div>
+<br/>
+
+
 <b><a href="https://weather.aniqa.dev" target="_blank">Weather Dashboard</a></b><br/>
 A detailed dashboard with a complete overview of live weather conditions in the specified city. Option to toggle weather data between Celsius and Fahrenheit units. Sidebar provides random major cities weather and upon clicking, expands temperature details for that city. Built using JavaScript, Boostrap, CSS and OpenWeather API.
 <div align="center">
