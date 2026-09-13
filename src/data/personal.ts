@@ -14,7 +14,7 @@ export const personal: PersonalInfo = {
   title: 'software engineer',
   city: 'ny',
   about: 'a curated archive of my ongoing and completed web design and development projects',
-  lastUpdated: '2026-04-07',
+  lastUpdated: '2026-09-13',
   socialMedia: [
     {
       label: 'github',
