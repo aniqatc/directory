@@ -5,7 +5,7 @@ import {
   // Butterfly,
   // TwitterLogo,
   PaperPlaneTilt,
-  // LinkedinLogo,
+  LinkedinLogo,
 } from '@phosphor-icons/react';
 
 export const personal: PersonalInfo = {
@@ -36,11 +36,11 @@ export const personal: PersonalInfo = {
       href: 'https://codepen.com/aniqatc',
       Icon: CodepenLogo,
     },
-    // {
-    // 	label: 'linkedin',
-    // 	href: 'https://www.linkedin.com/in/aniqadev/',
-    // 	Icon: LinkedinLogo,
-    // },
+    {
+    	label: 'linkedin',
+    	href: 'https://www.linkedin.com/in/aniqatc/',
+    	Icon: LinkedinLogo,
+    },
     {
       label: 'email',
       href: 'mailto:hello@aniqa.dev',
