@@ -11,3 +11,4 @@ playwright-report/
 .idea/
 npm-debug.log*
 docs/
+.vscode/
