@@ -1,69 +1,114 @@
 # aniqa.dev
 
-My portfolio (`aniqa.dev`) and lab (`aniqa.dev/lab`). Astro, plain CSS, hosted on Vercel.
+My portfolio at aniqa.dev, with a lab of smaller experiments at aniqa.dev/lab. Built with Astro, hosted on Vercel. _Built with agent assistance from Claude._
+
+**[Live site](https://aniqa.dev)** · **[Lab](https://aniqa.dev/lab)**
+
+| Portfolio (dark)                                                                                      | Lab (light)                                                                              |
+| ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| ![Portfolio title card: "Aniqa." with a mint full stop on a dark background](public/og-portfolio.png) | ![Lab title card: "Lab." with a teal full stop on a light background](public/og-lab.png) |
+
+## Tech
+
+- **Astro 7** and **TypeScript** (strict), with plain CSS and theme tokens
+- **Upstash Redis** for likes, on **Vercel**
+- **Fontsource** for self-hosted Bricolage Grotesque and Geist
+- **p5.js** and **Three.js** for experiments that need them
+- **Playwright** for smoke tests
+
+## Features
+
+- **Portfolio** (dark): selected projects with case studies and GitHub star counts, and an intro with what I'm building now.
+- **Lab** (light): an archive of experiments with hover previews, a random-entry button, and likes (five per visitor).
+- **Everywhere**: a share card for each entry, a pet that follows you between pages, and a 404 with a sleeping dot.
+
+## Design
+
+Dark for the portfolio, light for the lab, with a cross-fade between them. One accent: mint on dark, a deeper teal on light. Every preview is a small HTML and CSS drawing rather than a screenshot, so it stays sharp at any size.
+
+## Accessibility
+
+- Every link and button is reachable by keyboard and shows a focus ring (tested).
+- Reduced motion stops the drawings and the pet (tested).
+- The current page is marked with `aria-current`, and icon-only controls have labels.
+
+## Project structure
+
+```text
+src/
+  content/      projects/ and experiments/, one folder per entry
+  components/   previews, lab rows, cards, the like button, the pet
+  pages/        home, case studies, lab, 404, and api/likes.ts
+  scripts/      likes, hover preview, scroll counter, pet, sketch runner
+  lib/          content helpers, Redis client, GitHub stars, "now" lists
+  styles/       theme tokens, drawings, portfolio and lab styles
+templates/      starters for npm run new
+tests/          Playwright smoke tests
+```
+
+## Key concepts
+
+- **One folder per entry.** The folder puts it in the portfolio or the lab, and its frontmatter is checked at build time.
+- **Static, plus one function.** Only `/api/likes` runs on the server; every page is built ahead of time.
+- **Star counts at build time.** A daily rebuild keeps them current, so visitors never call GitHub.
+- **Likes in Redis.** A total per entry and a count per visitor; the sixth like is refused. Visitors are anonymous browser IDs.
+- **Drawings** are HTML and CSS on a 200 × 140 board, coloured with the theme tokens `--pf`, `--pm`, `--pl` and `--hi`.
+- **Page scripts** set up in `onPage()` and clean up before the next page loads, since pages swap in place.
+
+## Setup
+
+Requires Node 22.22+. For the tests, also run `npx playwright install chromium`.
 
 ```bash
+git clone https://github.com/aniqatc/directory
+cd directory
 npm install
-npm run dev        # http://localhost:4321
+npm run dev    # http://localhost:4321
 ```
 
-## Where things live
+The site builds without any keys; likes and faster star counts need these:
 
-Every entry is a folder in `src/content/`:
+| Variable                                             | For                                           | Where to get it                                                                                      |
+| ---------------------------------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Likes                                         | Vercel → Storage → Upstash Redis, then `vercel env pull .env.local` (`KV_REST_API_*` names work too) |
+| `GITHUB_TOKEN`                                       | Star counts (optional, avoids the rate limit) | A read-only GitHub token                                                                             |
+| `VERCEL_DEPLOY_HOOK`                                 | Daily star refresh (Actions secret)           | Vercel → Settings → Git → Deploy Hooks                                                               |
 
-```
-src/content/
-├── projects/<name>/       portfolio
-│   ├── index.md           details and write-up
-│   └── preview.astro      its little animated drawing
-└── experiments/<name>/    lab
-    ├── index.md
-    ├── preview.astro
-    └── sketch.ts          only if it runs on the site (or sketch.astro for CSS art)
-```
+### Add an entry
 
-The drawing shows on cards and in the lab's hover preview. If an experiment has a sketch, its page shows the sketch instead.
+Run `npm run new` and answer the prompts. It creates a folder from [`templates/`](templates) with the frontmatter filled in.
 
-## Add something
+- **Project (portfolio):** choose **project**, then write the blurb, summary and notes in `index.md`. It gets a case study at `/work/<slug>`; `order` sets its place in Selected work.
+- **Lab entry that links out:** choose **experiment** → **none**, then write `index.md`.
+- **Experiment that runs on the site:** choose **experiment**, then **canvas**, **p5**, **three** or **css**. Each starter already works; replace it with your own. For p5 or Three.js, install the library when asked and restart `npm run dev`.
 
-Run `npm run new` and answer the questions. It creates the folder with everything filled in from [`templates/`](templates).
+Then, for any entry: replace the placeholder drawing in `preview.astro`, run `npm run og` for its share card, and check the page. Set `draft: true` to hide it until it's ready.
 
-**Project (portfolio):** choose **project**, then write the blurb, summary and notes in `index.md`.
-
-**Experiment that links to its own site:** choose **experiment** → **none**, then write `index.md`.
-
-**Experiment that runs on the site:** choose **experiment** → **canvas**, **p5**, **three** or **css**. You get a starter sketch that already works. For p5 or Three.js, install it when asked, then restart `npm run dev`.
-
-Then replace the placeholder drawing in `preview.astro`, run `npm run og` to make its link-preview card, and check the page in the browser.
-
-**Not ready?** Add `draft: true` to `index.md` to hide it.
-
-## Drawings and sketches
-
-- **Drawing (`preview.astro`):** HTML and CSS on a 200 × 140 board. Use the colours `--pf`, `--pm`, `--pl` and `--hi` (the mint accent). See them all at `localhost:4321/dev/drawings`.
-- **Sketch (`sketch.ts`):** export `start(stage)`, draw into `stage`, and return `stop`. Also return `pause`, `resume` and `restart` for those buttons. The starters in `templates/` show how.
-- **CSS art (`sketch.astro`):** just HTML and a `<style>` block.
-
-## With Claude Code
-
-- `/new-project <repo>`: writes the case study from the repo's README and draws it.
-- `/new-experiment <repo or idea>`: writes the lab note, or builds the sketch with you, and draws it.
-- `/new-drawing <name>`: redoes one drawing.
+With Claude Code, `/new-project`, `/new-experiment` and `/new-drawing` do the writing and drawing for you.
 
 ## Scripts
 
-| Command          | What it does                   |
-| ---------------- | ------------------------------ |
-| `npm run dev`    | Local site at `localhost:4321` |
-| `npm run new`    | Add a project or experiment    |
-| `npm run build`  | Check and build                |
-| `npm test`       | Smoke tests                    |
-| `npm run format` | Tidy the code                  |
-| `npm run og`     | Make the link-preview images   |
+| Command                             | What it does                     |
+| ----------------------------------- | -------------------------------- |
+| `npm run dev`                       | Local site at `localhost:4321`   |
+| `npm run build`                     | Type-check, then build           |
+| `npm test`                          | Playwright smoke tests           |
+| `npm run new`                       | Add a project or experiment      |
+| `npm run og`                        | Make share cards for every entry |
+| `npm run check` / `lint` / `format` | Type-check, lint, format         |
 
-## Also editable
+## Changelog
 
-- `src/lib/now.ts`: "Currently tinkering with", "Now building" and "On the bench".
-- `src/lib/contact.ts`: contact links.
+### October 2026
 
-More detail for working on the code is in [`AGENTS.md`](AGENTS.md).
+- Rebuilt in Astro, replacing the React version (kept at the `react-v1` tag).
+- Added the lab, likes in Upstash, and build-time star counts.
+- Added the 404 page, the pet, page transitions and share cards.
+
+### 2025
+
+- Updated the React portfolio.
+
+## License
+
+Code is [MIT](LICENSE): reuse it freely, keeping the copyright notice. The writing, experiments and images are © Aniqa, all rights reserved.

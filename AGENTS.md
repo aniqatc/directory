@@ -100,8 +100,7 @@ src/content/
 
 ## Conventions
 
-- Match the existing voice in entry notes: first person, plain and specific, British spelling (practise, colour). Don't invent facts; leave `[bracketed notes]` for Aniqa.
-- Commits: never add Claude / AI co-author lines. Don't push unless asked.
+- Match the existing voice in entry notes: first person, plain and specific. Don't invent facts; leave `[bracketed notes]` for Aniqa.
 - Design decisions to keep: plain CSS with tokens in `src/styles/tokens.css` (`--pop` dark accent, `--pop-lab` light); the lab at `/lab`, not a subdomain; touch screens get no hover preview; reduced motion turns animations off globally.
 
 ## Astro Documentation
