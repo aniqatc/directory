@@ -5,9 +5,11 @@ import Bench from '../../components/Bench.astro';
 import Facts from '../../components/Facts.astro';
 import HoverPreview from '../../components/HoverPreview.astro';
 import LabRow from '../../components/LabRow.astro';
+import { badgeFor, updatedSet } from '../../lib/badges';
 import { byYear, fmtMonth, getLab, pad, stats } from '../../lib/projects';
 
 const lab = await getLab();
+const updated = updatedSet(lab);
 const s = stats(lab);
 const facts = [
   { label: 'Entries', value: pad(s.entries) },
@@ -50,7 +52,7 @@ const facts = [
           <h3 class="year label">{y}</h3>
           <ol>
             {entries.map((e) => (
-              <LabRow entry={e} />
+              <LabRow entry={e} badge={badgeFor(e, updated)} />
             ))}
           </ol>
         </>

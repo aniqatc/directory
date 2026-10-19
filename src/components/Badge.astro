@@ -1,0 +1,12 @@
+---
+// A small tag next to a lab entry's title: "Example", "New" (mint outline) or "Updated" (muted outline).
+import type { Badge } from '../lib/badges';
+
+interface Props {
+  badge: Badge | null;
+}
+
+const { badge } = Astro.props;
+---
+
+{badge && <span class:list={['chip', { 'chip-soft': badge === 'Updated' }]}>{badge}</span>}

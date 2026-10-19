@@ -6,14 +6,23 @@ import Facts from '../../components/Facts.astro';
 import Preview from '../../components/Preview.astro';
 import PrevNext from '../../components/PrevNext.astro';
 import LikeButton from '../../components/LikeButton.astro';
+import Badge from '../../components/Badge.astro';
+import { badgeFor, updatedSet } from '../../lib/badges';
 import { fmtMonth, getLab, links, pad, type LabEntry } from '../../lib/projects';
 
-// One page per lab entry: a lab note, or the experiment layout for type "Experiment".
+// One page per lab entry: a lab note, or the experiment layout when it has a sketch.
 export async function getStaticPaths() {
   const lab = await getLab();
+  const updated = updatedSet(lab);
   return lab.map((entry, i) => ({
     params: { slug: entry.id },
-    props: { entry, total: lab.length, older: lab[i - 1], newer: lab[i + 1] },
+    props: {
+      entry,
+      total: lab.length,
+      older: lab[i - 1],
+      newer: lab[i + 1],
+      badge: badgeFor(entry, updated),
+    },
   }));
 }
 
@@ -22,9 +31,10 @@ interface Props {
   total: number;
   older?: LabEntry;
   newer?: LabEntry;
+  badge: ReturnType<typeof badgeFor>;
 }
 
-const { entry, total, older, newer } = Astro.props;
+const { entry, total, older, newer, badge } = Astro.props;
 const { title, type, stack, released, summary, example, hint, time, repo } = entry.data;
 const { Content } = await render(entry);
 const no = `No. ${pad(entry.n)}`;
@@ -54,7 +64,7 @@ const isExperiment = hasScript || Boolean(Art);
   <LikeButton slot="actions" slug={entry.id} title={title} big />
   <Fragment slot="eyebrow">
     {isExperiment ? 'Experiment' : 'Lab note'} <b>{no}</b>
-    {example && <span class="chip">Example entry</span>}
+    {example ? <span class="chip">Example entry</span> : <Badge badge={badge} />}
   </Fragment>
 
   {isExperiment ? (
