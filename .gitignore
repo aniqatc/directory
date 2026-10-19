@@ -10,5 +10,4 @@ playwright-report/
 .DS_Store
 .idea/
 npm-debug.log*
-docs/
 .vscode/
