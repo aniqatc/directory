@@ -2,6 +2,7 @@
 // Run with `npm test` (starts or reuses the dev server).
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
+import { BENCH } from '../src/lib/now';
 
 /** Fails the test if the page logs an error or throws. */
 function watchErrors(page: Page) {
@@ -32,13 +33,14 @@ test.describe('pages', () => {
     expect(errors).toEqual([]);
   });
 
-  test('lab is light, with the archive, stats and bench', async ({ page }) => {
+  test('lab is light, with the archive, stats and bench (when listed)', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/lab');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'lab');
     await expect(page.locator('.row').first()).toBeVisible();
     await expect(page.locator('.lab-top .facts dd').first()).not.toBeEmpty();
-    await expect(page.locator('.bench')).toBeVisible();
+    // the bench card only shows when src/lib/now.ts has something on it
+    await expect(page.locator('.bench')).toHaveCount(BENCH.length > 0 ? 1 : 0);
     expect(errors).toEqual([]);
   });
 
