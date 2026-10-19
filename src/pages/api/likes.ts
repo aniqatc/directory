@@ -6,7 +6,7 @@
 import type { APIRoute } from 'astro';
 import { Ratelimit } from '@upstash/ratelimit';
 import { getLab } from '../../lib/projects';
-import { LIKE_MAX, likeKeys, redis } from '../../lib/redis';
+import { LIKE_MAX, likeKeys, likesConfigured, redis } from '../../lib/redis';
 
 export const prerender = false;
 
@@ -32,7 +32,10 @@ const json = (body: unknown, status = 200) =>
 // only published lab entries can be liked
 const labSlugs = async () => new Set((await getLab()).map((e) => e.id));
 
+const notConfigured = () => json({ error: 'Likes are not configured (no Upstash credentials)' }, 503);
+
 export const GET: APIRoute = async ({ url }) => {
+  if (!likesConfigured) return notConfigured();
   const visitor = url.searchParams.get('visitor') ?? '';
   if (!UUID.test(visitor)) return json({ error: 'visitor must be a UUID' }, 400);
   const known = await labSlugs();
@@ -49,6 +52,7 @@ export const GET: APIRoute = async ({ url }) => {
 };
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  if (!likesConfigured) return notConfigured();
   const { success } = await ratelimit.limit(clientAddress ?? 'unknown');
   if (!success) return json({ error: 'Too many likes, slow down' }, 429);
 

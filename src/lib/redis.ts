@@ -4,10 +4,13 @@ import { Redis } from '@upstash/redis';
 
 const env = (name: string): string | undefined => import.meta.env[name] ?? process.env[name];
 
-export const redis = new Redis({
-  url: env('UPSTASH_REDIS_REST_URL') ?? env('KV_REST_API_URL') ?? '',
-  token: env('UPSTASH_REDIS_REST_TOKEN') ?? env('KV_REST_API_TOKEN') ?? '',
-});
+const url = env('UPSTASH_REDIS_REST_URL') ?? env('KV_REST_API_URL') ?? '';
+const token = env('UPSTASH_REDIS_REST_TOKEN') ?? env('KV_REST_API_TOKEN') ?? '';
+
+/** False without credentials (CI, or a fresh clone without .env): the likes API then answers 503. */
+export const likesConfigured = Boolean(url && token);
+
+export const redis = new Redis({ url: url || 'https://not-configured.invalid', token: token || 'none' });
 
 /** Likes allowed per visitor per entry. */
 export const LIKE_MAX = 5;
