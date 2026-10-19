@@ -1,6 +1,7 @@
 // Easter egg: the dot by aniqa.dev is alive. Click it and it grows into a little face that follows you around.
 // It looks toward your cursor, blinks, squishes as it moves, falls asleep when you stop, hops with a heart when
 // clicked, and shrinks back into the logo on double-click or Esc. On touch screens it follows your taps.
+// It comes with you between pages: its spot is saved for this tab when you leave and it reappears there.
 const dot = document.querySelector<HTMLElement>('.brand i');
 
 if (dot) {
@@ -30,6 +31,25 @@ if (dot) {
     return [b.left + b.width / 2, b.top + b.height / 2];
   };
   const wake = () => (lastMove = performance.now());
+  // where the pet was when you left the last page (this tab only)
+  const KEY = 'aniqa-pet';
+  type Saved = { x: number; y: number; px: number; py: number };
+  const load = (): Saved | null => {
+    try {
+      return JSON.parse(sessionStorage.getItem(KEY) ?? 'null');
+    } catch {
+      return null;
+    }
+  };
+  const save = (s: Saved | null) => {
+    try {
+      if (s) sessionStorage.setItem(KEY, JSON.stringify(s));
+      else sessionStorage.removeItem(KEY);
+    } catch {
+      // storage blocked: the pet just stays on this page
+    }
+  };
+
   const goHome = () => {
     if (pet) {
       homing = true;
@@ -37,13 +57,22 @@ if (dot) {
     }
   };
 
-  function release() {
-    [x, y] = home();
-    px = x;
-    py = y;
-    tx = x + 30;
-    ty = y + 52;
-    born = lastMove = performance.now();
+  /** Out of the logo, or straight back where it was on the last page (already full size, staying put). */
+  function release(saved?: Saved) {
+    if (saved) {
+      x = tx = clamp(saved.x, 16, innerWidth - 16);
+      y = ty = clamp(saved.y, 16, innerHeight - 16);
+      px = saved.px;
+      py = saved.py;
+    } else {
+      [x, y] = home();
+      px = x;
+      py = y;
+      tx = x + 30;
+      ty = y + 52;
+    }
+    lastMove = performance.now();
+    born = saved ? lastMove - 1000 : lastMove;
     homing = false;
 
     pet = document.createElement('div');
@@ -91,6 +120,7 @@ if (dot) {
     shadow?.remove();
     pet = shadow = parts = null;
     dot!.classList.remove('out');
+    save(null);
   }
 
   function tick(now: number) {
@@ -180,4 +210,9 @@ if (dot) {
   addEventListener('keydown', (ev) => {
     if (ev.key === 'Escape') goHome();
   });
+
+  // leaving the page: remember where it is, unless it's on its way home
+  addEventListener('pagehide', () => save(pet && !homing ? { x, y, px, py } : null));
+  const saved = load();
+  if (saved) release(saved);
 }
