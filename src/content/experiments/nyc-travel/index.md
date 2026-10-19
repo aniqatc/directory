@@ -18,6 +18,7 @@ A guide to my own city, and a reason to put two APIs and more ambitious layouts 
 1. Content from JSON: 27 hotels, the neighbourhoods and weather icons load from files I compiled.
 2. Two APIs side by side: weather on page load, flight data on search by airport code or your location.
 3. A live clock in New York time, updated every second.
+4. Many CSS layouts on one page, often nested: grid and flexbox in every section, and a horizontal scroll container for the destinations.
 
 ## Revisited
 

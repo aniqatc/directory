@@ -11,7 +11,7 @@ summary: An analog and digital clock for 500+ time zones. Pin cities, slide time
 
 ## Why I built it
 
-A small, contained question: what does the time look like everywhere at once?
+I wanted to get comfortable with dates and time zones in JavaScript, and to draw a working analog clock in SVG.
 
 ## What I learned
 

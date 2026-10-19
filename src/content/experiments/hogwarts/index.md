@@ -11,7 +11,7 @@ summary: A fan landing page for Hogwarts with house profiles, a course list and 
 
 ## Why I built it
 
-One of my first complete pages. I wanted to see whether I could lay out a whole site from scratch and make parts of it respond to clicks.
+One of my first complete pages.
 
 ## What I learned
 

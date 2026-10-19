@@ -13,7 +13,7 @@ summary: Eight independent widgets, from a graphing calculator to a community bo
 
 ## Why
 
-I wanted to learn the backend properly. Widgets let me take on one new skill at a time (third-party APIs, MongoDB models, scraping, image export, text processing) without starting a whole new project.
+I wanted fully working widgets, each with the features of a full-sized project, all in one site: a one-stop shop of beginner to intermediate full-stack builds. Fitting eight of them together made me think hard about architecture and how to structure the whole project.
 
 ## The widgets
 
