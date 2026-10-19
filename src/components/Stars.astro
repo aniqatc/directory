@@ -1,0 +1,110 @@
+---
+import { CONTACT } from '../lib/contact';
+import { getStars } from '../lib/github';
+
+interface Props {
+  repo?: string;
+  title: string;
+  /** "link": "★ 38" on portfolio cards. "button": "★ Star on GitHub 38" on case studies. */
+  variant?: 'link' | 'button';
+}
+
+const { repo, title, variant = 'link' } = Astro.props;
+const stars = repo ? await getStars(repo) : null;
+const href = `${CONTACT.github}/${repo}`;
+// the five-point star from the prototype
+const STAR = 'M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9.5l6.4-.9z';
+---
+
+{stars !== null &&
+  (variant === 'button' ? (
+    <a
+      class="star-btn"
+      href={href}
+      target="_blank"
+      rel="noopener"
+      aria-label={`Star ${title} on GitHub (${stars} stars)`}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d={STAR} />
+      </svg>
+      <span>Star on GitHub</span>
+      <b>{stars}</b>
+    </a>
+  ) : (
+    <a class="stars" href={href} target="_blank" rel="noopener" title={`Star on GitHub (${stars} stars)`}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d={STAR} />
+      </svg>
+      {stars}
+      <span class="sr-only"> stars</span>
+    </a>
+  ))}
+
+<style>
+  /* "★ 38" on portfolio cards; sits in the card's Live / Code links, above the card-wide link */
+  .stars {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .stars svg {
+    width: 11px;
+    height: 11px;
+    fill: var(--pop);
+    transition: transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .stars:hover {
+    color: var(--fg);
+  }
+  .stars:hover svg {
+    transform: rotate(72deg) scale(1.4);
+  }
+
+  /* "★ Star on GitHub 38" in the case study top bar */
+  .star-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 6px 6px 11px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font: 500 11px/1 var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--fg);
+    transition: border-color 0.2s;
+  }
+  .star-btn svg {
+    width: 13px;
+    height: 13px;
+    fill: var(--pop);
+    transition: transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .star-btn b {
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .star-btn:hover {
+    border-color: var(--pop);
+  }
+  .star-btn:hover svg {
+    transform: rotate(72deg) scale(1.3);
+  }
+  @media (max-width: 560px) {
+    .star-btn span {
+      display: none;
+    }
+    .star-btn {
+      padding-left: 9px;
+    }
+  }
+</style>

@@ -1,13 +1,14 @@
 // Short lists for the portfolio intro and the lab. Edit freely; no project files involved.
 
 /** "Currently tinkering with" chips in the portfolio intro. */
-export const TINKERING = ['TypeScript', 'Three.js', 'WebGL', 'p5.js', 'React', 'Next.js', 'Agentic coding'];
+export const TINKERING = ['TypeScript', 'p5.js', 'React', 'Next.js', 'Astro', 'Agentic coding'];
 
 /** "Now building" in the portfolio intro. Each one graduates to Selected work when it ships. */
 export const BUILDING = [
   {
     title: 'huckleberry.csv',
-    blurb: 'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
+    blurb:
+      'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
   },
   { title: 'For Zayn', blurb: 'A gallery of pure-CSS pieces, each one something that reminds me of my son.' },
 ];

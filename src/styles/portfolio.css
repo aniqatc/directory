@@ -187,13 +187,21 @@
   font-size: 13.5px;
   max-width: 52ch;
 }
+/* type · year · stack on the left (wraps in its own column), stars + links pinned top-right on every card */
 .meta {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 6px 16px;
+  gap: 16px;
   font: 400 11px/1.4 var(--font-mono);
   color: var(--muted);
+}
+.meta > span:first-child {
+  flex: 1;
+  min-width: 0;
+}
+.meta .l {
+  flex: none;
 }
 
 /* ---------- Latest in the lab ---------- */

@@ -4,6 +4,7 @@ import Detail from '../../layouts/Detail.astro';
 import Facts from '../../components/Facts.astro';
 import Preview from '../../components/Preview.astro';
 import PrevNext from '../../components/PrevNext.astro';
+import Stars from '../../components/Stars.astro';
 import { fmtMonth, getSelected, links, pad, type Project } from '../../lib/projects';
 
 // One case study per selected project; previous / next wrap around.
@@ -49,18 +50,19 @@ const facts = [
   back={{ href: '/', label: '← All work' }}
   position={`${pad(i + 1)} / ${pad(total)}`}
 >
-  <Fragment slot="eyebrow">Selected work <b>{pad(i + 1)}</b> · Case study</Fragment>
+  <Stars slot="actions" repo={project.data.repo} title={title} variant="button" />
+  <Fragment slot="eyebrow">
+    Selected work <b>{pad(i + 1)}</b> · Case study
+  </Fragment>
   <Facts slot="facts" items={facts} />
   <Preview entry={project} fit="width" />
   <Content />
-  {
-    total > 1 && (
-      <PrevNext
-        label="More work"
-        labels={['← Previous', 'Next →']}
-        prev={{ href: `/work/${prev.id}`, title: prev.data.title }}
-        next={{ href: `/work/${next.id}`, title: next.data.title }}
-      />
-    )
-  }
+  {total > 1 && (
+    <PrevNext
+      label="More work"
+      labels={['← Previous', 'Next →']}
+      prev={{ href: `/work/${prev.id}`, title: prev.data.title }}
+      next={{ href: `/work/${next.id}`, title: next.data.title }}
+    />
+  )}
 </Detail>
