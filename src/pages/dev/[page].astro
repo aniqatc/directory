@@ -14,29 +14,35 @@ const entries = [...(await getCollection('projects')), ...(await getCollection('
 
 <Base mode="portfolio" title="Drawings">
   <main class="wrap gallery">
-    <p class="label">{entries.length} drawings · add <code>?only=slug</code> to the URL to show one</p>
-    {
-      entries.map((e) => (
-        <section data-key={e.id}>
-          <h2 class="label">
-            {e.data.title} · {e.collection}/{e.id}/preview.astro{e.data.draft && ' · draft'}
-          </h2>
-          <div class="sizes">
-            <Preview entry={e} />
-            <Preview entry={e} fit="height" class="card" />
-            <Preview entry={e} fit="width" class="figure" />
-          </div>
-        </section>
-      ))
-    }
+    <p class="label">
+      {entries.length} drawings · add <code>?only=slug</code> to the URL to show one
+    </p>
+    {entries.map((e) => (
+      <section data-key={e.id}>
+        <h2 class="label">
+          {e.data.title} · {e.collection}/{e.id}/preview.astro{e.data.draft && ' · draft'}
+        </h2>
+        <div class="sizes">
+          <Preview entry={e} />
+          <Preview entry={e} fit="height" class="card" />
+          <Preview entry={e} fit="width" class="figure" />
+        </div>
+      </section>
+    ))}
   </main>
 </Base>
 
 <script>
+  import { onPage } from '../../scripts/page';
+
   // ?only=slug shows one drawing (query params aren't available to pre-rendered pages, so filter here)
-  const only = new URLSearchParams(location.search).get('only');
-  if (only)
-    document.querySelectorAll<HTMLElement>('.gallery section').forEach((s) => (s.hidden = s.dataset.key !== only));
+  onPage(() => {
+    const only = new URLSearchParams(location.search).get('only');
+    if (only)
+      document
+        .querySelectorAll<HTMLElement>('.gallery section')
+        .forEach((s) => (s.hidden = s.dataset.key !== only));
+  });
 </script>
 
 <style is:global>

@@ -52,19 +52,25 @@ import Base from '../layouts/Base.astro';
 </Base>
 
 <script>
+  import { onPage } from '../scripts/page';
+
   // tap the sleeping dot: it opens its eyes and hops, then dozes off again
-  const pet = document.querySelector<HTMLButtonElement>('.nf-pet');
-  let timer = 0;
-  pet?.addEventListener('click', () => {
-    pet.classList.remove('awake');
-    void pet.offsetWidth;
-    pet.classList.add('awake');
-    pet.setAttribute('aria-label', 'The dot is awake');
-    clearTimeout(timer);
-    timer = window.setTimeout(() => {
+  onPage(() => {
+    const pet = document.querySelector<HTMLButtonElement>('.nf-pet');
+    if (!pet) return;
+    let timer = 0;
+    pet.addEventListener('click', () => {
       pet.classList.remove('awake');
-      pet.setAttribute('aria-label', 'Wake the dot');
-    }, 2200);
+      void pet.offsetWidth;
+      pet.classList.add('awake');
+      pet.setAttribute('aria-label', 'The dot is awake');
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        pet.classList.remove('awake');
+        pet.setAttribute('aria-label', 'Wake the dot');
+      }, 2200);
+    });
+    return () => clearTimeout(timer);
   });
 </script>
 

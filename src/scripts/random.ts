@@ -1,6 +1,6 @@
 // "Random entry": roll the dice, flash a random lab row, then open it. Skips example entries.
-const dice = document.querySelector<HTMLButtonElement>('.dice');
-const pips = dice?.querySelector('.pips');
+import { navigate } from 'astro:transitions/client';
+import { onPage } from './page';
 
 const FACES: Record<number, [number, number][]> = {
   1: [[12, 12]],
@@ -35,30 +35,40 @@ const FACES: Record<number, [number, number][]> = {
     [16, 17],
   ],
 };
-const face = (n: number) => {
-  if (pips) pips.innerHTML = FACES[n].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.7"/>`).join('');
+const face = (pips: Element, n: number) => {
+  pips.innerHTML = FACES[n].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.7"/>`).join('');
 };
 const roll = () => 1 + Math.floor(Math.random() * 6);
 
-dice?.addEventListener('click', () => {
-  const rows = [...document.querySelectorAll<HTMLElement>('.row:not([data-example])')];
-  const row = rows[Math.floor(Math.random() * rows.length)];
-  if (!row) return;
-  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+onPage(() => {
+  const dice = document.querySelector<HTMLButtonElement>('.dice');
+  const pips = dice?.querySelector('.pips');
+  if (!dice || !pips) return;
+  const timers: number[] = [];
 
-  dice.classList.remove('roll');
-  void dice.offsetWidth;
-  dice.classList.add('roll');
-  const spin = calm ? 0 : window.setInterval(() => face(roll()), 90);
+  dice.addEventListener('click', () => {
+    const rows = [...document.querySelectorAll<HTMLElement>('.row:not([data-example])')];
+    const row = rows[Math.floor(Math.random() * rows.length)];
+    if (!row) return;
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  setTimeout(
-    () => {
-      clearInterval(spin);
-      face(roll());
-      row.classList.add('picked');
-      row.scrollIntoView({ block: 'center', behavior: calm ? 'auto' : 'smooth' });
-      setTimeout(() => (location.href = `/lab/${row.dataset.slug}`), 650);
-    },
-    calm ? 0 : 600,
-  );
+    dice.classList.remove('roll');
+    void dice.offsetWidth;
+    dice.classList.add('roll');
+    const spin = calm ? 0 : window.setInterval(() => face(pips, roll()), 90);
+    timers.push(spin);
+
+    setTimeout(
+      () => {
+        clearInterval(spin);
+        face(pips, roll());
+        row.classList.add('picked');
+        row.scrollIntoView({ block: 'center', behavior: calm ? 'auto' : 'smooth' });
+        timers.push(window.setTimeout(() => navigate(`/lab/${row.dataset.slug}`), 650));
+      },
+      calm ? 0 : 600,
+    );
+  });
+
+  return () => timers.forEach((t) => clearTimeout(t));
 });

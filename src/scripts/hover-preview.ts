@@ -1,9 +1,12 @@
 // Lab archive: a floating preview follows the cursor over the rows. Mouse only; on touch screens
 // the rows are plain links and the preview stays hidden (see the hover: none rule in lab.css).
-const tip = document.querySelector<HTMLElement>('.tip');
-const archive = document.querySelector<HTMLElement>('.archive');
+import { onPage } from './page';
 
-if (tip && archive) {
+onPage(() => {
+  const tip = document.querySelector<HTMLElement>('.tip');
+  const archive = document.querySelector<HTMLElement>('.archive');
+  if (!tip || !archive) return;
+
   const boxes = [...tip.querySelectorAll<HTMLElement>('.pvbox')];
   const capTitle = tip.querySelector('.tip-cap b')!;
   const capInfo = tip.querySelector('.tip-cap span')!;
@@ -48,4 +51,5 @@ if (tip && archive) {
     const to = ev.relatedTarget as Element | null;
     if (!to?.closest('.row')) tip.classList.remove('show');
   });
-}
+  return () => cancelAnimationFrame(raf);
+});

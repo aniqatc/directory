@@ -353,6 +353,14 @@ footer a:hover {
     display: none;
   }
 }
+/* page changes: the old page fades into the new one (night ↔ day when switching between portfolio and lab),
+   at the same pace as the prototype's colour transition */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

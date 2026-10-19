@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '@fontsource-variable/bricolage-grotesque/opsz.css';
 import '@fontsource-variable/geist';
 import '@fontsource-variable/geist-mono';
@@ -15,8 +16,11 @@ interface Props {
   description?: string;
 }
 
-const { mode, title, description = 'Aniqa builds small things for the web, mostly for fun and to learn.' } =
-  Astro.props;
+const {
+  mode,
+  title,
+  description = 'Aniqa builds small things for the web, mostly for fun and to learn.',
+} = Astro.props;
 const fullTitle = title ? `${title} — aniqa.dev` : 'aniqa.dev';
 ---
 
@@ -29,10 +33,14 @@ const fullTitle = title ? `${title} — aniqa.dev` : 'aniqa.dev';
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{fullTitle}</title>
+    <!-- links swap pages in place with a cross-fade, so portfolio ↔ lab fades between night and day -->
+    <ClientRouter />
   </head>
   <body>
     <Header mode={mode} />
     <slot />
     <Footer />
+    <!-- the pet lives here; it survives page changes, so it stays out while you move around -->
+    <div id="pet-layer" transition:persist></div>
   </body>
 </html>

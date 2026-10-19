@@ -1,10 +1,14 @@
 // Easter egg: the dot by aniqa.dev is alive. Click it and it grows into a little face that follows you around.
 // It looks toward your cursor, blinks, squishes as it moves, falls asleep when you stop, hops with a heart when
 // clicked, and shrinks back into the logo on double-click or Esc. On touch screens it follows your taps.
-// It comes with you between pages: its spot is saved for this tab when you leave and it reappears there.
-const dot = document.querySelector<HTMLElement>('.brand i');
+// It comes with you between pages: it lives in #pet-layer, which survives page changes (view transitions); on a
+// full reload its spot is saved for this tab and it reappears there.
+import { onPage } from './page';
 
-if (dot) {
+// the header (and so the dot) is replaced on every page change, so look it up each time
+const dot = () => document.querySelector<HTMLElement>('.brand i');
+
+{
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
@@ -27,8 +31,8 @@ if (dot) {
   let lid = 1;
 
   const home = () => {
-    const b = dot.getBoundingClientRect();
-    return [b.left + b.width / 2, b.top + b.height / 2];
+    const b = dot()?.getBoundingClientRect();
+    return b ? [b.left + b.width / 2, b.top + b.height / 2] : [x, y];
   };
   const wake = () => (lastMove = performance.now());
   // where the pet was when you left the last page (this tab only)
@@ -91,13 +95,13 @@ if (dot) {
       <svg class="pet-heart" viewBox="0 0 10 10"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`;
     shadow = document.createElement('div');
     shadow.className = 'pet-shadow';
-    document.body.append(shadow, pet);
+    (document.getElementById('pet-layer') ?? document.body).append(shadow, pet);
     parts = {
       body: pet.querySelector('.b')!,
       face: pet.querySelector('.f')!,
       eyes: [...pet.querySelectorAll<SVGGElement>('.e')],
     };
-    dot!.classList.add('out');
+    dot()?.classList.add('out');
 
     pet.addEventListener('click', (ev) => {
       ev.stopPropagation();
@@ -119,7 +123,7 @@ if (dot) {
     pet?.remove();
     shadow?.remove();
     pet = shadow = parts = null;
-    dot!.classList.remove('out');
+    dot()?.classList.remove('out');
     save(null);
   }
 
@@ -177,12 +181,18 @@ if (dot) {
     raf = requestAnimationFrame(tick);
   }
 
-  dot.addEventListener('click', (ev) => {
-    ev.preventDefault(); // the dot sits inside the home link
-    ev.stopPropagation();
-    if (pet) goHome();
-    else release();
-  });
+  // the dot sits inside the home link: catch the click first (capture), so the page doesn't change
+  document.addEventListener(
+    'click',
+    (ev) => {
+      if (!(ev.target as Element).closest('.brand i')) return;
+      ev.preventDefault();
+      ev.stopPropagation();
+      if (pet) goHome();
+      else release();
+    },
+    { capture: true },
+  );
   addEventListener(
     'pointermove',
     (ev) => {
@@ -211,8 +221,15 @@ if (dot) {
     if (ev.key === 'Escape') goHome();
   });
 
-  // leaving the page: remember where it is, unless it's on its way home
+  // a full reload or leaving the site: remember where it is, unless it's on its way home
   addEventListener('pagehide', () => save(pet && !homing ? { x, y, px, py } : null));
-  const saved = load();
-  if (saved) release(saved);
+
+  onPage(() => {
+    if (pet) {
+      dot()?.classList.add('out'); // still out from the last page: keep the new header's dot hidden
+      return;
+    }
+    const saved = load();
+    if (saved) release(saved);
+  });
 }

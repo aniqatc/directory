@@ -2,6 +2,8 @@
 // Counts live in Upstash behind /api/likes (src/pages/api/likes.ts), which enforces the limit per visitor.
 // Each browser gets an anonymous visitor ID; clearing site data starts a visitor over, which is fine here.
 
+import { onPage } from './page';
+
 const MAX = 5;
 const API = '/api/likes';
 
@@ -130,10 +132,13 @@ document.addEventListener('click', async (ev) => {
   }
 });
 
-// fill in every heart on the page with one request
-const slugs = [...new Set([...document.querySelectorAll<HTMLElement>('.like')].map((b) => b.dataset.slug!))];
-if (slugs.length) {
+// on every page, fill in its hearts with one request (the click handler above is shared by all pages)
+onPage(() => {
+  const slugs = [
+    ...new Set([...document.querySelectorAll<HTMLElement>('.like')].map((b) => b.dataset.slug!)),
+  ];
+  if (!slugs.length) return;
   loadAll(slugs)
     .then((counts) => slugs.forEach((s) => show(s, counts[s] ?? { total: 0, mine: 0 })))
     .catch(() => slugs.forEach((s) => show(s, { total: 0, mine: 0 })));
-}
+});
