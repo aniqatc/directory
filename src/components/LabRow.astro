@@ -1,4 +1,5 @@
 ---
+import LikeButton from './LikeButton.astro';
 import { links, pad, year, type LabEntry } from '../lib/projects';
 
 interface Props {
@@ -11,16 +12,17 @@ const { title, type, live } = entry.data;
 
 <li class="row" data-slug={entry.id} data-t={title} data-u={live ? live.replace('www.', '') : type}>
   <span class="n">{pad(entry.n)}</span>
-  <span class="t"><a href={`/lab/${entry.id}`}>{title}</a></span>
+  <span class="t">
+    <a href={`/lab/${entry.id}`}>{title}</a>
+  </span>
   <span class="k">{type}</span>
   <span class="y">{year(entry)}</span>
   <span class="l">
-    {
-      links(entry).map((l) => (
-        <a href={l.href} target="_blank" rel="noopener">
-          {l.label}
-        </a>
-      ))
-    }
+    {links(entry).map((l) => (
+      <a href={l.href} target="_blank" rel="noopener">
+        {l.label}
+      </a>
+    ))}
   </span>
+  <LikeButton slug={entry.id} title={title} />
 </li>

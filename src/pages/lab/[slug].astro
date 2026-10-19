@@ -5,6 +5,7 @@ import Detail from '../../layouts/Detail.astro';
 import Facts from '../../components/Facts.astro';
 import Preview from '../../components/Preview.astro';
 import PrevNext from '../../components/PrevNext.astro';
+import LikeButton from '../../components/LikeButton.astro';
 import { fmtMonth, getLab, links, pad, type LabEntry } from '../../lib/projects';
 
 // One page per lab entry: a lab note, or the experiment layout for type "Experiment".
@@ -50,6 +51,7 @@ const isExperiment = hasScript || Boolean(Art);
   back={{ href: '/lab', label: '← Archive' }}
   position={`${no} / ${pad(total)}`}
 >
+  <LikeButton slot="actions" slug={entry.id} title={title} big />
   <Fragment slot="eyebrow">
     {isExperiment ? 'Experiment' : 'Lab note'} <b>{no}</b>
     {example && <span class="chip">Example entry</span>}

@@ -1,0 +1,209 @@
+---
+// Heart for lab entries: up to 5 likes per visitor; it fills a fifth per like and smiles when full.
+// The count and state are filled in by src/scripts/likes.ts once the page loads.
+interface Props {
+  slug: string;
+  title: string;
+  /** larger, outlined version for the lab note / experiment top bar */
+  big?: boolean;
+}
+
+const { slug, title, big = false } = Astro.props;
+const clip = `lk-${slug}${big ? '-lg' : ''}`;
+const HEART =
+  'M12 21s-7.5-4.6-9.6-9.1C.9 8.6 2.7 4.5 6.6 4.1c2.2-.2 4 .9 5.4 2.8 1.4-1.9 3.2-3 5.4-2.8 3.9.4 5.7 4.5 4.2 7.8C19.5 16.4 12 21 12 21z';
+---
+
+<button
+  type="button"
+  class:list={['like', { 'like-lg': big }]}
+  data-slug={slug}
+  data-t={title}
+  aria-label={`Like ${title}`}
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <defs>
+      <clipPath id={clip}>
+        <rect class="lv" x="0" y="21" width="24" height="24"></rect>
+      </clipPath>
+    </defs>
+    <path class="h-f" d={HEART} clip-path={`url(#${clip})`}></path>
+    <path class="h-o" d={HEART}></path>
+    <g class="face">
+      <circle cx="9.2" cy="11.3" r=".95"></circle>
+      <circle cx="14.8" cy="11.3" r=".95"></circle>
+      <path d="M10.4 13.7q1.6 1.3 3.2 0"></path>
+    </g>
+  </svg>
+  <span class="lc"></span>
+</button>
+
+<script>
+  import '../scripts/likes';
+</script>
+
+<style is:global>
+  /* global so the burst and "+1" pieces that likes.ts adds to <body> are styled too */
+  .like {
+    position: relative;
+    z-index: 1;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 2px;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    font: 500 10.5px/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .like svg {
+    width: 16px;
+    height: 16px;
+    overflow: visible;
+  }
+  .like .h-o {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linejoin: round;
+    transition: stroke 0.2s;
+  }
+  .like .h-f {
+    fill: var(--heart);
+  }
+  .like .lv {
+    transition: y 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+  }
+  .like .face {
+    opacity: 0;
+    transform: scale(0.4);
+    transform-origin: 12px 12px;
+    transition:
+      opacity 0.3s,
+      transform 0.45s cubic-bezier(0.3, 1.8, 0.5, 1);
+  }
+  .like .face circle {
+    fill: #fff;
+  }
+  .like .face path {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.1;
+    stroke-linecap: round;
+  }
+  .like .lc {
+    min-width: 1ch;
+    text-align: left;
+  }
+  .like:hover,
+  .like.full {
+    color: var(--heart);
+  }
+  .like.full .h-o {
+    stroke: var(--heart);
+  }
+  .like.full .face {
+    opacity: 1;
+    transform: none;
+  }
+  .like.pop svg {
+    animation: like-pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .like.nope svg {
+    animation: like-nope 0.4s ease;
+  }
+  .like-lg {
+    gap: 7px;
+    padding: 6px 12px 6px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 11px;
+    transition: border-color 0.2s;
+  }
+  .like-lg:hover,
+  .like-lg.full {
+    border-color: var(--heart);
+  }
+  .like-lg svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .like-burst {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    z-index: 60;
+    pointer-events: none;
+  }
+  .like-burst i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-style: normal;
+    line-height: 1;
+    animation: like-fly 0.75s cubic-bezier(0.15, 0.7, 0.3, 1) forwards;
+  }
+  .like-plus {
+    position: fixed;
+    z-index: 61;
+    pointer-events: none;
+    font: 500 11px/1 var(--font-mono);
+    color: var(--heart);
+    white-space: nowrap;
+    animation: like-rise 0.9s ease-out forwards;
+  }
+  @keyframes like-pop {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(0.72);
+    }
+    65% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes like-nope {
+    20%,
+    60% {
+      transform: translateX(-3px) rotate(-10deg);
+    }
+    40%,
+    80% {
+      transform: translateX(3px) rotate(10deg);
+    }
+  }
+  @keyframes like-fly {
+    0% {
+      transform: translate(-50%, -50%) scale(0.3);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--r)) scale(1);
+      opacity: 0;
+    }
+  }
+  @keyframes like-rise {
+    0% {
+      transform: translate(-50%, -50%);
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -220%);
+      opacity: 0;
+    }
+  }
+</style>
