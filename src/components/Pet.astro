@@ -1,0 +1,97 @@
+---
+// The pet easter egg: no markup of its own. src/scripts/pet.ts brings the header's brand dot to life on click
+// and adds the pet to <body>, so its styles are global.
+---
+
+<script>
+  import '../scripts/pet';
+</script>
+
+<style is:global>
+  .pet {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  .pet > svg:first-child {
+    display: block;
+    width: 32px;
+    height: 32px;
+    overflow: visible;
+  }
+  .pet-shadow {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 49;
+    width: 24px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.4), transparent);
+    pointer-events: none;
+  }
+  :root[data-mode='lab'] .pet-shadow {
+    background: radial-gradient(closest-side, rgba(0, 0, 0, 0.2), transparent);
+  }
+  .pet-z {
+    position: absolute;
+    left: 24px;
+    top: -2px;
+    font: 500 10px var(--font-mono);
+    color: var(--muted);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pet-z + .pet-z {
+    left: 30px;
+  }
+  .pet.sleep .pet-z {
+    animation: pet-zz 2.4s ease-in-out infinite;
+  }
+  .pet.sleep .pet-z + .pet-z {
+    animation-delay: 1.2s;
+  }
+  .pet-heart {
+    position: absolute;
+    left: 11px;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pet.hop .pet-heart {
+    animation: pet-heart 0.9s ease-out;
+  }
+  @keyframes pet-zz {
+    0% {
+      opacity: 0;
+      transform: none;
+    }
+    25% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(8px, -14px);
+    }
+  }
+  @keyframes pet-heart {
+    0% {
+      opacity: 0;
+      transform: translateY(4px) scale(0.6);
+    }
+    25% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-16px) scale(1);
+    }
+  }
+</style>
