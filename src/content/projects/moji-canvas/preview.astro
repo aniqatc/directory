@@ -9,16 +9,20 @@ const stickers: [string, number, number, number][] = [
 ---
 
 <i class="pv-bg"></i>
-{
-  stickers.map(([e, x, y, s], i) => (
-    <span class="st" style={`left:${x}px;top:${y}px;font-size:${s}px;animation-delay:-${(i * 0.3).toFixed(1)}s`}>
-      {e}
-    </span>
-  ))
-}
+{stickers.map(([e, x, y, s], i) => (
+  <span
+    class="st"
+    style={`left:${x}px;top:${y}px;font-size:${s}px;animation-delay:-${(i * 0.3).toFixed(1)}s`}
+  >
+    {e}
+  </span>
+))}
 <span class="sel">
   <span class="st bee">🐝</span>
-  <i class="h h1"></i><i class="h h2"></i><i class="h h3"></i><i class="h h4"></i>
+  <i class="h h1"></i>
+  <i class="h h2"></i>
+  <i class="h h3"></i>
+  <i class="h h4"></i>
 </span>
 
 <style>

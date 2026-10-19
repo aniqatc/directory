@@ -11,8 +11,13 @@ const { entries } = Astro.props;
 ---
 
 <div class="tip" aria-hidden="true">
-  {entries.map((e) => <Preview entry={e} scale={1.1} data-slug={e.id} hidden />)}
-  <div class="tip-cap"><b></b><span></span></div>
+  {entries.map((e) => (
+    <Preview entry={e} scale={1.1} data-slug={e.id} hidden />
+  ))}
+  <div class="tip-cap">
+    <b></b>
+    <span></span>
+  </div>
 </div>
 
 <script>

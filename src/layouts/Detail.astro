@@ -21,11 +21,18 @@ const { mode, variant, title, lede, back, position } = Astro.props;
   <main class="wrap detail">
     <article class={`d d-${variant}`}>
       <div class="d-top label">
-        <a class="back" href={back.href}>{back.label}</a>
-        <span class="d-top-r"><slot name="actions" /><span>{position}</span></span>
+        <a class="back" href={back.href}>
+          {back.label}
+        </a>
+        <span class="d-top-r">
+          <slot name="actions" />
+          <span>{position}</span>
+        </span>
       </div>
       <div class="d-head">
-        <p class="d-eyebrow label"><slot name="eyebrow" /></p>
+        <p class="d-eyebrow label">
+          <slot name="eyebrow" />
+        </p>
         <h1 class="d-title">{title}</h1>
         <p class="d-lede">{lede}</p>
         <slot name="facts" />

@@ -9,21 +9,22 @@ const { entries } = Astro.props;
 ---
 
 <div class="latest">
-  <div class="work-head"><h2 class="label">Latest in the lab</h2><a href="/lab">Open the lab →</a></div>
+  <div class="work-head">
+    <h2 class="label">Latest in the lab</h2>
+    <a href="/lab">Open the lab →</a>
+  </div>
   <ol class="lt">
-    {
-      entries.map((e) => (
-        <li>
-          <a href={`/lab/${e.id}`}>
-            <span class="lt-t">{e.data.title}</span>
-            <span class="lt-k">{e.data.type}</span>
-            <span class="lt-d">{fmtMonth(e.data.released)}</span>
-            <span class="lt-a" aria-hidden="true">
-              →
-            </span>
-          </a>
-        </li>
-      ))
-    }
+    {entries.map((e) => (
+      <li>
+        <a href={`/lab/${e.id}`}>
+          <span class="lt-t">{e.data.title}</span>
+          <span class="lt-k">{e.data.type}</span>
+          <span class="lt-d">{fmtMonth(e.data.released)}</span>
+          <span class="lt-a" aria-hidden="true">
+            →
+          </span>
+        </a>
+      </li>
+    ))}
   </ol>
 </div>

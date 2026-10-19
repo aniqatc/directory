@@ -19,32 +19,28 @@ const links = (
 ---
 
 <ul class:list={['contact', { 'contact-f': variant === 'foot' }]} aria-label="Contact">
-  {
-    links.map(([label, url]) => (
-      <li>
-        <a href={url} target="_blank" rel="noopener">
-          {label} ↗
-        </a>
-      </li>
-    ))
-  }
-  {
-    c.email && (
-      <li>
-        <button
-          type="button"
-          class="copy"
-          data-email={c.email}
-          title="Copy email"
-          aria-label={`Copy email ${c.email}`}
-        >
-          <span class="em">{c.email}</span>
-          <span class="ok" aria-hidden="true" />
-        </button>
-        <span class="sr-only" role="status" />
-      </li>
-    )
-  }
+  {links.map(([label, url]) => (
+    <li>
+      <a href={url} target="_blank" rel="noopener">
+        {label} ↗
+      </a>
+    </li>
+  ))}
+  {c.email && (
+    <li>
+      <button
+        type="button"
+        class="copy"
+        data-email={c.email}
+        title="Copy email"
+        aria-label={`Copy email ${c.email}`}
+      >
+        <span class="em">{c.email}</span>
+        <span class="ok" aria-hidden="true" />
+      </button>
+      <span class="sr-only" role="status" />
+    </li>
+  )}
 </ul>
 
 <script>

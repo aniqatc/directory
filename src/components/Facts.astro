@@ -14,22 +14,20 @@ const { items, cols, class: className } = Astro.props;
 ---
 
 <dl class:list={['facts', className]} style={cols ? `--cols:${cols}` : undefined}>
-  {
-    items.map(({ label, value }) => (
-      <div>
-        <dt class="label">{label}</dt>
-        <dd>
-          {typeof value === 'string'
-            ? value
-            : value.length
-              ? value.map((l) => (
-                  <a href={l.href} target="_blank" rel="noopener">
-                    {l.label}
-                  </a>
-                ))
-              : '—'}
-        </dd>
-      </div>
-    ))
-  }
+  {items.map(({ label, value }) => (
+    <div>
+      <dt class="label">{label}</dt>
+      <dd>
+        {typeof value === 'string'
+          ? value
+          : value.length
+            ? value.map((l) => (
+                <a href={l.href} target="_blank" rel="noopener">
+                  {l.label}
+                </a>
+              ))
+            : '—'}
+      </dd>
+    </div>
+  ))}
 </dl>

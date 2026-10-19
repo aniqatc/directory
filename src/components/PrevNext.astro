@@ -13,24 +13,20 @@ const { prev, next, labels, label } = Astro.props;
 ---
 
 <nav class="pn" aria-label={label}>
-  {
-    prev ? (
-      <a href={prev.href}>
-        <span class="label">{labels[0]}</span>
-        <b>{prev.title}</b>
-      </a>
-    ) : (
-      <span />
-    )
-  }
-  {
-    next ? (
-      <a href={next.href}>
-        <span class="label">{labels[1]}</span>
-        <b>{next.title}</b>
-      </a>
-    ) : (
-      <span />
-    )
-  }
+  {prev ? (
+    <a href={prev.href}>
+      <span class="label">{labels[0]}</span>
+      <b>{prev.title}</b>
+    </a>
+  ) : (
+    <span />
+  )}
+  {next ? (
+    <a href={next.href}>
+      <span class="label">{labels[1]}</span>
+      <b>{next.title}</b>
+    </a>
+  ) : (
+    <span />
+  )}
 </nav>

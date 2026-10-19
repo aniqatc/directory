@@ -11,7 +11,12 @@ const slugify = (s) =>
 // copy a node read from the tree into a plain object Sätteri can write back
 const plain = (n) => {
   if (n.type === 'element') {
-    return { type: 'element', tagName: n.tagName, properties: { ...n.properties }, children: n.children.map(plain) };
+    return {
+      type: 'element',
+      tagName: n.tagName,
+      properties: { ...n.properties },
+      children: n.children.map(plain),
+    };
   }
   return { type: n.type, value: n.value };
 };
