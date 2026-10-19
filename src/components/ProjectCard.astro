@@ -1,0 +1,37 @@
+---
+import Preview from './Preview.astro';
+import { links, pad, year, type Project } from '../lib/projects';
+
+interface Props {
+  project: Project;
+  /** 1-based position in Selected work */
+  n: number;
+}
+
+const { project, n } = Astro.props;
+const { title, type, stack, blurb, summary, preview } = project.data;
+---
+
+<li class="project" data-title={title}>
+  <Preview name={preview} fit="height" />
+  <div>
+    <h3>
+      <span class="n">{pad(n)}</span><a href={`/work/${project.id}`}
+        >{title}<span class="arrow" aria-hidden="true">→</span></a
+      >
+    </h3>
+    <p>{blurb ?? summary}</p>
+    <div class="meta">
+      <span>{type} · {year(project)} · {stack}</span>
+      <span class="l">
+        {
+          links(project).map((l) => (
+            <a href={l.href} target="_blank" rel="noopener">
+              {l.label}
+            </a>
+          ))
+        }
+      </span>
+    </div>
+  </div>
+</li>

@@ -1,22 +1,50 @@
 ---
+import '../styles/portfolio.css';
 import Base from '../layouts/Base.astro';
-import { getSelected } from '../lib/projects';
+import Contact from '../components/Contact.astro';
+import LatestInLab from '../components/LatestInLab.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ScrollCounter from '../components/ScrollCounter.astro';
+import { getLab, getSelected, latest, real } from '../lib/projects';
+import { TINKERING } from '../lib/now';
 
 const selected = await getSelected();
+const lab = await getLab();
 ---
 
 <Base mode="portfolio">
-  <main class="wrap" style="padding-block: 56px 64px; display: flex; flex-direction: column; gap: 22px">
-    <h1>Aniqa<span class="dot">.</span></h1>
-    <p class="lede">
-      I build small things for the web, mostly for fun and to learn. Now I’m working toward things that <em
-        >solve real problems</em
-      >.
-    </p>
-    <!-- temporary: proves the collection loads; replaced by ProjectCard in step 5 -->
-    <h2 class="label" style="margin: 0">Selected work</h2>
-    <ol>
-      {selected.map((p) => <li>{p.data.title}</li>)}
-    </ol>
+  <main class="wrap pf">
+    <section class="intro" aria-labelledby="pf-h">
+      <h1 id="pf-h">Aniqa<span class="dot">.</span></h1>
+      <p class="lede">
+        I build small things for the web, mostly for fun and to learn. Now I’m working toward things that <em
+          >solve real problems</em
+        >.
+      </p>
+      <p class="about">
+        Software engineer in New York. I work full time and build in my free time, picking up new tech as I go.
+        These are the projects I’m proudest of; the lab is where I try things just for fun.
+      </p>
+      <div class="now">
+        <span class="label">Currently tinkering with</span>
+        <ul class="chips">{TINKERING.map((t) => <li>{t}</li>)}</ul>
+      </div>
+      <div class="now">
+        <span class="label">Say hi</span>
+        <Contact />
+      </div>
+      <ScrollCounter titles={selected.map((p) => p.data.title)} />
+    </section>
+
+    <section class="work" aria-labelledby="pf-work">
+      <div class="work-head">
+        <h2 class="label" id="pf-work">Selected work</h2>
+        <a href="/lab">{real(lab).length} more in the lab →</a>
+      </div>
+      <ol class="projects">
+        {selected.map((p, i) => <ProjectCard project={p} n={i + 1} />)}
+      </ol>
+      <LatestInLab entries={latest(lab)} />
+    </section>
   </main>
 </Base>

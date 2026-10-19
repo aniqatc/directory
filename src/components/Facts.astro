@@ -1,0 +1,22 @@
+---
+// The label/value row: lab stats, detail page meta, colophon.
+interface Props {
+  items: { label: string; value: string }[];
+  /** fixed column count; omit for 4, dropping to 2 on narrow screens */
+  cols?: number;
+  class?: string;
+}
+
+const { items, cols, class: className } = Astro.props;
+---
+
+<dl class:list={['facts', className]} style={cols ? `--cols:${cols}` : undefined}>
+  {
+    items.map(({ label, value }) => (
+      <div>
+        <dt class="label">{label}</dt>
+        <dd>{value}</dd>
+      </div>
+    ))
+  }
+</dl>

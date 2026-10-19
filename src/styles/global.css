@@ -112,6 +112,49 @@ h1:hover .dot {
   color: var(--accent);
 }
 
+/* ---------- Facts row (lab stats, detail page meta, colophon) ---------- */
+.facts {
+  --cols: 4;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: 20px 28px;
+  margin: 0;
+}
+.facts > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  transition: border-color 0.6s;
+}
+.facts dt {
+  margin: 0;
+}
+.facts dd {
+  margin: 0;
+  font: 500 12px/1.55 var(--font-mono);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Project links: Live ↗ / Code ↗ ---------- */
+.l {
+  display: flex;
+  gap: 14px;
+}
+.l a {
+  position: relative;
+  z-index: 1;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.l a:hover {
+  color: var(--accent);
+}
+
 /* ---------- Header ---------- */
 .hdr {
   position: sticky;
@@ -285,6 +328,11 @@ footer a:hover {
   color: var(--accent);
 }
 
+@media (max-width: 860px) {
+  .facts {
+    --cols: 2;
+  }
+}
 @media (max-width: 560px) {
   .wrap {
     padding-left: max(16px, env(safe-area-inset-left, 0px));

@@ -1,4 +1,5 @@
 ---
+import type { HTMLAttributes } from 'astro/types';
 import '../styles/drawings.css';
 import Chat from './drawings/Chat.astro';
 import Clock from './drawings/Clock.astro';
@@ -42,7 +43,7 @@ const DRAWINGS = {
 };
 export type PreviewKey = keyof typeof DRAWINGS;
 
-interface Props {
+interface Props extends HTMLAttributes<'div'> {
   name: string;
   /**
    * Omit for a fixed-size tile scaled by `scale`.
@@ -51,10 +52,9 @@ interface Props {
   fit?: 'width' | 'height';
   /** board scale for fixed tiles; 1 = 200 × 140 px */
   scale?: number;
-  class?: string;
 }
 
-const { name, fit, scale = 0.74, class: className } = Astro.props;
+const { name, fit, scale = 0.74, class: className, ...rest } = Astro.props;
 if (!(name in DRAWINGS)) {
   throw new Error(`No drawing called "${name}". Add it to src/components/drawings and DRAWINGS in Preview.astro.`);
 }
@@ -67,6 +67,7 @@ const Drawing = DRAWINGS[name as PreviewKey];
   data-fit={fit}
   style={fit ? undefined : `--s:${scale}`}
   aria-hidden="true"
+  {...rest}
 >
   <div class={`pv pv-${name}`}><Drawing /></div>
 </div>

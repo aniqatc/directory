@@ -1,0 +1,30 @@
+---
+import { pad } from '../lib/projects';
+
+interface Props {
+  /** Selected work titles, in order */
+  titles: string[];
+}
+
+// "01 / 05 Playground" plus one dash per project; scroll-counter.ts keeps it in sync with the page.
+const { titles } = Astro.props;
+---
+
+<div class="progress" aria-label="Selected work">
+  <p class="progress-now" aria-live="polite">
+    <b>{pad(1)} / {pad(titles.length)}</b><span>{titles[0]}</span>
+  </p>
+  <div class="dots">
+    {
+      titles.map((t, i) => (
+        <button type="button" aria-label={`Go to ${t}`} aria-current={i === 0 ? 'true' : 'false'}>
+          <i />
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import '../scripts/scroll-counter';
+</script>

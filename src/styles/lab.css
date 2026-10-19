@@ -1,0 +1,211 @@
+/* ---------- Lab archive ---------- */
+.lab {
+  max-width: 808px;
+  padding-block: 56px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+.lab-top {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.lab-top > div {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.lab-top .lede {
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+.arch-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px 18px;
+}
+.arch-head h2 {
+  margin: 0;
+}
+
+/* No. / Project / Type / Year / Links / Like */
+.cols,
+.row {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) 8rem 3rem 8rem 3rem;
+  column-gap: 16px;
+  align-items: center;
+}
+.cols {
+  padding: 0 4px 8px;
+}
+.cols span:nth-child(4) {
+  text-align: right;
+}
+.year {
+  margin: 0;
+  padding: 40px 4px 10px;
+  border-bottom: 1px solid var(--fg);
+  transition: border-color 0.6s;
+}
+.year:first-of-type {
+  padding-top: 12px;
+}
+.archive ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.row {
+  min-height: 44px;
+  padding: 0 4px;
+  border-bottom: 1px solid var(--line);
+  transition:
+    background 0.2s,
+    padding 0.25s;
+  -webkit-touch-callout: none;
+}
+.row:hover {
+  background: linear-gradient(90deg, var(--surface), transparent 85%);
+  padding-left: 12px;
+}
+.row .n {
+  font: 400 10.5px/1 var(--font-mono);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.row:hover .n {
+  color: var(--accent);
+}
+.row .t {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font: 500 15px/1.2 var(--font-body);
+  letter-spacing: -0.01em;
+}
+.row .t a {
+  display: block;
+  min-width: 0;
+  line-height: 44px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.row .t a:hover {
+  color: var(--accent);
+}
+.row .k {
+  font: 400 10.5px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.row .y {
+  font: 400 11px/1 var(--font-mono);
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.row .l {
+  justify-content: flex-end;
+  font: 400 10.5px/1 var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.row .l a {
+  line-height: 44px;
+}
+
+/* ---------- Floating preview (desktop only) ---------- */
+.tip {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  pointer-events: none;
+  width: 232px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #16151b;
+  box-shadow: 0 18px 40px -12px rgba(22, 21, 27, 0.5);
+  opacity: 0;
+  transform: translate(-9999px, 0);
+  transition: opacity 0.18s ease;
+}
+.tip.show {
+  opacity: 1;
+}
+.tip .pvbox {
+  border-radius: 9px;
+}
+.tip-cap {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 4px 2px;
+  font: 400 10.5px/1.2 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: #9690a3;
+  white-space: nowrap;
+}
+.tip-cap b {
+  font-weight: 500;
+  color: #ebe7f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (hover: none) {
+  .tip,
+  .peek {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .cols,
+  .row {
+    grid-template-columns: 2rem minmax(0, 1fr) 3rem 7.5rem 2.75rem;
+  }
+  .cols span:nth-child(3),
+  .row .k {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .lab {
+    padding-block: 44px 56px;
+    gap: 40px;
+  }
+  .cols,
+  .row {
+    grid-template-columns: 1.4rem minmax(0, 1fr) 6.4rem 2.6rem;
+    column-gap: 8px;
+  }
+  .cols span:nth-child(4),
+  .row .y {
+    display: none;
+  }
+  .row .t {
+    font-size: 14px;
+  }
+  .row .t .chip {
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+  .row .l {
+    gap: 10px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .lab-top .facts {
+    gap: 16px;
+  }
+}

@@ -1,0 +1,22 @@
+// Short lists for the portfolio intro and the lab. Edit freely; no project files involved.
+
+/** "Currently tinkering with" chips in the portfolio intro. */
+export const TINKERING = ['TypeScript', 'Three.js', 'WebGL', 'p5.js', 'React', 'Next.js', 'Agentic coding'];
+
+/** "Now building" in the portfolio intro. Each one graduates to Selected work when it ships. */
+export const BUILDING = [
+  {
+    title: 'huckleberry.csv',
+    blurb: 'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
+  },
+  { title: 'For Zayn', blurb: 'A gallery of pure-CSS pieces, each one something that reminds me of my son.' },
+];
+
+/** "On the bench" in the lab. The card hides itself when this is empty. */
+export const BENCH = [
+  {
+    title: 'Zayn’s garden',
+    blurb: 'A p5.js garden where a new flower blooms for every week since my son was born.',
+    tag: 'p5.js · Generative sketch',
+  },
+];

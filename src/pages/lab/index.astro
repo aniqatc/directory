@@ -1,26 +1,51 @@
 ---
+import '../../styles/lab.css';
 import Base from '../../layouts/Base.astro';
-import { getLab } from '../../lib/projects';
+import Facts from '../../components/Facts.astro';
+import HoverPreview from '../../components/HoverPreview.astro';
+import LabRow from '../../components/LabRow.astro';
+import { byYear, fmtMonth, getLab, pad, stats } from '../../lib/projects';
 
-const lab = (await getLab()).reverse(); // newest first
+const lab = await getLab();
+const s = stats(lab);
+const facts = [
+  { label: 'Entries', value: pad(s.entries) },
+  { label: 'Started', value: s.started ? fmtMonth(s.started) : '—' },
+  { label: 'Last entry', value: s.last ? fmtMonth(s.last) : '—' },
+];
 ---
 
 <Base mode="lab" title="Lab">
-  <main class="wrap" style="max-width: 808px; padding-block: 56px 64px; display: flex; flex-direction: column; gap: 22px">
-    <h1>Lab<span class="dot">.</span></h1>
-    <p class="lede" style="color: var(--muted); max-width: 40ch">
-      A digital sketchbook. Everything I've made while learning, newest first.
-    </p>
-    <!-- temporary: proves the collection loads; replaced by LabRow in step 4 -->
-    <h2 class="label" style="margin: 0">Archive</h2>
-    <ul style="list-style: none; padding: 0">
+  <main class="wrap lab">
+    <section class="lab-top" aria-labelledby="lab-h">
+      <div>
+        <h1 id="lab-h">Lab<span class="dot">.</span></h1>
+        <p class="lede">
+          A digital sketchbook. Everything I've made while learning, newest first.{' '}
+          <span class="peek">Hover a row to peek.</span>
+        </p>
+      </div>
+      <Facts items={facts} cols={3} />
+    </section>
+
+    <section class="archive" aria-label="Archive">
+      <div class="arch-head"><h2 class="label">Archive</h2></div>
+      <div class="cols label" aria-hidden="true">
+        <span>No.</span><span>Project</span><span>Type</span><span>Year</span><span></span><span></span>
+      </div>
       {
-        lab.map((p) => (
-          <li>
-            <span class="label">No. {String(p.n).padStart(2, '0')}</span> {p.data.title}
-          </li>
+        byYear(lab).map(([y, entries]) => (
+          <>
+            <h3 class="year label">{y}</h3>
+            <ol>
+              {entries.map((e) => (
+                <LabRow entry={e} />
+              ))}
+            </ol>
+          </>
         ))
       }
-    </ul>
+    </section>
   </main>
+  <HoverPreview entries={lab} />
 </Base>

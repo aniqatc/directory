@@ -1,0 +1,20 @@
+---
+import Preview from './Preview.astro';
+import type { LabEntry } from '../lib/projects';
+
+interface Props {
+  entries: LabEntry[];
+}
+
+// One drawing per entry, all hidden; the script shows the one for the row under the cursor.
+const { entries } = Astro.props;
+---
+
+<div class="tip" aria-hidden="true">
+  {entries.map((e) => <Preview name={e.data.preview} scale={1.1} data-slug={e.id} hidden />)}
+  <div class="tip-cap"><b></b><span></span></div>
+</div>
+
+<script>
+  import '../scripts/hover-preview';
+</script>
