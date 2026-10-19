@@ -1,0 +1,82 @@
+---
+import '../styles/drawings.css';
+import Chat from './drawings/Chat.astro';
+import Clock from './drawings/Clock.astro';
+import Css from './drawings/Css.astro';
+import Def from './drawings/Def.astro';
+import Food from './drawings/Food.astro';
+import Hog from './drawings/Hog.astro';
+import Keys from './drawings/Keys.astro';
+import Land from './drawings/Land.astro';
+import List from './drawings/List.astro';
+import Mini from './drawings/Mini.astro';
+import Moji from './drawings/Moji.astro';
+import Nyc from './drawings/Nyc.astro';
+import Play from './drawings/Play.astro';
+import Sketch from './drawings/Sketch.astro';
+import Term from './drawings/Term.astro';
+import Val from './drawings/Val.astro';
+import Wx from './drawings/Wx.astro';
+import Zayn from './drawings/Zayn.astro';
+
+// the `preview` key in each project file picks one of these
+const DRAWINGS = {
+  chat: Chat,
+  clock: Clock,
+  css: Css,
+  def: Def,
+  food: Food,
+  hog: Hog,
+  keys: Keys,
+  land: Land,
+  list: List,
+  mini: Mini,
+  moji: Moji,
+  nyc: Nyc,
+  play: Play,
+  sketch: Sketch,
+  term: Term,
+  val: Val,
+  wx: Wx,
+  zayn: Zayn,
+};
+export type PreviewKey = keyof typeof DRAWINGS;
+
+interface Props {
+  name: string;
+  /**
+   * Omit for a fixed-size tile scaled by `scale`.
+   * "width": fill the box's width (detail pages). "height": fill its height and centre (portfolio cards).
+   */
+  fit?: 'width' | 'height';
+  /** board scale for fixed tiles; 1 = 200 × 140 px */
+  scale?: number;
+  class?: string;
+}
+
+const { name, fit, scale = 0.74, class: className } = Astro.props;
+if (!(name in DRAWINGS)) {
+  throw new Error(`No drawing called "${name}". Add it to src/components/drawings and DRAWINGS in Preview.astro.`);
+}
+const Drawing = DRAWINGS[name as PreviewKey];
+---
+
+<div
+  class:list={['pvbox', { pvbig: fit, 'fit-h': fit === 'height' }, className]}
+  data-pv={name}
+  data-fit={fit}
+  style={fit ? undefined : `--s:${scale}`}
+  aria-hidden="true"
+>
+  <div class={`pv pv-${name}`}><Drawing /></div>
+</div>
+
+<script>
+  // Big previews scale the 200 × 140 board to their box: by width, or by height for .fit-h.
+  const fitBox = (box: HTMLElement, w: number, h: number) =>
+    box.style.setProperty('--s', String(box.dataset.fit === 'height' ? h / 140 : w / 200));
+  const ro = new ResizeObserver((entries) =>
+    entries.forEach((en) => fitBox(en.target as HTMLElement, en.contentRect.width, en.contentRect.height)),
+  );
+  document.querySelectorAll<HTMLElement>('.pvbox[data-fit]').forEach((box) => ro.observe(box));
+</script>

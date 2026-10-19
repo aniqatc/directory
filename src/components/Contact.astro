@@ -31,11 +31,17 @@ const links = (
   {
     c.email && (
       <li>
-        <button type="button" class="copy" data-email={c.email} title="Copy email">
+        <button
+          type="button"
+          class="copy"
+          data-email={c.email}
+          title="Copy email"
+          aria-label={`Copy email ${c.email}`}
+        >
           <span class="em">{c.email}</span>
-          <span class="ok" aria-hidden="true"></span>
-          <span class="sr-only" role="status"></span>
+          <span class="ok" aria-hidden="true" />
         </button>
+        <span class="sr-only" role="status" />
       </li>
     )
   }
@@ -43,11 +49,12 @@ const links = (
 
 <script>
   // Click the address to copy it; a ✓ shows briefly. If the clipboard is blocked, select the text instead.
+  const timers = new WeakMap<HTMLButtonElement, number>();
   document.addEventListener('click', (ev) => {
     const b = (ev.target as Element).closest<HTMLButtonElement>('.copy');
     if (!b) return;
     const ok = b.querySelector('.ok')!;
-    const status = b.querySelector('.sr-only')!;
+    const status = b.parentElement!.querySelector('[role="status"]')!;
     const select = () => {
       const r = document.createRange();
       r.selectNodeContents(b.querySelector('.em')!);
@@ -58,12 +65,13 @@ const links = (
     const copied = () => {
       ok.textContent = '✓';
       status.textContent = 'Email copied';
-      setTimeout(() => (ok.textContent = status.textContent = ''), 1600);
+      clearTimeout(timers.get(b));
+      timers.set(
+        b,
+        window.setTimeout(() => (ok.textContent = status.textContent = ''), 1600),
+      );
     };
-    try {
-      navigator.clipboard.writeText(b.dataset.email!).then(copied, select);
-    } catch {
-      select();
-    }
+    if (!navigator.clipboard?.writeText) return select();
+    navigator.clipboard.writeText(b.dataset.email!).then(copied, select);
   });
 </script>

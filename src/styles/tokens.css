@@ -3,7 +3,7 @@
 :root {
   /* --pop is the accent on dark pages and in drawings; --pop-lab is the same hue darkened for text on the light lab */
   --pop: #79d6cf;
-  --pop-lab: #16756f; /* mint-blue, for Zayn */
+  --pop-lab: #16756f; /* mint-blue */
   --bg: #16151b;
   --surface: #1f1d26;
   --line: #2e2b37;

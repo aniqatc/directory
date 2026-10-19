@@ -1,0 +1,15 @@
+---
+// Directory: a list with a highlight stepping down it.
+const widths = [80, 60, 96, 52, 70];
+---
+
+<i class="ttl"></i>
+{
+  widths.map((w, i) => (
+    <>
+      <i class="ln" style={`top:${36 + i * 20}px`} />
+      <i class="tx" style={`top:${43 + i * 20}px;width:${w}px`} />
+    </>
+  ))
+}
+<i class="hl"></i>

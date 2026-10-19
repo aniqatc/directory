@@ -1,5 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { getLab } from '../../lib/projects';
+
+const lab = (await getLab()).reverse(); // newest first
 ---
 
 <Base mode="lab" title="Lab">
@@ -8,5 +11,16 @@ import Base from '../../layouts/Base.astro';
     <p class="lede" style="color: var(--muted); max-width: 40ch">
       A digital sketchbook. Everything I've made while learning, newest first.
     </p>
+    <!-- temporary: proves the collection loads; replaced by LabRow in step 4 -->
+    <h2 class="label" style="margin: 0">Archive</h2>
+    <ul style="list-style: none; padding: 0">
+      {
+        lab.map((p) => (
+          <li>
+            <span class="label">No. {String(p.n).padStart(2, '0')}</span> {p.data.title}
+          </li>
+        ))
+      }
+    </ul>
   </main>
 </Base>
