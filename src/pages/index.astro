@@ -1,6 +1,7 @@
 ---
 import '../styles/portfolio.css';
 import Base from '../layouts/Base.astro';
+import Colophon from '../components/Colophon.astro';
 import Contact from '../components/Contact.astro';
 import LatestInLab from '../components/LatestInLab.astro';
 import NowBuilding from '../components/NowBuilding.astro';
@@ -56,6 +57,7 @@ const lab = await getLab();
         ))}
       </ol>
       <LatestInLab entries={latest(lab)} />
+      <Colophon />
     </section>
   </main>
 </Base>
