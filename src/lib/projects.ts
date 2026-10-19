@@ -55,8 +55,15 @@ export function stats(lab: LabEntry[]) {
   return { entries: dates.length, started: dates[0], last: dates[dates.length - 1] };
 }
 
-/** The newest real lab entries, for "Latest in the lab". */
-export const latest = (lab: LabEntry[], count = 3) => real(lab).sort(byRelease).reverse().slice(0, count);
+/** When an entry last changed: its `updated` month, or its release month if it hasn't been revisited. */
+export const lastTouched = (p: Entry) => p.data.updated ?? p.data.released;
+
+/** The most recently released or updated real lab entries, for "Latest in the lab". */
+export const latest = (lab: LabEntry[], count = 3) =>
+  real(lab)
+    .sort((a, b) => lastTouched(a).localeCompare(lastTouched(b)) || byRelease(a, b))
+    .reverse()
+    .slice(0, count);
 
 /** Live / npm and Code links for a project, in that order. */
 export function links(p: Entry) {

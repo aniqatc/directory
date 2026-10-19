@@ -1,5 +1,5 @@
 ---
-import { fmtMonth, type LabEntry } from '../lib/projects';
+import { fmtMonth, lastTouched, type LabEntry } from '../lib/projects';
 
 interface Props {
   entries: LabEntry[];
@@ -19,7 +19,7 @@ const { entries } = Astro.props;
         <a href={`/lab/${e.id}`}>
           <span class="lt-t">{e.data.title}</span>
           <span class="lt-k">{e.data.type}</span>
-          <span class="lt-d">{fmtMonth(e.data.released)}</span>
+          <span class="lt-d">{fmtMonth(lastTouched(e))}</span>
           <span class="lt-a" aria-hidden="true">
             →
           </span>
