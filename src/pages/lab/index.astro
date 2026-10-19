@@ -2,6 +2,7 @@
 import '../../styles/lab.css';
 import Base from '../../layouts/Base.astro';
 import Bench from '../../components/Bench.astro';
+import Dice from '../../components/Dice.astro';
 import Facts from '../../components/Facts.astro';
 import HoverPreview from '../../components/HoverPreview.astro';
 import LabRow from '../../components/LabRow.astro';
@@ -38,6 +39,7 @@ const facts = [
     <section class="archive" aria-label="Archive">
       <div class="arch-head">
         <h2 class="label">Archive</h2>
+        <Dice />
       </div>
       <div class="cols label" aria-hidden="true">
         <span>No.</span>
