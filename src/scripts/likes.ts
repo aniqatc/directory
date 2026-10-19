@@ -1,43 +1,42 @@
 // Likes on lab entries: up to 5 per visitor per entry. Every heart for an entry on the page stays in sync.
-//
-// Storage lives behind load() and like(). For now they keep counts in this browser (like the prototype); the
-// next step swaps them for /api/likes/<slug>, which stores totals in Upstash and enforces the limit per visitor.
+// Counts live in Upstash behind /api/likes (src/pages/api/likes.ts), which enforces the limit per visitor.
+// Each browser gets an anonymous visitor ID; clearing site data starts a visitor over, which is fine here.
 
 const MAX = 5;
-const KEY = 'aniqa-likes';
+const API = '/api/likes';
 
 type Counts = { total: number; mine: number };
 
-// ---------- storage ----------
-const read = (): Record<string, number> => {
+// ---------- visitor + server ----------
+function visitorId(): string {
+  const key = 'aniqa-visitor';
   try {
-    return JSON.parse(localStorage.getItem(KEY) || '{}') || {};
+    let id = localStorage.getItem(key);
+    if (!id) localStorage.setItem(key, (id = crypto.randomUUID()));
+    return id;
   } catch {
-    return {};
+    return crypto.randomUUID(); // storage blocked: likes still work, just not remembered next visit
   }
-};
-const write = (all: Record<string, number>) => {
-  try {
-    localStorage.setItem(KEY, JSON.stringify(all));
-  } catch {
-    // private mode or storage blocked: likes just won't persist
-  }
-};
+}
+const visitor = visitorId();
+const state = new Map<string, Counts>(); // what the hearts on this page show
 
-/** Current counts for an entry. */
-async function load(slug: string): Promise<Counts> {
-  const mine = read()[slug] ?? 0;
-  return { total: mine, mine };
+/** Totals and this visitor's counts for every entry on the page, in one request. */
+async function loadAll(slugs: string[]): Promise<Record<string, Counts>> {
+  const res = await fetch(`${API}?visitor=${visitor}&slugs=${slugs.map(encodeURIComponent).join(',')}`);
+  if (!res.ok) throw new Error(`likes: ${res.status}`);
+  return res.json();
 }
 
-/** Add one like; refuses past MAX. Returns the counts after the attempt. */
+/** Add one like on the server; it refuses past MAX. */
 async function like(slug: string): Promise<Counts & { ok: boolean }> {
-  const all = read();
-  const mine = all[slug] ?? 0;
-  if (mine >= MAX) return { total: mine, mine, ok: false };
-  all[slug] = mine + 1;
-  write(all);
-  return { total: mine + 1, mine: mine + 1, ok: true };
+  const res = await fetch(API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ slug, visitor }),
+  });
+  if (!res.ok) throw new Error(`likes: ${res.status}`);
+  return res.json();
 }
 
 // ---------- the hearts ----------
@@ -46,12 +45,13 @@ const label = (title: string, mine: number) =>
   mine >= MAX ? `You liked ${title} ${MAX} times, the max` : `Like ${title} (${mine} of ${MAX})`;
 
 function show(slug: string, { total, mine }: Counts) {
+  state.set(slug, { total, mine });
   document.querySelectorAll<HTMLButtonElement>(`.like[data-slug="${CSS.escape(slug)}"]`).forEach((b) => {
     b.classList.toggle('full', mine >= MAX);
     const rect = b.querySelector<SVGRectElement>('.lv')!;
     rect.setAttribute('y', level(mine));
     rect.style.setProperty('y', `${level(mine)}px`);
-    b.querySelector('.lc')!.textContent = total ? String(total) : '';
+    b.querySelector('.lc')!.textContent = String(total);
     b.setAttribute('aria-label', label(b.dataset.t ?? '', mine));
   });
 }
@@ -107,18 +107,33 @@ document.addEventListener('click', async (ev) => {
   const r = b.querySelector('svg')!.getBoundingClientRect();
   const cx = r.left + r.width / 2;
   const cy = r.top + r.height / 2;
-  const after = await like(slug);
-  if (!after.ok) {
+  const before = state.get(slug) ?? { total: 0, mine: 0 };
+  if (before.mine >= MAX) {
     restart(b, 'nope');
     float(cx, cy, 'max ♥');
     return;
   }
-  show(slug, after);
+
+  // show it straight away, then settle on what the server says
+  const guess = { total: before.total + 1, mine: before.mine + 1 };
+  show(slug, guess);
   restart(b, 'pop');
-  burst(cx, cy, after.mine === MAX);
-  float(cx, cy, after.mine === MAX ? `${MAX}/${MAX} ♥` : '+1');
+  burst(cx, cy, guess.mine === MAX);
+  float(cx, cy, guess.mine === MAX ? `${MAX}/${MAX} ♥` : '+1');
+  try {
+    const after = await like(slug);
+    show(slug, after);
+    if (!after.ok) restart(b, 'nope'); // already at the max (say, from another tab)
+  } catch {
+    show(slug, before); // didn't save: put the heart back
+    restart(b, 'nope');
+  }
 });
 
-// fill in every heart on the page
-const slugs = new Set([...document.querySelectorAll<HTMLElement>('.like')].map((b) => b.dataset.slug!));
-slugs.forEach(async (slug) => show(slug, await load(slug)));
+// fill in every heart on the page with one request
+const slugs = [...new Set([...document.querySelectorAll<HTMLElement>('.like')].map((b) => b.dataset.slug!))];
+if (slugs.length) {
+  loadAll(slugs)
+    .then((counts) => slugs.forEach((s) => show(s, counts[s] ?? { total: 0, mine: 0 })))
+    .catch(() => slugs.forEach((s) => show(s, { total: 0, mine: 0 })));
+}

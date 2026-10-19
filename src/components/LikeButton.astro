@@ -95,9 +95,13 @@ const HEART =
     stroke-width: 1.1;
     stroke-linecap: round;
   }
+  /* room for three digits, so every heart in the archive column lines up whatever the count */
   .like .lc {
-    min-width: 1ch;
+    min-width: 3ch;
     text-align: left;
+  }
+  .like-lg .lc {
+    min-width: 1ch;
   }
   .like:hover,
   .like.full {
