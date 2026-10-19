@@ -139,6 +139,15 @@ h1:hover .dot {
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
+.facts dd a {
+  border-bottom: 1px solid var(--accent);
+}
+.facts dd a:hover {
+  color: var(--accent);
+}
+.facts dd a + a {
+  margin-left: 14px;
+}
 
 /* ---------- Project links: Live ↗ / Code ↗ ---------- */
 .l {

@@ -1,0 +1,101 @@
+---
+import { render } from 'astro:content';
+import Detail from '../../layouts/Detail.astro';
+import Facts from '../../components/Facts.astro';
+import Preview from '../../components/Preview.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { fmtMonth, getLab, links, pad, type LabEntry } from '../../lib/projects';
+
+// One page per lab entry: a lab note, or the experiment layout for type "Experiment".
+export async function getStaticPaths() {
+  const lab = await getLab();
+  return lab.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, total: lab.length, older: lab[i - 1], newer: lab[i + 1] },
+  }));
+}
+
+interface Props {
+  entry: LabEntry;
+  total: number;
+  older?: LabEntry;
+  newer?: LabEntry;
+}
+
+const { entry, total, older, newer } = Astro.props;
+const { title, type, stack, released, summary, preview, example, hint, time, repo } = entry.data;
+const { Content } = await render(entry);
+const isExperiment = type === 'Experiment';
+const no = `No. ${pad(entry.n)}`;
+const toLink = (e?: LabEntry) => e && { href: `/lab/${e.id}`, title: e.data.title };
+---
+
+<Detail
+  mode="lab"
+  variant={isExperiment ? 'xp' : 'nb'}
+  title={title}
+  lede={summary}
+  back={{ href: '/lab', label: '← Archive' }}
+  position={`${no} / ${pad(total)}`}
+>
+  <Fragment slot="eyebrow">
+    {isExperiment ? 'Experiment' : 'Lab note'} <b>{no}</b>
+    {example && <span class="chip">Example entry</span>}
+  </Fragment>
+
+  {
+    isExperiment ? (
+      <>
+        <figure>
+          <div class="stage">
+            <span class="fig label">Fig. {pad(entry.n)}</span>
+          </div>
+          <figcaption class="stage-bar label">
+            <span>{hint}</span>
+          </figcaption>
+        </figure>
+        <div class="xp-body">
+          <Facts
+            items={[
+              { label: 'Tools', value: stack },
+              { label: 'Time', value: time ?? '—' },
+              { label: 'Made', value: fmtMonth(released) },
+              { label: 'Source', value: repo ? links(entry).filter((l) => l.label === 'Code ↗') : '—' },
+            ]}
+          />
+          <div>
+            <Content />
+          </div>
+        </div>
+      </>
+    ) : (
+      <>
+        <Facts
+          slot="facts"
+          cols={3}
+          items={[
+            { label: 'Made', value: fmtMonth(released) },
+            { label: 'Type', value: type },
+            { label: 'Stack', value: stack },
+          ]}
+        />
+        <figure>
+          <Preview name={preview} fit="width" />
+          <figcaption class="label">
+            <span>Fig. {pad(entry.n)}</span>
+            <span class="l">
+              {links(entry).map((l) => (
+                <a href={l.href} target="_blank" rel="noopener">
+                  {l.label}
+                </a>
+              ))}
+            </span>
+          </figcaption>
+        </figure>
+        <Content />
+      </>
+    )
+  }
+
+  <PrevNext label="More entries" labels={['← Older', 'Newer →']} prev={toLink(older)} next={toLink(newer)} />
+</Detail>

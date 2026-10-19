@@ -1,7 +1,10 @@
 ---
 // The label/value row: lab stats, detail page meta, colophon.
+// A value is text, or a list of links (empty list shows a dash).
+type Value = string | { label: string; href: string }[];
+
 interface Props {
-  items: { label: string; value: string }[];
+  items: { label: string; value: Value }[];
   /** fixed column count; omit for 4, dropping to 2 on narrow screens */
   cols?: number;
   class?: string;
@@ -15,7 +18,17 @@ const { items, cols, class: className } = Astro.props;
     items.map(({ label, value }) => (
       <div>
         <dt class="label">{label}</dt>
-        <dd>{value}</dd>
+        <dd>
+          {typeof value === 'string'
+            ? value
+            : value.length
+              ? value.map((l) => (
+                  <a href={l.href} target="_blank" rel="noopener">
+                    {l.label}
+                  </a>
+                ))
+              : '—'}
+        </dd>
       </div>
     ))
   }

@@ -1,0 +1,36 @@
+---
+import '../styles/detail.css';
+import Base from './Base.astro';
+
+// Shared shell for case studies (cs), lab notes (nb) and experiments (xp):
+// top bar, eyebrow, title, lede and facts; the page fills in the rest.
+interface Props {
+  mode: 'portfolio' | 'lab';
+  variant: 'cs' | 'nb' | 'xp';
+  title: string;
+  lede: string;
+  back: { href: string; label: string };
+  /** e.g. "01 / 05" or "No. 03 / 12" */
+  position: string;
+}
+
+const { mode, variant, title, lede, back, position } = Astro.props;
+---
+
+<Base mode={mode} title={title} description={lede}>
+  <main class="wrap detail">
+    <article class={`d d-${variant}`}>
+      <div class="d-top label">
+        <a class="back" href={back.href}>{back.label}</a>
+        <span class="d-top-r"><slot name="actions" /><span>{position}</span></span>
+      </div>
+      <div class="d-head">
+        <p class="d-eyebrow label"><slot name="eyebrow" /></p>
+        <h1 class="d-title">{title}</h1>
+        <p class="d-lede">{lede}</p>
+        <slot name="facts" />
+      </div>
+      <slot />
+    </article>
+  </main>
+</Base>

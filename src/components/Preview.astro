@@ -74,8 +74,9 @@ const Drawing = DRAWINGS[name as PreviewKey];
 
 <script>
   // Big previews scale the 200 × 140 board to their box: by width, or by height for .fit-h.
+  // Never past the other side either, so the board can't poke out under the border by a fraction of a pixel.
   const fitBox = (box: HTMLElement, w: number, h: number) =>
-    box.style.setProperty('--s', String(box.dataset.fit === 'height' ? h / 140 : w / 200));
+    box.style.setProperty('--s', String(box.dataset.fit === 'height' ? h / 140 : Math.min(w / 200, h / 140)));
   const ro = new ResizeObserver((entries) =>
     entries.forEach((en) => fitBox(en.target as HTMLElement, en.contentRect.width, en.contentRect.height)),
   );

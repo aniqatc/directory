@@ -1,0 +1,259 @@
+/* ---------- Detail pages: case studies (night), lab notes and experiments (day) ---------- */
+.detail {
+  padding-block: 28px 72px;
+}
+.d {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+}
+.d-cs {
+  max-width: 720px;
+}
+.d-nb {
+  max-width: 640px;
+}
+.d-xp {
+  max-width: 760px;
+}
+.d-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.d-top-r {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+.back:hover {
+  color: var(--accent);
+}
+.d-head {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.d-eyebrow {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.d-eyebrow b {
+  font-weight: 500;
+  color: var(--accent);
+}
+.d-title {
+  margin: 0;
+  font: 800 clamp(40px, 6.2vw, 70px) / 0.95 var(--font-display);
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.d-lede {
+  margin: 0;
+  max-width: 54ch;
+  font: 400 18px/1.5 var(--font-display);
+  color: var(--muted);
+}
+.d-head .facts {
+  margin-top: 10px;
+}
+.d figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.d figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Sections: built from the ## headings in each project file (md-sections.mjs) ---------- */
+.sec {
+  display: grid;
+  grid-template-columns: 128px minmax(0, 1fr);
+  gap: 12px 40px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  transition: border-color 0.6s;
+}
+.d-nb .sec,
+.xp-body .sec {
+  grid-template-columns: minmax(0, 1fr);
+}
+.sec h2 {
+  margin: 0;
+}
+.sec > div {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.sec p {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--body);
+}
+.sec a {
+  border-bottom: 1px solid var(--accent);
+}
+.sec a:hover {
+  color: var(--accent);
+}
+.sec strong {
+  font-weight: 500;
+  color: var(--fg);
+}
+.sec ul {
+  margin: 0;
+  padding-left: 1.2em;
+  max-width: 64ch;
+  color: var(--body);
+}
+/* numbered lists: 01, 02… on case studies; L.1 / R.1 on lab notes; N.1 on experiments */
+.sec ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 64ch;
+  counter-reset: n;
+}
+.sec ol > li {
+  position: relative;
+  padding: 6px 0 6px 36px;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--body);
+  counter-increment: n;
+}
+.sec ol > li::before {
+  content: counter(n, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.d-nb [data-sec='what-i-learned'] ol > li::before {
+  content: 'L.' counter(n);
+}
+.d-nb [data-sec='revisited'] ol > li::before {
+  content: 'R.' counter(n);
+}
+.d-xp [data-sec='notes'] ol > li::before {
+  content: 'N.' counter(n);
+}
+
+/* ---------- Previous / next ---------- */
+.pn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.pn a {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pn a:last-child {
+  text-align: right;
+  align-items: flex-end;
+}
+.pn b {
+  font: 600 clamp(18px, 2.1vw, 22px) / 1.2 var(--font-display);
+  letter-spacing: -0.01em;
+  transition: color 0.2s;
+}
+.pn a:hover b {
+  color: var(--accent);
+}
+
+/* ---------- Experiment ---------- */
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--bg);
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: pan-y;
+}
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.stage .fig {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  pointer-events: none;
+}
+.stage-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 16px;
+}
+.xp-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  gap: 32px 56px;
+  align-items: start;
+}
+.xp-body .facts {
+  --cols: 1;
+  gap: 16px;
+}
+.xp-body > div {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+@media (max-width: 860px) {
+  .xp-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .xp-body .facts {
+    --cols: 2;
+  }
+}
+@media (max-width: 640px) {
+  .sec {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stage {
+    aspect-ratio: 1 / 1;
+  }
+}
+@media (max-width: 560px) {
+  .stage-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
