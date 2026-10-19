@@ -7,10 +7,10 @@ description: Add an experiment to the aniqa.dev lab, either one that links out t
 
 An experiment is a folder, `src/content/experiments/<slug>/`. There are two kinds:
 
-| Kind                              | Files                                                      | Its page shows                                | Drawing shows on                   |
-| --------------------------------- | ---------------------------------------------------------- | --------------------------------------------- | ---------------------------------- |
-| **Links out** (like World Clock)  | `index.md`, `preview.astro`                                | Lab note with Live / Code links               | Lab hover preview and the lab note |
-| **Runs on the page** (like Drift) | `index.md`, `preview.astro`, `sketch.ts` or `sketch.astro` | The sketch, with Pause / Restart / Fullscreen | Lab hover preview only             |
+| Kind                             | Files                                                      | Its page shows                                | Drawing shows on                   |
+| -------------------------------- | ---------------------------------------------------------- | --------------------------------------------- | ---------------------------------- |
+| **Links out** (like World Clock) | `index.md`, `preview.astro`                                | Lab note with Live / Code links               | Lab hover preview and the lab note |
+| **Runs on the page**             | `index.md`, `preview.astro`, `sketch.ts` or `sketch.astro` | The sketch, with Pause / Restart / Fullscreen | Lab hover preview only             |
 
 Every experiment gets a drawing. `npm run new` copies the matching `templates/experiment*/` folder.
 
@@ -49,7 +49,7 @@ This creates `index.md`, a placeholder `preview.astro`, and a starter sketch tha
 
 1. **Install the library if needed** (the script says so): `npm i p5 && npm i -D @types/p5`, or `npm i three && npm i -D @types/three`. Then restart the dev server (`astro dev stop`, `astro dev --background`). Vite won't serve a newly installed package until it restarts.
 2. **Build the sketch with the user.**
-   - **`sketch.ts`:** exports `start(stage)` (contract in `src/lib/sketch.ts`). It draws into `stage`, sizes to `stage.clientWidth` / `clientHeight`, handles resizes with a ResizeObserver, and returns `stop`. Return `pause`, `resume` and `restart` too, and those buttons appear. `experiments/drift/sketch.ts` is the full example.
+   - **`sketch.ts`:** exports `start(stage)` (contract in `src/lib/sketch.ts`). It draws into `stage`, sizes to `stage.clientWidth` / `clientHeight`, handles resizes with a ResizeObserver, and returns `stop`. Return `pause`, `resume` and `restart` too, and those buttons appear. The starter in `templates/experiment-<tool>/sketch.ts` is a working example.
    - **`sketch.astro`:** plain HTML and a `<style>` block, rendered into the stage.
    - **Colours:** read `--bg`, `--fg` and `--accent` from the page (`getComputedStyle(document.documentElement)`) so the sketch follows the lab theme.
    - **Extra files:** shaders and helpers can sit in the same folder.
@@ -57,7 +57,7 @@ This creates `index.md`, a placeholder `preview.astro`, and a starter sketch tha
 
 ## 4. Make the drawing
 
-Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to replace the placeholder `preview.astro`. For a sketch, draw a still, simplified take on it (see `experiments/drift/preview.astro`), since the drawing is what people see when they hover over it in the lab.
+Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to replace the placeholder `preview.astro`. For a sketch, draw a still, simplified take on it, since the drawing is what people see when they hover over it in the lab.
 
 ## 5. Check
 

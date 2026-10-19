@@ -31,7 +31,7 @@ Find the entry's one recognisable idea: open its live site or README (`gh api re
 - `experiments/hogwarts`: four house banners lighting up while it says SORTING….
 - `projects/rflect-cli`: a terminal typing `rflect write`.
 
-For an experiment with a sketch, draw a still, simplified take on the sketch (see `experiments/drift/preview.astro`).
+For an experiment with a sketch, draw a still, simplified take on the sketch.
 
 Read 2–3 existing `preview.astro` files first so the new one matches in density and style.
 

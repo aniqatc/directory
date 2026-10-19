@@ -13,7 +13,10 @@ const start: StartSketch = (stage) => {
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 4;
   const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshStandardMaterial({ color: accent }));
+  const cube = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshStandardMaterial({ color: accent }),
+  );
   const light = new THREE.DirectionalLight(0xffffff, 2);
   light.position.set(2, 3, 4);
   scene.add(cube, light, new THREE.AmbientLight(0xffffff, 0.6));

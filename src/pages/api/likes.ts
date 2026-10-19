@@ -1,7 +1,7 @@
 // Likes for lab entries. The only part of the site that runs on the server (a Vercel function); every page
 // stays static.
 //
-//   GET  /api/likes?visitor=<uuid>&slugs=drift,world-clock  → { "drift": { total, mine }, … }
+//   GET  /api/likes?visitor=<uuid>&slugs=valorant,world-clock  → { "valorant": { total, mine }, … }
 //   POST /api/likes  { slug, visitor }                       → { total, mine, ok }   (ok: false past 5)
 import type { APIRoute } from 'astro';
 import { Ratelimit } from '@upstash/ratelimit';

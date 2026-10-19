@@ -1,7 +1,6 @@
 // {{title}}: starter sketch from `npm run new`. A dot loops around the stage; replace it with yours.
 // start(stage) draws into the stage and returns stop (plus pause / resume / restart for those buttons).
 // Needs p5: npm i p5 && npm i -D @types/p5
-// See ../drift/sketch.ts for a full example.
 import type { StartSketch } from '../../../lib/sketch';
 import p5 from 'p5';
 
@@ -23,7 +22,11 @@ const start: StartSketch = (stage) => {
       t += 0.02;
       p.background(bg);
       p.fill(accent);
-      p.circle(p.width / 2 + (Math.cos(t) * p.width) / 4, p.height / 2 + (Math.sin(t * 2) * p.height) / 5, 24);
+      p.circle(
+        p.width / 2 + (Math.cos(t) * p.width) / 4,
+        p.height / 2 + (Math.sin(t * 2) * p.height) / 5,
+        24,
+      );
     };
   }, stage);
 

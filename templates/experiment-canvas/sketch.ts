@@ -1,6 +1,5 @@
 // {{title}}: starter sketch from `npm run new`. A dot loops around the stage; replace it with yours.
 // start(stage) draws into the stage and returns stop (plus pause / resume / restart for those buttons).
-// See ../drift/sketch.ts for a full example.
 import type { StartSketch } from '../../../lib/sketch';
 
 const start: StartSketch = (stage) => {

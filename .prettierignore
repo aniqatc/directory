@@ -1,0 +1,2 @@
+# templates/ holds {{title}} / {{slug}} placeholders that npm run new fills in; formatting would break them
+templates/

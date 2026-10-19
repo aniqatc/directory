@@ -16,7 +16,7 @@ src/content/
     ├── world-clock/           # links out to its own site
     │   ├── index.md
     │   └── preview.astro
-    └── drift/                 # runs on the page
+    └── <sketch>/              # runs on the page
         ├── index.md
         ├── preview.astro
         └── sketch.ts          # or sketch.astro for CSS art
@@ -74,7 +74,7 @@ For something that lives on its own site, like World Clock.
 
 ### Experiment that runs on the site (lab)
 
-For a sketch shown on the page itself, like Drift.
+For a sketch shown on the page itself (canvas, p5.js, Three.js or CSS art).
 
 1. `npm run new`, choose **experiment**, then **canvas**, **p5**, **three** or **css**. For p5 or Three.js, install the library when it says so (`npm i p5 && npm i -D @types/p5`), then restart `npm run dev`.
 2. Build the sketch in `sketch.ts` or `sketch.astro` (see [Sketches](#sketches)).
@@ -86,7 +86,7 @@ For a sketch shown on the page itself, like Drift.
 
 The starter in `templates/experiment-<tool>/` already runs; change it into your own.
 
-- **`sketch.ts` (canvas, p5.js, Three.js):** export `start(stage)`. It draws into the stage, sizes to `stage.clientWidth` / `clientHeight`, handles resizes, and returns `stop`. Return `pause`, `resume` and `restart` too, and those buttons appear. The contract is in [`src/lib/sketch.ts`](src/lib/sketch.ts), and [`drift/sketch.ts`](src/content/experiments/drift/sketch.ts) is a complete example.
+- **`sketch.ts` (canvas, p5.js, Three.js):** export `start(stage)`. It draws into the stage, sizes to `stage.clientWidth` / `clientHeight`, handles resizes, and returns `stop`. Return `pause`, `resume` and `restart` too, and those buttons appear. The contract is in [`src/lib/sketch.ts`](src/lib/sketch.ts), and each starter in `templates/experiment-<tool>/` is a working example to build from.
 - **`sketch.astro` (CSS art):** HTML and a `<style>` block, rendered into the stage.
 - **Colours:** use `var(--accent)`, `var(--fg)` and `var(--bg)` (or read them with `getComputedStyle`) to follow the lab colours.
 - **Bundling:** each sketch is bundled on its own, so p5 or three only load on the page that uses them. Extra files (shaders, helpers) can sit in the same folder.

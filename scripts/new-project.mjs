@@ -167,7 +167,9 @@ const files = readdirSync(from);
 for (const f of files) {
   const text = readFileSync(join(from, f), 'utf8');
   const out =
-    f === 'index.md' ? fillIndex(text) : text.replaceAll('{{title}}', safeTitle).replaceAll('{{slug}}', slug);
+    f === 'index.md'
+      ? fillIndex(text)
+      : text.replace(/\{\{\s*title\s*\}\}/g, safeTitle).replace(/\{\{\s*slug\s*\}\}/g, slug);
   writeFileSync(join(dir, f), out);
 }
 const sketchFile = files.find((f) => f.startsWith('sketch.'));
