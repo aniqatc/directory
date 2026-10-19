@@ -18,6 +18,13 @@ summary: Two sentences for the top of the case study. What it is and what it doe
 
 Why you built it, in a short paragraph.
 
+<!-- Optional: delete if the summary already covers it -->
+
+## What it does
+
+1. A key feature, in one line.
+2. Another one.
+
 <!-- Optional: delete if it doesn't apply -->
 
 ## Hardest part
@@ -35,7 +42,3 @@ The one problem that took the most work, and how you solved it.
 ## Revisited
 
 1. Oct 2026: what changed.
-
-## If I built it again
-
-Two or three sentences on what you would change now.

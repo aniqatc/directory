@@ -54,8 +54,8 @@ Replace the template text in `index.md`. Match the voice of the existing entries
 - **What I learned:** 3–5 numbered items. Each names a technique, then what it let the project do: "Sharded search data: the 42 MB city list split into 520 files, so the browser only downloads the one for what you're typing."
 - **Hardest part** (optional): one problem and how it was solved.
 - **Revisited** (optional): dated items, "Oct 2026: what changed.", from the changelog or commits.
+- **What it does:** 3–4 one-line key features from the README's feature list, covering what the summary doesn't. Skip it when the project has its own parts section (Playground's widgets).
 - **Extra sections:** if the project is made of parts the README lists (Playground's eight widgets), add a `## The widgets`-style section after Why: a numbered list of `**Name**: what it does.` Any `##` heading becomes a section.
-- **If I built it again:** leave the bracketed placeholder unless the user told you. It's their opinion.
 
 **Don't invent facts.** If the README doesn't say, write a `[bracketed note for Aniqa]` and list those gaps in your reply. Delete optional sections with nothing real to say.
 

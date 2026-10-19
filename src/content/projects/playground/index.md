@@ -28,22 +28,18 @@ I wanted to learn the backend properly. Widgets let me take on one new skill at 
 
 ## Hardest part
 
-Making user-submitted links safe. Each one is scraped for metadata, checked against Google Safe Browsing and run through a profanity filter, with a clear message for every way it can fail.
+Making user-submitted links safe. Each one is scraped with Cheerio, checked against Google Safe Browsing, tagged with natural and run through leo-profanity, with a clear message for every way it can fail.
 
 ## What I learned
 
 1. Scheduled data instead of live calls. Free API tiers allow too few requests for every visitor, so node-cron refreshes stocks and currencies each weekday and lottery results monthly into MongoDB.
 2. Accounts without sign-up: a random ID in localStorage ties tasks and likes to each visitor.
-3. Processing user submissions: bookmarks are scraped with Cheerio, checked with Google Safe Browsing, tagged with natural and filtered with leo-profanity before saving.
-4. Likes cached in sessionStorage and capped at five per visitor, to cut repeat requests.
-5. One folder per widget (markup, script, styles and a core module per job), loaded with Webpack’s require.context.
+3. Likes cached in sessionStorage and capped at five per visitor, to cut repeat requests.
+4. One folder per widget (markup, script, styles and a core module per job), loaded with Webpack’s require.context.
+5. Announcing changes to screen readers: aria-pressed for toggles and likes, live regions for calculator and lottery results, and aria-invalid on form errors.
 
 ## Revisited
 
 1. Sep–Dec 2024: added the task manager, financial markets, lottery, repo card and bookmarks widgets.
 2. Feb 2025: example .env files and better loading states.
 3. Oct 2026: redesigned with shared design tokens, one card shell and a 12-column grid. Every widget works the same as before.
-
-## If I built it again
-
-[Two or three sentences on what you would change now]

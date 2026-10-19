@@ -17,7 +17,3 @@ I wanted a place to keep the little things that remind me of my son, and CSS art
 
 1. [A CSS technique a piece pushed you to learn.]
 2. [Something about keeping every piece in its own standalone file.]
-
-## If I built it again
-
-[Two or three sentences on what you would change now]

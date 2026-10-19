@@ -18,6 +18,7 @@ A CLI is hard to show off, so it needed a page that shows it working.
 1. Data-driven sections: each window renders from one object, so adding a command means adding one entry.
 2. CSS scroll snapping sets the pace, and Framer Motion reveals each terminal as it arrives.
 3. The live star count and version come straight from the GitHub and npm APIs.
+4. Respecting reduced motion across every animation with Framer Motion’s MotionConfig.
 
 ## Revisited
 

@@ -15,9 +15,16 @@ summary: An emoji sticker canvas where you arrange, animate and share collages m
 
 A bigger React project. A canvas full of draggable stickers is a lot of state to look after.
 
+## What it does
+
+1. Drop random stickers from 10 themes or search for one, then drag them anywhere.
+2. Edit each sticker’s size, tilt, animation and speed in a panel you can drag aside or collapse.
+3. 10 animations with canvas-wide play, pause, shuffle and speed.
+4. Save to your browser, download a PNG, or share a link anyone can keep editing. It works offline too.
+
 ## Hardest part
 
-Keeping it smooth with lots of stickers: animations pause above 40, the canvas caps at 150, and every animation runs in CSS instead of JavaScript.
+Keeping it smooth with lots of stickers: animations pause above 40 and the canvas caps at 150.
 
 ## What I learned
 
@@ -25,11 +32,8 @@ Keeping it smooth with lots of stickers: animations pause above 40, the canvas c
 2. Custom hooks for keys, local storage, animation and sticker data.
 3. CSS keyframe animations with one speed variable, keeping dozens of loops off the JavaScript thread.
 4. Upgrading saved data, so old share links keep working.
+5. Editing without a mouse: Enter adds a sticker, arrows nudge it, Delete removes it, and modals trap and return focus.
 
 ## Revisited
 
 1. Oct 2026: per-sticker editing, a searchable sticker picker, a movable editing panel and animations rewritten as CSS keyframes.
-
-## If I built it again
-
-[Two or three sentences on what you would change now]
