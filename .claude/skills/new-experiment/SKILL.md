@@ -61,7 +61,7 @@ Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to repl
 
 ## 5. Check
 
-1. Run `npm run build`.
+1. Run `npm run og` to make the entry's link-preview card (it needs the finished drawing), then `npm run build`.
 2. With the dev server running, open `/lab/<slug>` and screenshot it with Playwright.
    - **For a sketch:** check that it draws, that Pause / Play and Restart work, that Fullscreen opens and Esc closes it, and that it starts paused on a still frame with reduced motion (Playwright `reducedMotion: 'reduce'`).
 3. On `/lab`, hover the new row and check the drawing appears.

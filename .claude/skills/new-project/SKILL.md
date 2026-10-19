@@ -65,6 +65,6 @@ Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to repl
 
 ## 5. Check
 
-1. Run `npm run build`. The schema catches bad dates and missing fields, and a missing `preview.astro` fails with the folder named.
+1. Run `npm run og` to make the entry's link-preview card (it needs the finished drawing), then `npm run build`. The schema catches bad dates and missing fields, and a missing `preview.astro` fails with the folder named.
 2. With the dev server running, screenshot `/` (the card) and `/work/<slug>` with Playwright.
 3. Tell the user what you filled in, what's still a placeholder, and where. If it was on "Now building" in `src/lib/now.ts`, remove it from `BUILDING`. Don't commit unless they ask; when they do, use no Claude co-author line.

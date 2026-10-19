@@ -1,0 +1,167 @@
+---
+// Dev-only: a 1200 × 630 link-preview card for one entry, screenshotted into public/og/<collection>/<slug>.png by
+// `npm run og` (scripts/og.mjs). Portfolio cards are dark, lab cards light; the drawing is the entry's real
+// preview.astro, frozen mid-animation. getStaticPaths returns nothing in a production build.
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '../../../../styles/tokens.css';
+import { getCollection } from 'astro:content';
+import Preview from '../../../../components/Preview.astro';
+import { getLab, getSelected, pad, year, type Entry } from '../../../../lib/projects';
+
+export async function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  const entries = [...(await getCollection('projects')), ...(await getCollection('experiments'))];
+  return entries.map((entry) => ({
+    params: { collection: entry.collection, slug: entry.id },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: Entry;
+}
+
+const { entry } = Astro.props;
+const isProject = entry.collection === 'projects';
+const { title, type, summary } = entry.data;
+const blurb = 'blurb' in entry.data ? entry.data.blurb : summary;
+
+// the label in the top corner: "Selected work 02" or "Lab note No. 06"
+let label = isProject ? 'Selected work' : 'Lab';
+if (isProject) {
+  const i = (await getSelected()).findIndex((p) => p.id === entry.id);
+  if (i >= 0) label = `Selected work ${pad(i + 1)}`;
+} else {
+  const e = (await getLab()).find((p) => p.id === entry.id);
+  if (e) label = `Lab · No. ${pad(e.n)}`;
+}
+---
+
+<!doctype html>
+<html lang="en" data-mode={isProject ? 'portfolio' : 'lab'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>{title} card</title>
+  </head>
+  <body>
+    <main class="card">
+      <div class="top">
+        <span class="brand">
+          <i></i>aniqa.dev
+        </span>
+        <span>{label}</span>
+      </div>
+      <div class="body">
+        <div class="text">
+          <h1>{title}</h1>
+          <p class="meta">
+            {type} · {year(entry)}
+          </p>
+          <p class="blurb">{blurb}</p>
+        </div>
+        <Preview entry={entry} scale={2.5} class="art" />
+      </div>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .card {
+    height: 100%;
+    padding: 64px 80px 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 26px;
+    border-bottom: 2px solid var(--line);
+    font: 500 20px var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font: 600 26px var(--font-display);
+    letter-spacing: -0.01em;
+    text-transform: none;
+    color: var(--fg);
+  }
+  .brand i {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--pop);
+  }
+  .body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 56px;
+  }
+  .text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  h1 {
+    font: 800 84px/0.95 var(--font-display);
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .meta {
+    font: 500 20px var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .blurb {
+    font: 400 26px/1.4 var(--font-display);
+    color: var(--muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  /* dev-only toolbar: keep it out of the screenshot */
+  astro-dev-toolbar {
+    display: none !important;
+  }
+  /* the drawing: a fixed 500 × 350 board, frozen 1.2s into its animation (a more natural still than frame one) */
+  .art .pv * {
+    animation-delay: -1.2s !important;
+  }
+  .art {
+    flex: none;
+    border-radius: 20px;
+    box-shadow: 0 24px 48px -24px rgba(22, 21, 27, 0.45);
+  }
+</style>

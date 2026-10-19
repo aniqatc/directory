@@ -191,4 +191,5 @@ console.log(
 );
 console.log(`  · Make the drawing: ${dir}/preview.astro (in Claude Code: /new-drawing ${slug})`);
 if (sketchFile) console.log(`  · Make the sketch: ${dir}/${sketchFile}`);
+console.log('  · Then make its link-preview card: npm run og');
 console.log(`  · Preview at http://localhost:4321${url}  ·  drawing at /dev/drawings?only=${slug}`);

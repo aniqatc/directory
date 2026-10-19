@@ -15,7 +15,7 @@ const sketchLibs = ['p5', 'three'].filter((name) => name in dependencies);
 export default defineConfig({
   site: 'https://aniqa.dev',
   adapter: vercel(), // pages stay static; only routes with `prerender = false` run as functions
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.endsWith('/404/') })],
   markdown: {
     processor: satteri({ hastPlugins: [sections] }), // ## headings in project files become label-left sections
   },

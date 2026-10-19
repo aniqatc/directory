@@ -1,4 +1,5 @@
 ---
+import { existsSync } from 'node:fs';
 import '../styles/detail.css';
 import Base from './Base.astro';
 
@@ -12,12 +13,17 @@ interface Props {
   back: { href: string; label: string };
   /** e.g. "01 / 05" or "No. 03 / 12" */
   position: string;
+  /** the entry, to find its own link-preview card in public/og/ */
+  entry: { collection: string; id: string };
 }
 
-const { mode, variant, title, lede, back, position } = Astro.props;
+const { mode, variant, title, lede, back, position, entry } = Astro.props;
+// the entry's card from `npm run og`, if it has been made; Base falls back to the general card otherwise
+const card = `/og/${entry.collection}/${entry.id}.png`;
+const ogImage = existsSync(`public${card}`) ? card : undefined;
 ---
 
-<Base mode={mode} title={title} description={lede}>
+<Base mode={mode} title={title} description={lede} ogImage={ogImage}>
   <main class="wrap detail">
     <article class={`d d-${variant}`}>
       <div class="d-top label">

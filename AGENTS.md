@@ -82,6 +82,10 @@ src/content/
 
 `src/lib/github.ts` fetches star counts at build time, one request per repo, using `GITHUB_TOKEN` if set. If GitHub fails, the stars are hidden rather than failing the build. `.github/workflows/refresh-stars.yml` calls a Vercel deploy hook (`VERCEL_DEPLOY_HOOK` secret) daily at 09:00 UTC; scheduled workflows only run from the default branch.
 
+## Meta and link previews
+
+`Base.astro` sets the title, description, canonical URL, `theme-color` (dark or light per mode), Open Graph and Twitter card tags. Pages pass `description` (detail pages use the entry's summary); the 404 passes `noindex`. Every published entry has its own share card, `public/og/<collection>/<slug>.png` (title, label, type · year, blurb and its real drawing), screenshotted from the dev-only page `/dev/og/<collection>/<slug>`. `Detail.astro` uses it when the file exists and falls back to `public/og-portfolio.png` / `public/og-lab.png` (also used by the home and lab pages). `npm run og` (`scripts/og.mjs`) draws all of them plus `public/apple-touch-icon.png`, reusing a running dev server or starting one; it skips drafts, because `public/` files are reachable even when a page is hidden. Vercel can't run a browser, so the images are generated locally and committed: rerun `npm run og` after adding an entry, changing a drawing or editing a title or blurb. A smoke test fails if an entry is missing its card. `public/robots.txt` points to the sitemap and disallows `/api/`.
+
 ## Environment
 
 `.env` (gitignored; names in `.env.example`): `GITHUB_TOKEN`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (the Vercel Marketplace may name them `KV_REST_API_URL` / `KV_REST_API_TOKEN`; both work). Never print their values.

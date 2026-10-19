@@ -14,14 +14,29 @@ interface Props {
   /** page name; omit on the home pages */
   title?: string;
   description?: string;
+  /** keep this page out of search results (the 404) */
+  noindex?: boolean;
+  /** this page's own link-preview card, e.g. /og/projects/weather.png; defaults to the portfolio or lab card */
+  ogImage?: string;
 }
 
 const {
   mode,
   title,
   description = 'Aniqa builds small things for the web, mostly for fun and to learn.',
+  noindex = false,
+  ogImage,
 } = Astro.props;
 const fullTitle = title ? `${title} — aniqa.dev` : 'aniqa.dev';
+// link previews: each page's own address, and its card from `npm run og` (an entry's own, or the portfolio / lab one)
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL(ogImage ?? `/og-${mode}.png`, Astro.site);
+const imageAlt = ogImage
+  ? `${title}, on aniqa.dev`
+  : mode === 'lab'
+    ? 'Lab. A digital sketchbook, on aniqa.dev'
+    : 'Aniqa. I build small things for the web.';
+const themeColor = mode === 'lab' ? '#f1efea' : '#16151b';
 ---
 
 <!doctype html>
@@ -29,10 +44,33 @@ const fullTitle = title ? `${title} — aniqa.dev` : 'aniqa.dev';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description" content={description} />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Aniqa" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content={themeColor} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- link previews (iMessage, Slack, LinkedIn, X…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="aniqa.dev" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <!-- links swap pages in place with a cross-fade, so portfolio ↔ lab fades between night and day -->
     <ClientRouter />
   </head>

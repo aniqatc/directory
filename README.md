@@ -34,7 +34,7 @@ Run `npm run new` and answer the questions. It creates the folder with everythin
 
 **Experiment that runs on the site:** choose **experiment** → **canvas**, **p5**, **three** or **css**. You get a starter sketch that already works. For p5 or Three.js, install it when asked, then restart `npm run dev`.
 
-Then replace the placeholder drawing in `preview.astro` and check the page in the browser.
+Then replace the placeholder drawing in `preview.astro`, run `npm run og` to make its link-preview card, and check the page in the browser.
 
 **Not ready?** Add `draft: true` to `index.md` to hide it.
 
@@ -59,6 +59,7 @@ Then replace the placeholder drawing in `preview.astro` and check the page in th
 | `npm run build`  | Check and build                |
 | `npm test`       | Smoke tests                    |
 | `npm run format` | Tidy the code                  |
+| `npm run og`     | Make the link-preview images   |
 
 ## Also editable
 

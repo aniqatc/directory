@@ -56,6 +56,21 @@ test.describe('pages', () => {
     expect(errors).toEqual([]);
   });
 
+  test('every entry has its own link-preview card (run npm run og if this fails)', async ({
+    page,
+    request,
+  }) => {
+    for (const href of await allPages(page)) {
+      await page.goto(href);
+      const image = await page.getAttribute('meta[property="og:image"]', 'content');
+      const slug = href.split('/').pop();
+      expect(image, `${href}: own card`).toContain(`/og/`);
+      expect(image, `${href}: own card`).toContain(`/${slug}.png`);
+      const res = await request.get(new URL(image!).pathname);
+      expect(res.status(), `${href}: ${image}`).toBe(200);
+    }
+  });
+
   test('a missing page gets the 404 with the sleeping dot', async ({ page }) => {
     const res = await page.goto('/no-such-page');
     expect(res?.status()).toBe(404);
