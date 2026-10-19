@@ -35,7 +35,7 @@ const labSlugs = async () => new Set((await getLab()).map((e) => e.id));
 const notConfigured = () => json({ error: 'Likes are not configured (no Upstash credentials)' }, 503);
 
 export const GET: APIRoute = async ({ url }) => {
-  if (!likesConfigured) return notConfigured();
+  if (!likesConfigured) return json({}); // nothing to show: hearts read 0, and the page logs no errors
   const visitor = url.searchParams.get('visitor') ?? '';
   if (!UUID.test(visitor)) return json({ error: 'visitor must be a UUID' }, 400);
   const known = await labSlugs();

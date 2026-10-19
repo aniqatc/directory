@@ -7,7 +7,7 @@ const env = (name: string): string | undefined => import.meta.env[name] ?? proce
 const url = env('UPSTASH_REDIS_REST_URL') ?? env('KV_REST_API_URL') ?? '';
 const token = env('UPSTASH_REDIS_REST_TOKEN') ?? env('KV_REST_API_TOKEN') ?? '';
 
-/** False without credentials (CI, or a fresh clone without .env): the likes API then answers 503. */
+/** False without credentials (CI, or a fresh clone without .env): the API then reports no likes and refuses new ones. */
 export const likesConfigured = Boolean(url && token);
 
 export const redis = new Redis({ url: url || 'https://not-configured.invalid', token: token || 'none' });

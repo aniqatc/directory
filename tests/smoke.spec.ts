@@ -230,8 +230,7 @@ test.describe('likes', () => {
 test.describe('accessibility', () => {
   test('keyboard: every link and button can be reached and shows a focus ring', async ({ page }) => {
     for (const path of ['/', '/lab', '/work/weather', '/lab/world-clock']) {
-      await page.goto(path);
-      await page.waitForLoadState('networkidle');
+      await page.goto(path, { waitUntil: 'load' });
       // number every visible link and button, then Tab through and tick them off
       // (document.querySelectorAll, not $$eval: Playwright's selectors reach into the dev toolbar's shadow DOM)
       const ids = await page.evaluate(() =>
