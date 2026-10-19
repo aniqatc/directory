@@ -1,0 +1,23 @@
+---
+import { CONTACT } from '../lib/contact';
+
+interface Props {
+  mode: 'portfolio' | 'lab';
+}
+
+const { mode } = Astro.props;
+const onLab = mode === 'lab';
+---
+
+<header class="hdr">
+  <div class="wrap">
+    <a class="brand" href="/"><i aria-hidden="true" title="Click me"></i>aniqa.dev</a>
+    <nav class="nav" aria-label="Site">
+      <span class="switch">
+        <a href="/" aria-current={onLab ? undefined : 'page'}>Portfolio</a>
+        <a href="/lab" aria-current={onLab ? 'page' : undefined}>Lab</a>
+      </span>
+      <a class="gh" href={CONTACT.github} target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>

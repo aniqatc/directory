@@ -1,0 +1,38 @@
+---
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '../styles/tokens.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  /** "portfolio" is the dark night mode, "lab" the light day mode */
+  mode: 'portfolio' | 'lab';
+  /** page name; omit on the home pages */
+  title?: string;
+  description?: string;
+}
+
+const { mode, title, description = 'Aniqa builds small things for the web, mostly for fun and to learn.' } =
+  Astro.props;
+const fullTitle = title ? `${title} — aniqa.dev` : 'aniqa.dev';
+---
+
+<!doctype html>
+<html lang="en" data-mode={mode}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <Header mode={mode} />
+    <slot />
+    <Footer />
+  </body>
+</html>

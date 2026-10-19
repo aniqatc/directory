@@ -1,0 +1,69 @@
+---
+import { CONTACT } from '../lib/contact';
+
+interface Props {
+  /** "intro" for the portfolio intro, "foot" for the footer */
+  variant?: 'intro' | 'foot';
+}
+
+const { variant = 'intro' } = Astro.props;
+// only the links set in contact.ts are shown
+const c: { github?: string; linkedin?: string; x?: string; email?: string } = CONTACT;
+const links = (
+  [
+    ['GitHub', c.github],
+    ['LinkedIn', c.linkedin],
+    ['X', c.x],
+  ] as const
+).filter(([, url]) => url);
+---
+
+<ul class:list={['contact', { 'contact-f': variant === 'foot' }]} aria-label="Contact">
+  {
+    links.map(([label, url]) => (
+      <li>
+        <a href={url} target="_blank" rel="noopener">
+          {label} ↗
+        </a>
+      </li>
+    ))
+  }
+  {
+    c.email && (
+      <li>
+        <button type="button" class="copy" data-email={c.email} title="Copy email">
+          <span class="em">{c.email}</span>
+          <span class="ok" aria-hidden="true"></span>
+          <span class="sr-only" role="status"></span>
+        </button>
+      </li>
+    )
+  }
+</ul>
+
+<script>
+  // Click the address to copy it; a ✓ shows briefly. If the clipboard is blocked, select the text instead.
+  document.addEventListener('click', (ev) => {
+    const b = (ev.target as Element).closest<HTMLButtonElement>('.copy');
+    if (!b) return;
+    const ok = b.querySelector('.ok')!;
+    const status = b.querySelector('.sr-only')!;
+    const select = () => {
+      const r = document.createRange();
+      r.selectNodeContents(b.querySelector('.em')!);
+      const s = getSelection()!;
+      s.removeAllRanges();
+      s.addRange(r);
+    };
+    const copied = () => {
+      ok.textContent = '✓';
+      status.textContent = 'Email copied';
+      setTimeout(() => (ok.textContent = status.textContent = ''), 1600);
+    };
+    try {
+      navigator.clipboard.writeText(b.dataset.email!).then(copied, select);
+    } catch {
+      select();
+    }
+  });
+</script>

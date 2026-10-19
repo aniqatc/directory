@@ -1,0 +1,34 @@
+/* One site, two moods. Portfolio + case studies = night; lab archive, lab notes + experiments = day.
+   Base.astro sets data-mode on <html>. */
+:root {
+  /* --pop is the accent on dark pages and in drawings; --pop-lab is the same hue darkened for text on the light lab */
+  --pop: #79d6cf;
+  --pop-lab: #16756f; /* mint-blue, for Zayn */
+  --bg: #16151b;
+  --surface: #1f1d26;
+  --line: #2e2b37;
+  --fg: #ebe7f0;
+  --body: #cfcad6;
+  --muted: #9690a3;
+  --accent: var(--pop);
+  --pet: var(--pop);
+  --blush: #f491b2;
+  --ink: #2a2418;
+  --heart: var(--accent); /* likes follow the accent, darkened on the light lab */
+  --font-display: 'Bricolage Grotesque Variable', 'Avenir Next', system-ui, sans-serif;
+  --font-body: 'Geist Variable', 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+  --hdr: 52px;
+  color-scheme: dark;
+}
+
+:root[data-mode='lab'] {
+  --bg: #f1efea;
+  --surface: #e7e4dc;
+  --line: #d6d2c8;
+  --fg: #1b1a20;
+  --body: #34323a;
+  --muted: #6a6571;
+  --accent: var(--pop-lab);
+  color-scheme: light;
+}

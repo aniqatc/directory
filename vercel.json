@@ -1,19 +1,10 @@
 {
-  "rewrites": [
-    {
-      "source": "/_astro/:path*",
-      "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
-      "destination": "/_astro/:path*"
-    },
-    {
-      "source": "/api/:path*",
-      "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
-      "destination": "/api/:path*"
-    },
+  "redirects": [
     {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
-      "destination": "/lab/:path*"
+      "destination": "https://aniqa.dev/lab/:path*",
+      "permanent": true
     }
   ]
 }
