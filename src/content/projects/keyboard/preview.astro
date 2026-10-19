@@ -1,0 +1,54 @@
+---
+// Keyboard: three rows of keys, every third one pressing in turn.
+---
+
+<span class="r" style="top:32px">
+  {Array.from({ length: 7 }, () => (
+    <i />
+  ))}
+</span>
+<span class="r" style="top:58px">
+  <i class="w2"></i>
+  {Array.from({ length: 5 }, () => (
+    <i />
+  ))}
+</span>
+<span class="r" style="top:84px">
+  <i></i>
+  <i class="w5"></i>
+  <i></i>
+  <i></i>
+</span>
+
+<style>
+  .r {
+    left: 16px;
+    right: 16px;
+    display: flex;
+    gap: 5px;
+    position: absolute;
+  }
+  .r i {
+    position: static;
+    flex: 1;
+    height: 20px;
+    border-radius: 4px;
+    background: var(--pl);
+    box-shadow: 0 2px 0 #0d0c11;
+  }
+  .r i.w2 {
+    flex: 2;
+  }
+  .r i.w5 {
+    flex: 5;
+  }
+  .r i:nth-child(3n + 1) {
+    animation: press 1s ease-in-out infinite;
+  }
+  .r:nth-child(2) i:nth-child(3n + 1) {
+    animation-delay: 0.33s;
+  }
+  .r:nth-child(3) i:nth-child(3n + 1) {
+    animation-delay: 0.66s;
+  }
+</style>

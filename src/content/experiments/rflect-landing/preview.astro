@@ -1,0 +1,55 @@
+---
+// Rflect Landing: terminal windows scrolling past a progress rail.
+---
+
+<i class="rail"></i>
+{[0, 1, 2].map((i) => (
+  <i class="win" style={`top:${14 + i * 64}px`} />
+))}
+
+<style>
+  .win {
+    left: 30px;
+    right: 18px;
+    height: 52px;
+    border: 1px solid var(--pl);
+    border-radius: 6px;
+    background: #121117;
+    animation: scrollup 3s ease-in-out infinite;
+  }
+  .win::before {
+    content: '$ rflect';
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-size: 10px;
+    color: var(--hi);
+  }
+  .win::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 30px;
+    width: 60%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--pl);
+  }
+  .rail {
+    left: 14px;
+    top: 20px;
+    bottom: 20px;
+    width: 2px;
+    background: var(--pl);
+  }
+  .rail::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 30%;
+    background: var(--hi);
+    animation: rail 3s ease-in-out infinite;
+  }
+</style>

@@ -1,0 +1,73 @@
+---
+// Moji Canvas: wobbling emoji stickers on a dotted canvas, with the bee selected for editing.
+const stickers: [string, number, number, number][] = [
+  ['🌼', 16, 14, 30],
+  ['⭐', 146, 12, 30],
+  ['🍓', 28, 84, 24],
+  ['💛', 150, 88, 24],
+];
+---
+
+<i class="pv-bg"></i>
+{
+  stickers.map(([e, x, y, s], i) => (
+    <span class="st" style={`left:${x}px;top:${y}px;font-size:${s}px;animation-delay:-${(i * 0.3).toFixed(1)}s`}>
+      {e}
+    </span>
+  ))
+}
+<span class="sel">
+  <span class="st bee">🐝</span>
+  <i class="h h1"></i><i class="h h2"></i><i class="h h3"></i><i class="h h4"></i>
+</span>
+
+<style>
+  /* the canvas: a faint dot grid on the dark board */
+  .pv-bg {
+    background:
+      radial-gradient(circle, var(--pl) 1px, transparent 1.5px) 0 0 / 14px 14px,
+      var(--ps);
+  }
+  .st {
+    line-height: 1;
+    font-family: system-ui, sans-serif;
+    animation: wob 1.6s ease-in-out infinite;
+  }
+  /* the selected sticker: dashed mint box with corner handles */
+  .sel {
+    left: 72px;
+    top: 40px;
+    width: 52px;
+    height: 52px;
+    border: 1px dashed var(--hi);
+    border-radius: 4px;
+  }
+  .bee {
+    left: 5px;
+    top: 5px;
+    font-size: 40px;
+    animation-delay: -0.6s;
+  }
+  .h {
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    background: var(--hi);
+  }
+  .h1 {
+    left: -4px;
+    top: -4px;
+  }
+  .h2 {
+    right: -4px;
+    top: -4px;
+  }
+  .h3 {
+    left: -4px;
+    bottom: -4px;
+  }
+  .h4 {
+    right: -4px;
+    bottom: -4px;
+  }
+</style>

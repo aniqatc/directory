@@ -31,7 +31,7 @@ interface Props {
 }
 
 const { project, i, total, prev, next } = Astro.props;
-const { title, type, stack, released, summary, preview } = project.data;
+const { title, type, stack, released, summary } = project.data;
 const { Content } = await render(project);
 const facts = [
   { label: 'Released', value: fmtMonth(released) },
@@ -51,7 +51,7 @@ const facts = [
 >
   <Fragment slot="eyebrow">Selected work <b>{pad(i + 1)}</b> · Case study</Fragment>
   <Facts slot="facts" items={facts} />
-  <Preview name={preview} fit="width" />
+  <Preview entry={project} fit="width" />
   <Content />
   {
     total > 1 && (

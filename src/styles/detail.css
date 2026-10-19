@@ -218,6 +218,61 @@
   align-items: center;
   gap: 8px 16px;
 }
+.stage-bar > span:last-child {
+  display: flex;
+  gap: 20px;
+}
+.stage-bar button,
+.fs-exit {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 0;
+  min-height: 40px;
+  cursor: pointer;
+}
+.stage-bar button:hover,
+.fs-exit:hover {
+  color: var(--accent);
+}
+.fs-exit {
+  display: none;
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  z-index: 2;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 14px;
+  min-height: 36px;
+}
+.stage.fs {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px)
+    env(safe-area-inset-left, 0px);
+}
+.stage.fs .fs-exit {
+  display: block;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+}
+body.fs-lock {
+  overflow: hidden;
+}
+/* CSS art: the .astro sketch fills the stage; it's not a canvas, so no crosshair */
+.stage-art {
+  cursor: auto;
+}
 .xp-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);

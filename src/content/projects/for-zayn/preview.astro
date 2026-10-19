@@ -1,0 +1,108 @@
+---
+// For Zayn: three framed CSS pieces on a dark wall: a moon, a bee and a letter block.
+---
+
+<span class="fr fr1">
+  <i class="moon"></i>
+  <i class="tw"></i>
+</span>
+<span class="fr fr2">
+  <i class="bee"></i>
+  <i class="trail"></i>
+</span>
+<span class="fr fr3">
+  <span class="blk">Z</span>
+</span>
+
+<style>
+  .fr {
+    top: 30px;
+    width: 46px;
+    height: 60px;
+    background: #262330;
+    border: 3px solid var(--pl);
+    border-radius: 3px;
+    box-shadow: 0 3px 0 #121117;
+  }
+  .fr1 {
+    left: 20px;
+    top: 36px;
+  }
+  .fr2 {
+    left: 72px;
+    top: 22px;
+    width: 56px;
+    height: 74px;
+  }
+  .fr3 {
+    left: 134px;
+    top: 36px;
+  }
+  .moon {
+    left: 10px;
+    top: 16px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    box-shadow: 6px -2px 0 0 #f2c94c;
+    transform: rotate(-18deg);
+  }
+  .tw {
+    left: 30px;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #f2c94c;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  .bee {
+    left: 12px;
+    top: 28px;
+    width: 30px;
+    height: 20px;
+    border-radius: 50%;
+    background: repeating-linear-gradient(90deg, #f2c94c 0 6px, #2a2418 6px 9px);
+    animation: bob 1.8s ease-in-out infinite;
+  }
+  .bee::before,
+  .bee::after {
+    content: '';
+    position: absolute;
+    top: -10px;
+    width: 11px;
+    height: 13px;
+    border-radius: 50%;
+    background: rgba(235, 231, 240, 0.85);
+    border: 1px solid var(--pm);
+    transform-origin: 50% 100%;
+    animation: flap 0.18s ease-in-out infinite alternate;
+  }
+  .bee::before {
+    left: 6px;
+  }
+  .bee::after {
+    left: 14px;
+    animation-delay: -0.09s;
+  }
+  .trail {
+    left: 6px;
+    top: 56px;
+    width: 40px;
+    height: 6px;
+    border-top: 2px dashed var(--pm);
+    border-radius: 50%;
+  }
+  .blk {
+    left: 7px;
+    top: 15px;
+    width: 26px;
+    height: 26px;
+    border-radius: 5px;
+    background: var(--hi);
+    color: #16151b;
+    font: 800 16px/26px var(--font-display);
+    text-align: center;
+    animation: wob 2.2s ease-in-out infinite;
+  }
+</style>

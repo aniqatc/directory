@@ -1,0 +1,132 @@
+---
+// Playground: six widget windows with a graph, toggles, bars, a grid, text lines and a map pin.
+const bars = [14, 24, 18, 30, 20];
+const lines = [34, 24, 30];
+---
+
+<i class="w w1"></i>
+<i class="w w2"></i>
+<i class="w w3"></i>
+<i class="w w4"></i>
+<i class="w w5"></i>
+<i class="w w6"></i>
+<svg viewBox="0 0 46 26" fill="none">
+  <path d="M0 13 C6 0 12 0 17 13 S28 26 34 13 S42 2 46 6" stroke="currentColor" stroke-width="1.6"></path>
+</svg>
+{[0, 1, 2].map((i) => (
+  <i class:list={['ball', { on: i === 1 }]} style={`left:${80 + i * 14}px`} />
+))}
+{bars.map((h, i) => (
+  <i class="bar" style={`left:${142 + i * 8}px;height:${h}px;animation-delay:-${(i * 0.3).toFixed(1)}s`} />
+))}
+{Array.from({ length: 9 }, (_, i) => (
+  <i
+    class="sq"
+    style={`left:${20 + (i % 3) * 13}px;top:${84 + Math.floor(i / 3) * 11}px;animation-delay:-${((i * 0.7) % 2.4).toFixed(1)}s`}
+  />
+))}
+{lines.map((w, i) => (
+  <i class="ln" style={`top:${88 + i * 10}px;width:${w}px`} />
+))}
+<i class="pin"></i>
+
+<style>
+  svg {
+    color: var(--hi);
+  }
+  .w {
+    width: 54px;
+    height: 50px;
+    border: 1px solid var(--pl);
+    border-radius: 5px;
+  }
+  .w1 {
+    left: 12px;
+    top: 14px;
+    border-color: var(--hi);
+  }
+  .w2 {
+    left: 73px;
+    top: 14px;
+  }
+  .w3 {
+    left: 134px;
+    top: 14px;
+  }
+  .w4 {
+    left: 12px;
+    top: 74px;
+  }
+  .w5 {
+    left: 73px;
+    top: 74px;
+  }
+  .w6 {
+    left: 134px;
+    top: 74px;
+  }
+  svg {
+    position: absolute;
+    left: 16px;
+    top: 26px;
+    width: 46px;
+    height: 26px;
+  }
+  svg path {
+    stroke-dasharray: 80;
+    stroke-dashoffset: 0;
+    animation: draw 2s ease-in-out infinite;
+  }
+  .ball {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--pm);
+    top: 34px;
+  }
+  .ball.on {
+    background: var(--hi);
+    border-color: var(--hi);
+    animation: pulse 1s ease-in-out infinite;
+  }
+  .bar {
+    bottom: 82px;
+    width: 6px;
+    background: var(--pm);
+    border-radius: 1px;
+    transform-origin: bottom;
+    animation: grow 1.4s ease-in-out infinite alternate;
+  }
+  .sq {
+    width: 7px;
+    height: 7px;
+    border-radius: 1px;
+    background: var(--pl);
+    animation: flick 2.4s steps(1) infinite;
+  }
+  .ln {
+    left: 82px;
+    height: 2px;
+    background: var(--pl);
+    border-radius: 1px;
+  }
+  .pin {
+    left: 154px;
+    top: 90px;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--pm);
+    border-radius: 50%;
+  }
+  .pin::after {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--hi);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+</style>

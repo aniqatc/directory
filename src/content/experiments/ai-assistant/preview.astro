@@ -1,0 +1,50 @@
+---
+// AI Assistant: a question, an answer, a code block and a reply on its way.
+---
+
+<i class="b me"></i>
+<i class="b ai"></i>
+<i class="code"></i>
+<i class="b ai2"></i>
+
+<style>
+  .b {
+    height: 18px;
+    border-radius: 9px;
+    background: var(--pl);
+    left: 16px;
+  }
+  .me {
+    left: auto;
+    right: 16px;
+    top: 16px;
+    width: 90px;
+    background: var(--hi);
+  }
+  .ai {
+    top: 42px;
+    width: 130px;
+  }
+  .code {
+    left: 16px;
+    right: 16px;
+    top: 68px;
+    height: 30px;
+    border-radius: 6px;
+    background: #121117;
+    border: 1px solid var(--pl);
+  }
+  .code::after {
+    content: 'fn()';
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    font-size: 10px;
+    color: var(--hi);
+  }
+  .ai2 {
+    top: 106px;
+    width: 100px;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+</style>

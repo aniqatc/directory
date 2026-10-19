@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import Preview from '../../components/Preview.astro';
+import { getCollection } from 'astro:content';
+
+// Dev-only gallery at /dev/drawings: every entry's preview.astro as a small tile, a portfolio card and a
+// detail-page figure, all animating. getStaticPaths returns nothing in a production build, so this never ships.
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { page: 'drawings' } }] : [];
+}
+
+const entries = [...(await getCollection('projects')), ...(await getCollection('experiments'))];
+---
+
+<Base mode="portfolio" title="Drawings">
+  <main class="wrap gallery">
+    <p class="label">{entries.length} drawings · add <code>?only=slug</code> to the URL to show one</p>
+    {
+      entries.map((e) => (
+        <section data-key={e.id}>
+          <h2 class="label">
+            {e.data.title} · {e.collection}/{e.id}/preview.astro{e.data.draft && ' · draft'}
+          </h2>
+          <div class="sizes">
+            <Preview entry={e} />
+            <Preview entry={e} fit="height" class="card" />
+            <Preview entry={e} fit="width" class="figure" />
+          </div>
+        </section>
+      ))
+    }
+  </main>
+</Base>
+
+<script>
+  // ?only=slug shows one drawing (query params aren't available to pre-rendered pages, so filter here)
+  const only = new URLSearchParams(location.search).get('only');
+  if (only)
+    document.querySelectorAll<HTMLElement>('.gallery section').forEach((s) => (s.hidden = s.dataset.key !== only));
+</script>
+
+<style is:global>
+  .gallery {
+    padding-block: 32px 64px;
+    display: grid;
+    gap: 40px;
+  }
+  .gallery h2 {
+    margin: 0 0 12px;
+  }
+  .gallery .sizes {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
+  .gallery .card {
+    aspect-ratio: 16 / 7;
+  }
+  .gallery .pv * {
+    animation-play-state: running !important;
+  }
+  @media (max-width: 860px) {
+    .gallery .sizes {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
