@@ -1,0 +1,9 @@
+name: Refresh stars
+on:
+  schedule: [{ cron: '0 9 * * *' }]
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"

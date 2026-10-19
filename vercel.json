@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    {
+      "source": "/_astro/:path*",
+      "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
+      "destination": "/_astro/:path*"
+    },
+    {
+      "source": "/api/:path*",
+      "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
+      "destination": "/api/:path*"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
+      "destination": "/lab/:path*"
+    }
+  ]
+}

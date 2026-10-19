@@ -1,17 +1,65 @@
 {
-  "name": "directory",
+  "name": "portfolio",
+  "description": "Personal portfolio website for @aniqatc.",
+  "private": true,
+  "version": "2.0.0",
   "type": "module",
-  "version": "0.0.1",
+  "homepage": "https://aniqa.dev",
+  "author": {
+    "name": "Aniqa",
+    "email": "hello@aniqa.dev",
+    "url": "https://aniqa.dev"
+  },
   "engines": {
     "node": ">=22.22.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "check": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "playwright test"
   },
   "dependencies": {
-    "astro": "^7.4.1"
-  }
+    "@astrojs/check": "^0.9.11",
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.16",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/geist": "^5.3.0",
+    "@fontsource-variable/geist-mono": "^5.3.0",
+    "@upstash/ratelimit": "^2.2.0",
+    "@upstash/redis": "^1.39.0",
+    "astro": "^7.4.1",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "eslint": "^10.13.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^1.1.1",
+    "typescript-eslint": "^8.71.2"
+  },
+  "keywords": [
+    "portfolio",
+    "frontend",
+    "typescript",
+    "vite",
+    "javascript",
+    "full stack",
+    "web development",
+    "astro",
+    "static site",
+    "css",
+    "content collections",
+    "vercel",
+    "upstash",
+    "redis",
+    "creative coding",
+    "generative art",
+    "lab"
+  ]
 }
