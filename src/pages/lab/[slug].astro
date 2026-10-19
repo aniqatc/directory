@@ -67,6 +67,19 @@ const isExperiment = hasScript || Boolean(Art);
     {example ? <span class="chip">Example entry</span> : <Badge badge={badge} />}
   </Fragment>
 
+  {/* lab notes show their facts in the header; experiments show theirs beside the notes */}
+  {!isExperiment && (
+    <Facts
+      slot="facts"
+      cols={3}
+      items={[
+        { label: 'Made', value: fmtMonth(released) },
+        { label: 'Type', value: type },
+        { label: 'Stack', value: stack },
+      ]}
+    />
+  )}
+
   {isExperiment ? (
     <>
       <figure>
@@ -108,15 +121,6 @@ const isExperiment = hasScript || Boolean(Art);
     </>
   ) : (
     <>
-      <Facts
-        slot="facts"
-        cols={3}
-        items={[
-          { label: 'Made', value: fmtMonth(released) },
-          { label: 'Type', value: type },
-          { label: 'Stack', value: stack },
-        ]}
-      />
       <figure>
         <Preview entry={entry} fit="width" />
         <figcaption class="label">
