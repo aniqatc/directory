@@ -41,16 +41,15 @@ npm run dev        # http://localhost:4321
 
 ## Scripts
 
-| Command           | What it does                                                         |
-| ----------------- | -------------------------------------------------------------------- |
-| `npm run dev`     | Local dev server at `localhost:4321`                                 |
-| `npm run new`     | Add a project or experiment: asks a few questions, creates the files |
-| `npm run build`   | Type-check, then build to `dist/`                                    |
-| `npm run preview` | Serve the built site locally                                         |
-| `npm run check`   | Type-check only                                                      |
-| `npm run format`  | Format everything with Prettier                                      |
-| `npm run lint`    | ESLint                                                               |
-| `npm test`        | Playwright smoke tests                                               |
+| Command          | What it does                                                         |
+| ---------------- | -------------------------------------------------------------------- |
+| `npm run dev`    | Local dev server at `localhost:4321`                                 |
+| `npm run new`    | Add a project or experiment: asks a few questions, creates the files |
+| `npm run build`  | Type-check, then build to `dist/`                                    |
+| `npm run check`  | Type-check only                                                      |
+| `npm run format` | Format everything with Prettier                                      |
+| `npm run lint`   | ESLint                                                               |
+| `npm test`       | Playwright smoke tests against the dev server (see [Tests](#tests))  |
 
 ## Add an entry
 
@@ -109,6 +108,27 @@ The starter in `templates/experiment-<tool>/` already runs; change it into your 
 | `/new-drawing <slug>`         | Designs or redoes one entry's drawing and checks it at every size                                                               |
 
 The skills live in [`.claude/skills/`](.claude/skills).
+
+## Tests
+
+`npm test` runs the smoke tests in `tests/smoke.spec.ts` against the dev server (an already running `npm run dev` is reused). They cover every page loading cleanly, the two moods, drafts staying hidden, the hover preview, Random entry, the pet, page changes, likes (a sixth like is refused), keyboard focus and reduced motion. With the Upstash values in `.env`, one test also checks the real likes API with a throwaway visitor and removes its likes afterwards.
+
+There's no `npm run preview`: the Vercel adapter doesn't support it. Every push to GitHub gets a Vercel preview deploy instead.
+
+## Page scripts
+
+Links swap pages in place with a cross-fade (Astro view transitions, `ClientRouter` in `Base.astro`), so a page's `<script>` runs once, not on every visit. Wrap per-page setup in `onPage` from `src/scripts/page.ts`; it runs on every page, and a function you return runs before the next page swaps in:
+
+```ts
+import { onPage } from '../scripts/page';
+
+onPage(() => {
+  const el = document.querySelector('.thing');
+  if (!el) return; // not on this page
+  const timer = setInterval(tick, 1000);
+  return () => clearInterval(timer);
+});
+```
 
 ## Also editable
 
