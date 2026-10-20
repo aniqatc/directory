@@ -25,10 +25,15 @@ export type PetId =
 export const PET: PetId | 'auto' = 'auto';
 
 /**
- * Used when PET is 'auto'. Dates are MM-DD and inclusive, and the first match wins, so single days sit at the
- * top and override the month they fall in. Anything not listed gets FALLBACK.
+ * Used when PET is 'auto'. Each entry is a date range (MM-DD, inclusive) or, for a holiday whose date moves,
+ * an `on` test with a `label` saying when it falls. The first match wins, so single days sit at the top and
+ * override the month they fall in. Anything not listed gets FALLBACK.
  */
-export const SEASONS: { from: string; to: string; pet: PetId }[] = [
+export type Season =
+  | { from: string; to: string; pet: PetId }
+  | { on: (day: Date) => boolean; label: string; pet: PetId };
+
+export const SEASONS: Season[] = [
   // special days
   { from: '02-27', to: '02-27', pet: 'cupcake' }, // my birthday
   { from: '03-27', to: '03-27', pet: 'heart' },
@@ -37,8 +42,15 @@ export const SEASONS: { from: string; to: string; pet: PetId }[] = [
   { from: '06-30', to: '06-30', pet: 'cupcake' }, // my son's birthday
   { from: '09-20', to: '09-20', pet: 'cupcake' }, // my husband's birthday
   { from: '10-18', to: '10-18', pet: 'heart' },
-  { from: '10-31', to: '10-31', pet: 'pumpkin' }, // Halloween
+  { from: '10-31', to: '10-31', pet: 'ghost' }, // Halloween
+  { from: '12-25', to: '12-25', pet: 'party' }, // Christmas
   { from: '12-31', to: '12-31', pet: 'party' }, // New Year's Eve
+
+  // holidays that move
+  { on: (d) => nthSunday(d, 5, 2), label: "Mother's Day, the 2nd Sunday in May", pet: 'party' },
+  { on: (d) => nthSunday(d, 6, 3), label: "Father's Day, the 3rd Sunday in June", pet: 'party' },
+  { on: (d) => hijri(d, 10, 1), label: 'Eid al-Fitr, 1 Shawwal', pet: 'party' },
+  { on: (d) => hijri(d, 12, 10), label: 'Eid al-Adha, 10 Dhu al-Hijjah', pet: 'party' },
 
   // the rest of the year
   { from: '01-01', to: '01-07', pet: 'party' }, // New Year's week
@@ -51,17 +63,36 @@ export const SEASONS: { from: string; to: string; pet: PetId }[] = [
   { from: '06-01', to: '06-30', pet: 'bee' },
   { from: '07-01', to: '08-31', pet: 'frog' },
   { from: '09-01', to: '09-30', pet: 'owl' }, // back to school
-  { from: '10-01', to: '10-31', pet: 'ghost' },
+  { from: '10-01', to: '10-31', pet: 'pumpkin' },
   { from: '11-01', to: '11-30', pet: 'acorn' },
   { from: '12-01', to: '12-31', pet: 'snowball' },
 ];
 export const FALLBACK: PetId = 'dot';
 
+/** Whether `d` is the nth Sunday of a month (1–12), for Mother's and Father's Day. */
+function nthSunday(d: Date, month: number, n: number): boolean {
+  return d.getMonth() + 1 === month && d.getDay() === 0 && Math.ceil(d.getDate() / 7) === n;
+}
+
+// The browser's own Islamic (Umm al-Qura) calendar. Eid can land a day off where it's set by moon sighting.
+const islamic = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { month: 'numeric', day: 'numeric' });
+/** Whether `d` is the given day of the given month in the Islamic calendar. */
+function hijri(d: Date, month: number, day: number): boolean {
+  // an old browser without that calendar quietly falls back to the Gregorian one, so check before trusting it
+  if (islamic.resolvedOptions().calendar !== 'islamic-umalqura') return false;
+  try {
+    const p = Object.fromEntries(islamic.formatToParts(d).map((x) => [x.type, x.value]));
+    return Number(p.month) === month && Number(p.day) === day;
+  } catch {
+    return false; // then the month's pet shows instead
+  }
+}
+
 /** The pet for a given day (the visitor's own date, so it changes without a rebuild). */
 export function currentPet(today = new Date()): PetId {
   if (PET !== 'auto') return PET;
   const md = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-  return SEASONS.find((s) => md >= s.from && md <= s.to)?.pet ?? FALLBACK;
+  return SEASONS.find((s) => ('on' in s ? s.on(today) : md >= s.from && md <= s.to))?.pet ?? FALLBACK;
 }
 
 // ---------- drawings ----------
