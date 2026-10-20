@@ -31,9 +31,12 @@ export const PET: PetId | 'auto' = 'auto';
 export const SEASONS: { from: string; to: string; pet: PetId }[] = [
   // special days
   { from: '02-27', to: '02-27', pet: 'cupcake' }, // my birthday
-  { from: '06-26', to: '06-26', pet: 'party' }, // our anniversary
+  { from: '03-27', to: '03-27', pet: 'heart' },
+  { from: '05-05', to: '05-05', pet: 'heart' },
+  { from: '06-26', to: '06-26', pet: 'heart' }, // our anniversary
   { from: '06-30', to: '06-30', pet: 'cupcake' }, // my son's birthday
   { from: '09-20', to: '09-20', pet: 'cupcake' }, // my husband's birthday
+  { from: '10-18', to: '10-18', pet: 'heart' },
   { from: '10-31', to: '10-31', pet: 'pumpkin' }, // Halloween
   { from: '12-31', to: '12-31', pet: 'party' }, // New Year's Eve
 
