@@ -7,8 +7,9 @@ import Preview from '../../components/Preview.astro';
 import PrevNext from '../../components/PrevNext.astro';
 import LikeButton from '../../components/LikeButton.astro';
 import Badge from '../../components/Badge.astro';
+import '../../styles/demo.css';
 import { badgeFor, updatedSet } from '../../lib/badges';
-import { fmtMonth, getLab, links, pad, type LabEntry } from '../../lib/projects';
+import { fmtMonth, folderLink, getLab, links, pad, type LabEntry } from '../../lib/projects';
 
 // One page per lab entry: a lab note, or the experiment layout when it has a sketch.
 export async function getStaticPaths() {
@@ -35,14 +36,14 @@ interface Props {
 }
 
 const { entry, total, older, newer, badge } = Astro.props;
-const { title, type, stack, released, summary, example, hint, time, repo } = entry.data;
+const { title, type, stack, released, summary, example, hint, repo, stage, themes, headsUp } = entry.data;
 const { Content } = await render(entry);
 const no = `No. ${pad(entry.n)}`;
 const toLink = (e?: LabEntry) => e && { href: `/lab/${e.id}`, title: e.data.title };
 
 // A sketch next to the entry's index.md (src/content/experiments/<slug>/) runs on the page: sketch.ts (canvas, p5,
-// three; loaded by sketch-runner.ts) or sketch.astro (CSS art, rendered straight into the stage). Entries without
-// one are lab notes that link out to the live site.
+// three; loaded by sketch-runner.ts) or sketch.astro (CSS art or a study, rendered straight into the stage).
+// Entries without one are lab notes that link out to the live site.
 const dir = '../../content/experiments';
 const scripts = import.meta.glob('../../content/experiments/*/sketch.ts');
 const art = import.meta.glob<{ default: AstroComponentFactory }>('../../content/experiments/*/sketch.astro', {
@@ -51,6 +52,14 @@ const art = import.meta.glob<{ default: AstroComponentFactory }>('../../content/
 const hasScript = `${dir}/${entry.id}/sketch.ts` in scripts;
 const Art = art[`${dir}/${entry.id}/sketch.astro`]?.default;
 const isExperiment = hasScript || Boolean(Art);
+const fit = isExperiment && stage === 'fit';
+// lab notes link to the live site and its repo; an experiment links to its own code (its repo if it has one,
+// otherwise its folder in this site's repo)
+const codeLinks = !isExperiment
+  ? []
+  : repo
+    ? links(entry).filter((l) => l.label === 'Code ↗')
+    : [folderLink(entry)];
 ---
 
 <Detail
@@ -68,57 +77,72 @@ const isExperiment = hasScript || Boolean(Art);
     {example ? <span class="chip">Example entry</span> : <Badge badge={badge} />}
   </Fragment>
 
-  {/* lab notes show their facts in the header; experiments show theirs beside the notes */}
-  {!isExperiment && (
-    <Facts
-      slot="facts"
-      cols={3}
-      items={[
-        { label: 'Made', value: fmtMonth(released) },
-        { label: 'Type', value: type },
-        { label: 'Stack', value: stack },
-      ]}
-    />
+  {/* every lab entry, lab note or experiment, has the same header facts */}
+  <Facts
+    slot="facts"
+    cols={3}
+    items={[
+      { label: 'Made', value: fmtMonth(released) },
+      { label: 'Type', value: type },
+      { label: 'Stack', value: stack },
+    ]}
+  />
+
+  {headsUp && (
+    <aside class="heads-up" aria-label="Before you start">
+      <p class="label">Before you start</p>
+      <p>{headsUp}</p>
+    </aside>
   )}
 
   {isExperiment ? (
     <>
       <figure>
-        <div class:list={['stage', { 'stage-art': Art }]} data-sketch={hasScript ? entry.id : undefined}>
+        <div
+          class:list={['stage', { 'stage-art': Art, 'stage-fit': fit }]}
+          data-sketch={hasScript ? entry.id : undefined}
+        >
           {Art && <Art />}
           <span class="fig label">Fig. {pad(entry.n)}</span>
-          <button type="button" class="fs-exit label">
-            Exit · Esc
-          </button>
+          {!fit && (
+            <button type="button" class="fs-exit label">
+              Exit · Esc
+            </button>
+          )}
         </div>
         <figcaption class="stage-bar label">
           <span>{hint}</span>
           <span>
+            {themes && (
+              <span class="stage-theme" role="group" aria-label="Stage colours">
+                <button type="button" data-theme-set="day" aria-pressed="true">
+                  Day
+                </button>
+                <button type="button" data-theme-set="night" aria-pressed="false">
+                  Night
+                </button>
+              </span>
+            )}
             <button type="button" data-act="pause" hidden>
               Pause
             </button>
             <button type="button" data-act="restart" hidden>
               Restart
             </button>
-            <button type="button" data-act="fullscreen">
-              Fullscreen ⤢
-            </button>
+            {!fit && (
+              <button type="button" data-act="fullscreen">
+                Fullscreen ⤢
+              </button>
+            )}
+            {codeLinks.map((l) => (
+              <a href={l.href} target="_blank" rel="noopener">
+                {l.label}
+              </a>
+            ))}
           </span>
         </figcaption>
       </figure>
-      <div class="xp-body">
-        <Facts
-          items={[
-            { label: 'Tools', value: stack },
-            { label: 'Time', value: time ?? '—' },
-            { label: 'Made', value: fmtMonth(released) },
-            { label: 'Source', value: repo ? links(entry).filter((l) => l.label === 'Code ↗') : '—' },
-          ]}
-        />
-        <div>
-          <Content />
-        </div>
-      </div>
+      <Content />
     </>
   ) : (
     <>

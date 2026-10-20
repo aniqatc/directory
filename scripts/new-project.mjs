@@ -5,8 +5,9 @@
 //   npm run new -- --kind project --title "Huckleberry"
 //   npm run new -- --kind experiment --title "World Clock" --live clock.aniqa.dev --repo world-clock
 //   npm run new -- --kind experiment --title "Zayn's Garden" --sketch p5
+//   npm run new -- --kind experiment --title "Easing Lanes" --sketch study
 //
-// Flags: --kind project|experiment  --sketch none|canvas|p5|three|css (experiments)  --title  --slug  --type
+// Flags: --kind project|experiment  --sketch none|canvas|p5|three|css|study (experiments)  --title  --slug  --type
 //        --stack  --released YYYY-MM  --updated YYYY-MM  --live  --repo  --summary  --blurb  --draft
 //        --yes (no prompts)
 //
@@ -30,6 +31,8 @@ const SKETCHES = {
   p5: { type: 'Generative sketch', stack: 'p5.js', needs: ['p5', '@types/p5'] },
   three: { type: '3D', stack: 'Three.js', needs: ['three', '@types/three'] },
   css: { type: 'CSS art', stack: 'HTML / CSS', needs: [] },
+  // a study: one idea with controls, in a stage that grows to fit it (stage: fit)
+  study: { type: 'CSS study', stack: 'HTML / CSS', needs: [] },
 };
 const ALIASES = { selected: 'project', portfolio: 'project', lab: 'experiment', ts: 'canvas', astro: 'css' };
 
@@ -84,16 +87,16 @@ const dir = `${CONTENT}/${isProject ? 'projects' : 'experiments'}/${slug}`;
 // experiments either link out to their own site, or run a sketch on the page
 const rawSketch = isProject
   ? 'none'
-  : await ask('sketch', 'Run it on the site? none (links out), canvas, p5, three or css', 'none');
+  : await ask('sketch', 'Run it on the site? none (links out), canvas, p5, three, css or study', 'none');
 const sketchKind = ALIASES[rawSketch] ?? rawSketch;
 if (sketchKind !== 'none' && !SKETCHES[sketchKind]) {
-  fail(`--sketch must be none, canvas, p5, three or css (got "${rawSketch}")`);
+  fail(`--sketch must be none, canvas, p5, three, css or study (got "${rawSketch}")`);
 }
 const sketch = SKETCHES[sketchKind];
 
 const type = await ask(
   'type',
-  'Type, a label (Web app, Dashboard, Generative sketch…)',
+  'Type, a label (Web app, Dashboard, Generative sketch, CSS study…)',
   sketch?.type ?? 'Web app',
 );
 const stack = await ask('stack', 'Stack, " / " between tools', sketch?.stack ?? '');

@@ -1,12 +1,12 @@
 // {{title}}: starter sketch from `npm run new`. A dot loops around the stage; replace it with yours.
 // start(stage) draws into the stage and returns stop (plus pause / resume / restart for those buttons).
-import type { StartSketch } from '../../../lib/sketch';
+import { colours, type StartSketch } from '../../../lib/sketch';
 
 const start: StartSketch = (stage) => {
   const cv = document.createElement('canvas');
   stage.appendChild(cv);
   const ctx = cv.getContext('2d')!;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent');
+  let c = colours(stage); // the stage's colours; read again when Day / Night flips
   let raf = 0;
   let t = 0;
   let paused = false;
@@ -21,7 +21,7 @@ const start: StartSketch = (stage) => {
     const w = stage.clientWidth;
     const h = stage.clientHeight;
     ctx.clearRect(0, 0, w, h);
-    ctx.fillStyle = accent;
+    ctx.fillStyle = c.accent;
     ctx.beginPath();
     ctx.arc(w / 2 + (Math.cos(t) * w) / 4, h / 2 + (Math.sin(t * 2) * h) / 5, 12, 0, Math.PI * 2);
     ctx.fill();
@@ -49,6 +49,10 @@ const start: StartSketch = (stage) => {
     },
     restart: () => {
       t = 0;
+      draw();
+    },
+    recolor: () => {
+      c = colours(stage);
       draw();
     },
     stop: () => {

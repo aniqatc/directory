@@ -81,6 +81,9 @@ Run `npm run new` and answer the prompts. It creates a folder from [`templates/`
 - **Project (portfolio):** choose **project**, then write the blurb, summary and notes in `index.md`. It gets a case study at `/work/<slug>`; `order` sets its place in Selected work.
 - **Lab entry that links out:** choose **experiment** → **none**, then write `index.md`.
 - **Experiment that runs on the site:** choose **experiment**, then **canvas**, **p5**, **three** or **css**. Each starter already works; replace it with your own. For p5 or Three.js, install the library when asked and restart `npm run dev`.
+- **Study (one idea with controls):** choose **experiment** → **study**. Its stage grows to fit it, and `src/styles/demo.css` has the buttons, sliders and lines that make it match the lab. `example-study` shows one.
+
+Optional fields for experiments: `themes: true` adds a Day / Night switch under the stage, and `headsUp: "…"` adds a "Before you start" box (for any lab entry; use it rarely).
 
 Then, for any entry: replace the placeholder drawing in `preview.astro`, run `npm run og` for its share card, and check the page. Set `draft: true` to hide it until it's ready.
 

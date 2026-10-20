@@ -8,7 +8,8 @@ stack: Canvas / JS
 released: 2026-10 # YYYY-MM
 # repo: repo-name # optional: repo under github.com/aniqatc
 hint: Move to stir · click to scatter # shown under the canvas
-time: ~2 hours # roughly how long it took
+# themes: true # optional: a Day / Night switch under the stage (the sketch must handle recolor)
+# headsUp: Made for a mouse. # optional, rare: a "Before you start" box above the figure
 # draft: true # optional: hide it from the portfolio and lab until it's ready
 summary: Two sentences for the top of the page. What it does and how to play with it.
 ---

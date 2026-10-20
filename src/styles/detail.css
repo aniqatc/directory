@@ -91,7 +91,7 @@
   transition: border-color 0.6s;
 }
 .d-nb .sec,
-.xp-body .sec {
+.d-xp .sec {
   grid-template-columns: minmax(0, 1fr);
 }
 .sec h2 {
@@ -160,6 +160,9 @@
 .d-xp [data-sec='notes'] ol > li::before {
   content: 'N.' counter(n);
 }
+.d-xp [data-sec='revisited'] ol > li::before {
+  content: 'R.' counter(n);
+}
 
 /* ---------- Previous / next ---------- */
 .pn {
@@ -194,9 +197,14 @@
   border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--bg);
+  color: var(--fg);
   overflow: hidden;
   cursor: crosshair;
   touch-action: pan-y;
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease,
+    color 0.5s ease;
 }
 .stage canvas {
   position: absolute;
@@ -220,7 +228,17 @@
 }
 .stage-bar > span:last-child {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 20px;
+}
+.stage-bar > span:last-child > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+}
+.stage-bar > span:last-child > a:hover {
+  color: var(--accent);
 }
 .stage-bar button,
 .fs-exit {
@@ -273,29 +291,54 @@ body.fs-lock {
 .stage-art {
   cursor: auto;
 }
-.xp-body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
-  gap: 32px 56px;
-  align-items: start;
-}
-.xp-body .facts {
-  --cols: 1;
-  gap: 16px;
-}
-.xp-body > div {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
+/* stage: fit (studies): the stage grows to its content instead of a fixed 16:9, with room for the Fig. label */
+.stage.stage-fit {
+  aspect-ratio: auto;
+  cursor: auto;
+  touch-action: auto;
+  padding: 44px 24px 24px;
 }
 
-@media (max-width: 860px) {
-  .xp-body {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .xp-body .facts {
-    --cols: 2;
-  }
+/* Day / Night under the stage (themes: true): a small version of the Portfolio / Lab switch.
+   Night gives the stage the portfolio's colours (.night in tokens.css); the rest of the page stays light. */
+.stage-theme {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.stage-bar .stage-theme button {
+  min-height: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.stage-bar .stage-theme button[aria-pressed='true'] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* headsUp: "Before you start", for the rare entry that needs it */
+.heads-up {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 6%, var(--bg));
+}
+.heads-up p {
+  margin: 0;
+}
+.heads-up p:not(.label) {
+  max-width: 62ch;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--body);
+}
+.heads-up .label {
+  color: var(--accent);
 }
 @media (max-width: 640px) {
   .sec {
@@ -304,9 +347,12 @@ body.fs-lock {
   .stage {
     aspect-ratio: 1 / 1;
   }
+  .stage.stage-fit {
+    padding: 40px 16px 16px;
+  }
 }
 @media (max-width: 560px) {
-  .stage-bar {
+  .d .stage-bar {
     flex-direction: column;
     align-items: flex-start;
     gap: 0;

@@ -65,6 +65,12 @@ export const latest = (lab: LabEntry[], count = 3) =>
     .reverse()
     .slice(0, count);
 
+/** An entry's own folder in this site's repo, where the code for a sketch or study that runs on the page lives. */
+export const folderLink = (p: Entry) => ({
+  label: 'Code ↗',
+  href: `${CONTACT.github}/directory/tree/main/src/content/${p.collection}/${p.id}`,
+});
+
 /** Live / npm and Code links for a project, in that order. */
 export function links(p: Entry) {
   const out: { label: string; href: string }[] = [];

@@ -4,13 +4,6 @@
   /* --pop is the accent on dark pages and in drawings; --pop-lab is the same hue darkened for text on the light lab */
   --pop: #79d6cf;
   --pop-lab: #16756f; /* mint-blue */
-  --bg: #16151b;
-  --surface: #1f1d26;
-  --line: #2e2b37;
-  --fg: #ebe7f0;
-  --body: #cfcad6;
-  --muted: #9690a3;
-  --accent: var(--pop);
   --pet: var(--pop);
   --blush: #f491b2;
   --ink: #2a2418;
@@ -19,6 +12,18 @@
   --font-body: 'Geist Variable', 'Helvetica Neue', system-ui, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
   --hdr: 52px;
+}
+
+/* night: the portfolio, and an experiment stage switched to Night on the lab (themes: true) */
+:root,
+.night {
+  --bg: #16151b;
+  --surface: #1f1d26;
+  --line: #2e2b37;
+  --fg: #ebe7f0;
+  --body: #cfcad6;
+  --muted: #9690a3;
+  --accent: var(--pop);
   color-scheme: dark;
 }
 

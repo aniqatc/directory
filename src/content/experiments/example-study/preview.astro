@@ -1,0 +1,69 @@
+---
+// Example Study: a dot easing across a track, under the curve that times it.
+---
+
+<svg class="curve" viewBox="0 0 120 60" aria-hidden="true">
+  <path d="M2 58 C 40 58, 50 2, 118 2"></path>
+</svg>
+<i class="track"></i>
+<i class="end"></i>
+<i class="dot"></i>
+<span class="css">ease · 0.8s</span>
+
+<style>
+  .curve {
+    position: absolute;
+    left: 40px;
+    top: 16px;
+    width: 120px;
+    height: 60px;
+    overflow: visible;
+  }
+  .curve path {
+    fill: none;
+    stroke: var(--pf);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .track {
+    left: 22px;
+    top: 100px;
+    width: 156px;
+    height: 1px;
+    background: var(--pl);
+  }
+  .end {
+    left: 177px;
+    top: 93px;
+    width: 1px;
+    height: 15px;
+    background: var(--pm);
+  }
+  .dot {
+    left: 22px;
+    top: 93px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--hi);
+    animation: ease-across 2.4s ease-in-out infinite alternate;
+  }
+  .css {
+    left: 22px;
+    top: 116px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--pm);
+    text-transform: uppercase;
+  }
+  @keyframes ease-across {
+    0%,
+    15% {
+      transform: translateX(0);
+    }
+    85%,
+    100% {
+      transform: translateX(142px);
+    }
+  }
+</style>

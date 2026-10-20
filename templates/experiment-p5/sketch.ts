@@ -1,13 +1,11 @@
 // {{title}}: starter sketch from `npm run new`. A dot loops around the stage; replace it with yours.
 // start(stage) draws into the stage and returns stop (plus pause / resume / restart for those buttons).
 // Needs p5: npm i p5 && npm i -D @types/p5
-import type { StartSketch } from '../../../lib/sketch';
+import { colours, type StartSketch } from '../../../lib/sketch';
 import p5 from 'p5';
 
 const start: StartSketch = (stage) => {
-  const css = getComputedStyle(document.documentElement);
-  const bg = css.getPropertyValue('--bg').trim();
-  const accent = css.getPropertyValue('--accent').trim();
+  let c = colours(stage); // the stage's colours; read again when Day / Night flips
   let t = 0;
   let ro: ResizeObserver | undefined;
 
@@ -20,8 +18,8 @@ const start: StartSketch = (stage) => {
     };
     p.draw = () => {
       t += 0.02;
-      p.background(bg);
-      p.fill(accent);
+      p.background(c.bg);
+      p.fill(c.accent);
       p.circle(
         p.width / 2 + (Math.cos(t) * p.width) / 4,
         p.height / 2 + (Math.sin(t * 2) * p.height) / 5,
@@ -35,6 +33,10 @@ const start: StartSketch = (stage) => {
     resume: () => sketch.loop(),
     restart: () => {
       t = 0;
+      sketch.redraw();
+    },
+    recolor: () => {
+      c = colours(stage);
       sketch.redraw();
     },
     stop: () => {

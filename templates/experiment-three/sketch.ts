@@ -2,7 +2,7 @@
 // start(stage) draws into the stage and returns stop (plus pause / resume / restart for those buttons).
 // Needs Three.js: npm i three && npm i -D @types/three
 import * as THREE from 'three';
-import type { StartSketch } from '../../../lib/sketch';
+import { colours, type StartSketch } from '../../../lib/sketch';
 
 const start: StartSketch = (stage) => {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -12,11 +12,8 @@ const start: StartSketch = (stage) => {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 4;
-  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-  const cube = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshStandardMaterial({ color: accent }),
-  );
+  const material = new THREE.MeshStandardMaterial({ color: colours(stage).accent });
+  const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material);
   const light = new THREE.DirectionalLight(0xffffff, 2);
   light.position.set(2, 3, 4);
   scene.add(cube, light, new THREE.AmbientLight(0xffffff, 0.6));
@@ -47,6 +44,8 @@ const start: StartSketch = (stage) => {
       paused = false;
     },
     restart: () => cube.rotation.set(0, 0, 0),
+    // the stage switched Day / Night: the background is see-through, so only the cube needs its new colour
+    recolor: () => material.color.set(colours(stage).accent),
     stop: () => {
       renderer.setAnimationLoop(null);
       ro.disconnect();

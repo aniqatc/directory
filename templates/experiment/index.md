@@ -9,6 +9,7 @@ released: 2026-10 # YYYY-MM; entries released in the last 60 days get a "New" ta
 live: name.aniqa.dev # host only, no https://; delete if there's no live site
 repo: repo-name # repo under github.com/aniqatc; delete if private
 # updated: 2026-10 # optional: last time you revisited it; the 3 newest get an "Updated" tag
+# headsUp: The live site is down; this page shows how it worked. # optional, rare: a "Before you start" box above the figure
 # draft: true # optional: hide it from the portfolio and lab until it's ready
 summary: Two sentences for the top of the lab note. What it is and what it does.
 ---

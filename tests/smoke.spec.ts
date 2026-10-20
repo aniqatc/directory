@@ -124,6 +124,46 @@ test.describe('interactions', () => {
   });
 });
 
+test.describe('experiment pages', () => {
+  test('a study: the lab-note header, a stage that fits, Day / Night and a Code link, but no Fullscreen', async ({
+    page,
+  }) => {
+    const errors = watchErrors(page);
+    await page.goto('/lab/example-study');
+    await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
+    await expect(page.locator('.heads-up')).toBeVisible();
+    const stage = page.locator('.stage');
+    await expect(stage).toHaveClass(/stage-fit/);
+    await expect(page.locator('[data-act="fullscreen"], .fs-exit')).toHaveCount(0);
+    await expect(page.locator('.stage-bar a', { hasText: 'Code' })).toHaveAttribute(
+      'href',
+      /\/directory\/tree\/main\/src\/content\/experiments\/example-study$/,
+    );
+
+    // Night gives the stage the portfolio's colours and leaves the page light
+    const bg = (sel: string) =>
+      page.locator(sel).evaluate((el) => getComputedStyle(el).getPropertyValue('--bg').trim());
+    await page.click('[data-theme-set="night"]');
+    await expect(stage).toHaveClass(/night/);
+    await expect(page.locator('[data-theme-set="night"]')).toHaveAttribute('aria-pressed', 'true');
+    expect(await bg('.stage')).toBe('#16151b');
+    expect(await bg('body')).toBe('#f1efea');
+
+    // and the study itself works
+    await page.click('[data-play]');
+    await expect(page.locator('.stage .track')).toHaveClass(/go/);
+    expect(errors).toEqual([]);
+  });
+
+  test('a lab note keeps its drawing, with Live and Code under it', async ({ page }) => {
+    await page.goto('/lab/world-clock');
+    await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
+    await expect(page.locator('.pvbig')).toBeVisible();
+    await expect(page.locator('figcaption .l a')).toHaveText(['Live ↗', 'Code ↗']);
+    await expect(page.locator('.heads-up, .stage')).toHaveCount(0);
+  });
+});
+
 test.describe('page changes (view transitions)', () => {
   test('links swap pages without a reload, and every script still works afterwards', async ({ page }) => {
     const errors = watchErrors(page);
@@ -141,8 +181,9 @@ test.describe('page changes (view transitions)', () => {
     await page.mouse.move(400, (await row.boundingBox())!.y + 20);
     await expect(page.locator('.tip')).toHaveClass(/show/); // hover preview
 
-    // lab → a lab note: the big heart and the drawing's scaling start
-    await page.click('.row .t a >> nth=0');
+    // lab → a lab note: the big heart and the drawing's scaling start (a lab note by name: the newest row can
+    // be an experiment, which has a stage instead of a drawing)
+    await page.click('.row[data-slug="world-clock"] .t a');
     await expect(page.locator('.d-title')).toBeVisible();
     expect(await sameDocument()).toBe(true);
     await expect(page.locator('.like-lg .lc')).toHaveText(/\d+/);
@@ -231,7 +272,7 @@ test.describe('likes', () => {
 
 test.describe('accessibility', () => {
   test('keyboard: every link and button can be reached and shows a focus ring', async ({ page }) => {
-    for (const path of ['/', '/lab', '/work/weather', '/lab/world-clock']) {
+    for (const path of ['/', '/lab', '/work/weather', '/lab/world-clock', '/lab/example-study']) {
       await page.goto(path, { waitUntil: 'load' });
       // number every visible link and button, then Tab through and tick them off
       // (document.querySelectorAll, not $$eval: Playwright's selectors reach into the dev toolbar's shadow DOM)

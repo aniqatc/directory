@@ -1,7 +1,7 @@
-// Experiment pages: Fullscreen for any stage, and for a JavaScript sketch (src/content/experiments/<slug>/sketch.ts)
-// load it into the stage and wire up Pause / Restart. Each sketch is its own bundle, so a page only downloads its
+// Experiment pages: Fullscreen for a framed stage, the Day / Night switch (themes: true), and for a JavaScript sketch
+// (src/content/experiments/<slug>/sketch.ts) load it into the stage and wire up Pause / Restart. Each sketch is its own bundle, so a page only downloads its
 // own sketch (and p5 or three if it uses them). Everything is torn down before the next page swaps in.
-import type { Sketch, StartSketch } from '../lib/sketch';
+import { STAGE_THEME, type Sketch, type StartSketch } from '../lib/sketch';
 import { onPage } from './page';
 
 const sketches = import.meta.glob<{ default: StartSketch }>('../content/experiments/*/sketch.ts');
@@ -54,6 +54,20 @@ onPage(() => {
       { signal },
     );
   }
+
+  // Day / Night: .night gives the stage the portfolio's colours (tokens.css). A JavaScript sketch redraws through
+  // recolor(); CSS art and studies follow the colours on their own, or listen for the stage:theme event.
+  const themeBtns = bar?.querySelectorAll<HTMLButtonElement>('[data-theme-set]') ?? [];
+  themeBtns.forEach((b) =>
+    b.addEventListener('click', () => {
+      const night = b.dataset.themeSet === 'night';
+      if (stage.classList.contains('night') === night) return;
+      stage.classList.toggle('night', night);
+      themeBtns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      sketch?.recolor?.();
+      stage.dispatchEvent(new CustomEvent(STAGE_THEME, { detail: { night } }));
+    }),
+  );
 
   // the sketch itself, loaded on demand
   const load = stage.dataset.sketch && sketches[`../content/experiments/${stage.dataset.sketch}/sketch.ts`];

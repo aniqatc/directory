@@ -1,0 +1,87 @@
+---
+// Example Study: starter study from `npm run new`. A dot crosses a track with a CSS transition; replace it with yours.
+// It renders inside a stage that grows to fit it (stage: fit). Use the shared parts in src/styles/demo.css
+// (.demo, .demo-bar, .demo-btn, .demo-check, .demo-range, .demo-out, .demo-grid) so it matches the lab, and
+// the stage colours (var(--fg), var(--muted), var(--line), var(--accent), var(--bg)) so Day / Night works.
+---
+
+<div class="demo" data-study="example-study">
+  <div class="demo-bar">
+    <button type="button" class="demo-btn" data-play aria-pressed="false">Play →</button>
+    <span class="demo-opts" role="group" aria-label="Easing">
+      <button type="button" class="demo-btn" data-ease="ease" aria-pressed="true">ease</button>
+      <button type="button" class="demo-btn" data-ease="linear" aria-pressed="false">linear</button>
+      <button type="button" class="demo-btn" data-ease="ease-in-out" aria-pressed="false">ease-in-out</button>
+    </span>
+    <label class="demo-range">
+      <span class="label">Duration</span>
+      <input type="range" min="0.2" max="2" step="0.1" value="0.8" aria-label="Duration" data-dur />
+      <output class="demo-out" data-dur-out>0.8s</output>
+    </label>
+  </div>
+  <div class="track"><i class="dot"></i></div>
+  <p class="demo-out" data-css>transition: transform 0.8s ease;</p>
+</div>
+
+<style>
+  .track {
+    position: relative;
+    height: 32px;
+    border-bottom: 1px solid var(--line);
+  }
+  .dot {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    transition: transform var(--dur, 0.8s) var(--ease, ease);
+  }
+  .go .dot {
+    transform: translateX(calc(var(--w, 0px) - 18px));
+  }
+</style>
+
+<script>
+  import { onPage } from '../../../scripts/page';
+
+  // onPage runs on every page change, so look for this study first and do nothing on other pages
+  onPage(() => {
+    const root = document.querySelector<HTMLElement>('[data-study="example-study"]');
+    if (!root) return;
+    const track = root.querySelector<HTMLElement>('.track')!;
+    const play = root.querySelector<HTMLButtonElement>('[data-play]')!;
+    const dur = root.querySelector<HTMLInputElement>('[data-dur]')!;
+    const css = root.querySelector<HTMLElement>('[data-css]')!;
+    const eases = root.querySelectorAll<HTMLButtonElement>('[data-ease]');
+    let ease = 'ease';
+
+    const show = () => {
+      root.style.setProperty('--dur', `${dur.value}s`);
+      root.style.setProperty('--ease', ease);
+      root.querySelector('[data-dur-out]')!.textContent = `${dur.value}s`;
+      css.textContent = `transition: transform ${dur.value}s ${ease};`;
+    };
+    const size = () => track.style.setProperty('--w', `${track.clientWidth}px`);
+    const ro = new ResizeObserver(size);
+    ro.observe(track);
+
+    play.addEventListener('click', () => {
+      const on = track.classList.toggle('go');
+      play.textContent = on ? '← Back' : 'Play →';
+      play.setAttribute('aria-pressed', String(on));
+    });
+    eases.forEach((b) =>
+      b.addEventListener('click', () => {
+        ease = b.dataset.ease!;
+        eases.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        show();
+      }),
+    );
+    dur.addEventListener('input', show);
+    show();
+    return () => ro.disconnect();
+  });
+</script>

@@ -36,7 +36,13 @@ const experiments = defineCollection({
   schema: base.extend({
     example: z.boolean().default(false), // placeholder entry that shows a layout
     hint: z.string().optional(), // with a sketch: shown under the stage, e.g. "Move to stir the field"
-    time: z.string().optional(), // with a sketch: roughly how long it took
+    // with a sketch: "frame" is a fixed 16:9 stage (square on phones) with Fullscreen, for canvas, p5, three
+    // and CSS art; "fit" grows to its content and has no Fullscreen, for studies with controls
+    stage: z.enum(['frame', 'fit']).default('frame'),
+    themes: z.boolean().default(false), // with a sketch: a Day / Night switch under the stage
+    // a "Before you start" box above the figure, for something the reader needs to know first
+    // ("Made for a mouse", "The live site is down"). Use it rarely.
+    headsUp: z.string().optional(),
   }),
 });
 
