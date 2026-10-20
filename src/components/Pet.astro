@@ -161,6 +161,126 @@
   .pet[data-pet='pumpkin'].hop .f path {
     animation: pet-glow 0.9s ease-out; /* the jack-o'-lantern lights up */
   }
+  /* the Christmas tree: lights twinkle, go dim while it naps, flash on a tap; the star spins */
+  .pet .pet-lights circle {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: pet-twinkle 1.8s ease-in-out infinite;
+  }
+  .pet .pet-lights circle:nth-child(2n) {
+    animation-delay: -0.9s;
+  }
+  .pet .pet-lights circle:nth-child(3n) {
+    animation-delay: -0.5s;
+  }
+  .pet.sleep .pet-lights,
+  .pet.sleep .pet-star {
+    opacity: 0.4;
+    transition: opacity 0.6s;
+  }
+  .pet.sleep .pet-lights circle {
+    animation: none;
+  }
+  .pet .pet-star,
+  .pet .pet-sparkle {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+  }
+  .pet.hop .pet-star {
+    animation: pet-spin 0.7s ease-out;
+  }
+  .pet.hop .pet-lights circle {
+    animation: pet-flash 0.25s ease-in-out 3;
+  }
+  /* the Eid moon: a star twinkles, the lantern swings, dims for a nap and glows on a tap */
+  .pet .pet-sparkle {
+    animation: pet-twinkle 2.4s ease-in-out infinite;
+  }
+  .pet .pet-lantern {
+    transform-box: fill-box;
+    transform-origin: 27% 0%;
+    animation: pet-swing 2.6s ease-in-out infinite;
+  }
+  .pet .pet-lantern-light {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    transition: opacity 0.6s;
+  }
+  .pet.sleep .pet-lantern-light {
+    opacity: 0.35;
+  }
+  .pet.sleep .pet-lantern {
+    animation: none;
+  }
+  .pet.hop .pet-lantern-light {
+    animation: pet-lantern 0.9s ease-out;
+  }
+  /* the Diwali diya: its flame flares on a tap */
+  .pet .pet-flame {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+  .pet.hop .pet-flame {
+    animation: pet-flare 0.9s ease-out;
+  }
+  /* the Lunar New Year lantern sways from its string and glows on a tap */
+  .pet[data-pet='lantern'] > svg:first-child {
+    transform-origin: 50% 6%;
+    animation: pet-swing 2.6s ease-in-out infinite;
+  }
+  .pet[data-pet='lantern'].sleep > svg:first-child {
+    animation: none;
+  }
+  .pet.hop .pet-lantern-body {
+    animation: pet-glow-red 0.9s ease-out;
+  }
+  @keyframes pet-flare {
+    30%,
+    60% {
+      transform: scale(1.5);
+    }
+  }
+  @keyframes pet-glow-red {
+    30%,
+    60% {
+      fill: #ff8a6a;
+    }
+  }
+  @keyframes pet-twinkle {
+    50% {
+      opacity: 0.45;
+      transform: scale(0.8);
+    }
+  }
+  @keyframes pet-flash {
+    50% {
+      opacity: 0.2;
+    }
+  }
+  @keyframes pet-spin {
+    to {
+      transform: rotate(144deg) scale(1);
+    }
+    40% {
+      transform: rotate(80deg) scale(1.35);
+    }
+  }
+  @keyframes pet-swing {
+    0%,
+    100% {
+      transform: rotate(-7deg);
+    }
+    50% {
+      transform: rotate(7deg);
+    }
+  }
+  @keyframes pet-lantern {
+    30%,
+    70% {
+      fill: #fff;
+      transform: scale(1.25);
+    }
+  }
   .pet[data-pet='owl'] > svg:first-child {
     transform-origin: 50% 70%;
     animation: pet-tilt 3.4s ease-in-out infinite;

@@ -19,7 +19,11 @@ export type PetId =
   | 'party'
   | 'penguin'
   | 'cupcake'
-  | 'pumpkin';
+  | 'pumpkin'
+  | 'tree'
+  | 'moon'
+  | 'diya'
+  | 'lantern';
 
 /** The pet everyone gets: a name to pin one, or 'auto' to follow the calendar in SEASONS. */
 export const PET: PetId | 'auto' = 'auto';
@@ -43,14 +47,20 @@ export const SEASONS: Season[] = [
   { from: '09-20', to: '09-20', pet: 'cupcake' }, // my husband's birthday
   { from: '10-18', to: '10-18', pet: 'heart' },
   { from: '10-31', to: '10-31', pet: 'ghost' }, // Halloween
-  { from: '12-25', to: '12-25', pet: 'party' }, // Christmas
+  { from: '12-25', to: '12-25', pet: 'tree' }, // Christmas
   { from: '12-31', to: '12-31', pet: 'party' }, // New Year's Eve
 
   // holidays that move
   { on: (d) => nthSunday(d, 5, 2), label: "Mother's Day, the 2nd Sunday in May", pet: 'party' },
   { on: (d) => nthSunday(d, 6, 3), label: "Father's Day, the 3rd Sunday in June", pet: 'party' },
-  { on: (d) => hijri(d, 10, 1), label: 'Eid al-Fitr, 1 Shawwal', pet: 'party' },
-  { on: (d) => hijri(d, 12, 10), label: 'Eid al-Adha, 10 Dhu al-Hijjah', pet: 'party' },
+  { on: (d) => hijri(d, 10, 1), label: 'Eid al-Fitr, 1 Shawwal', pet: 'moon' },
+  { on: (d) => hijri(d, 12, 10), label: 'Eid al-Adha, 10 Dhu al-Hijjah', pet: 'moon' },
+  { on: (d) => listed(d, DIWALI), label: 'Diwali, from a list of dates through 2030', pet: 'diya' },
+  {
+    on: (d) => listed(d, LUNAR_NEW_YEAR),
+    label: 'Lunar New Year, from a list of dates through 2035',
+    pet: 'lantern',
+  },
 
   // the rest of the year
   { from: '01-01', to: '01-07', pet: 'party' }, // New Year's week
@@ -68,6 +78,26 @@ export const SEASONS: Season[] = [
   { from: '12-01', to: '12-31', pet: 'snowball' },
 ];
 export const FALLBACK: PetId = 'dot';
+
+// Holidays without a calendar the browser can work out. Add more years when these run out.
+const DIWALI = ['2026-11-08', '2027-10-29', '2028-10-17', '2029-11-05', '2030-10-26'];
+const LUNAR_NEW_YEAR = [
+  '2026-02-17',
+  '2027-02-06',
+  '2028-01-26',
+  '2029-02-13',
+  '2030-02-03',
+  '2031-01-23',
+  '2032-02-11',
+  '2033-01-31',
+  '2034-02-19',
+  '2035-02-08',
+];
+/** Whether `d` is one of the listed YYYY-MM-DD dates. */
+function listed(d: Date, dates: string[]): boolean {
+  const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return dates.includes(ymd);
+}
 
 /** Whether `d` is the nth Sunday of a month (1–12), for Mother's and Father's Day. */
 function nthSunday(d: Date, month: number, n: number): boolean {
@@ -106,11 +136,13 @@ export function currentPet(today = new Date()): PetId {
 //   pet-wing-l / -r, pet-flap-l / -r, pet-sway   small idle loops
 
 type Face = {
-  y?: number; // moves the whole face
+  x?: number; // moves the whole face
+  y?: number;
   eyeX?: number;
   eyeY?: number;
   eye?: string; // replaces the eye drawing (centred on 0, 0); it still blinks and closes in its sleep
   blushX?: number;
+  blushRx?: number; // cheek width (2.3)
   blush?: string;
   mouth?: string;
 };
@@ -397,6 +429,70 @@ export const PETS: Record<PetId, PetDrawing> = {
       <path d="M-1 -9.6 Q-4.6 -12 -6 -9 Q-3.4 -8 -1 -9.6 Z" fill="${LEAF}"/></g>`,
     reward: '',
   },
+
+  tree: {
+    label: 'Christmas tree',
+    body: `<rect x="-1.8" y="9" width="3.6" height="3.4" rx=".6" fill="${CAP_LINE}"/>
+      <path d="M0 -12 Q1 -12 7 -3 Q7.6 -2 6.4 -2 L-6.4 -2 Q-7.6 -2 -7 -3 Q-1 -12 0 -12 Z" fill="var(--pet)"/>
+      <path d="M0 -6.6 Q1 -6.6 10 5 Q10.6 6 9.4 6 L-9.4 6 Q-10.6 6 -10 5 Q-1 -6.6 0 -6.6 Z" fill="var(--pet)"/>
+      <path d="M0 -1.6 Q1 -1.6 11.4 9.4 Q12 10.4 10.8 10.4 L-10.8 10.4 Q-12 10.4 -11.4 9.4 Q-1 -1.6 0 -1.6 Z" fill="var(--pet)"/>
+      <g class="pet-lights">
+        <circle cx="-3.6" cy="-4" r="1" fill="var(--blush)"/><circle cx="4.2" cy="-3.4" r="1" fill="#f5c451"/>
+        <circle cx="-7.6" cy="8.2" r="1.1" fill="#f5c451"/><circle cx="7.8" cy="8" r="1.1" fill="var(--blush)"/>
+        <circle cx="0" cy="8.8" r="1" fill="${CREAM}"/>
+      </g>`,
+    face: { y: 1.4, eyeX: 2.8, blushX: 5.2 },
+    front: `<g class="pet-star"><path d="M0 -17.4 L1.2 -14.6 L4.2 -14.4 L1.9 -12.4 L2.6 -9.6 L0 -11.1 L-2.6 -9.6 L-1.9 -12.4 L-4.2 -14.4 L-1.2 -14.6 Z" fill="#f5c451"/></g>`,
+  },
+
+  moon: {
+    label: 'Crescent moon',
+    back: `<path class="pet-sparkle" d="M-3 -15.5 L-2.4 -13.9 L-0.8 -13.3 L-2.4 -12.7 L-3 -11.1 L-3.6 -12.7 L-5.2 -13.3 L-3.6 -13.9 Z" fill="#f5c451"/>`,
+    body: '<path d="M0 -10.5 A10.5 10.5 0 1 0 0 10.5 A10.5 10.5 0 1 0 0 -10.5 Z M4.5 -9.5 A7.5 7.5 0 1 0 4.5 5.5 A7.5 7.5 0 1 0 4.5 -9.5 Z" fill="var(--pet)" fill-rule="evenodd"/>',
+    face: {
+      x: -6.6,
+      y: 0.4,
+      eyeX: 1.7,
+      blushX: 2.5,
+      blushRx: 1.2,
+      eye: `<ellipse rx="1.05" ry="1.55" fill="${INK}"/><circle cx="-.35" cy="-.55" r=".4" fill="#fff"/>`,
+      mouth: `<path d="M-1.2 2.6 Q0 3.8 1.2 2.6" stroke="${INK}" stroke-width="1" fill="none" stroke-linecap="round"/>`,
+    },
+    // a fanous (lantern) hanging from the moon's tip; it swings, dims while the moon naps and glows on a tap
+    front: `<g class="pet-lantern">
+      <path d="M6.6 -7.4 L7.4 -1.6" stroke="var(--muted)" stroke-width=".5"/>
+      <path d="M5.9 -1.6 L8.9 -1.6 L7.4 -3.2 Z" fill="${CAP_LINE}"/>
+      <rect x="5.6" y="-1.6" width="3.6" height="5" rx="1.2" fill="${YELLOW}"/>
+      <rect class="pet-lantern-light" x="6.6" y="-0.6" width="1.6" height="3" rx=".6" fill="#fff3c4"/>
+      <path d="M6 3.4 L8.8 3.4 L7.4 4.6 Z" fill="${CAP_LINE}"/></g>`,
+  },
+
+  diya: {
+    label: 'Diya',
+    body: `<path d="M-11 -1.6 Q-10.6 8.6 0 9.6 Q10.6 8.6 11 -1.6 Z" fill="var(--pet)"/>
+      <path d="M-11.6 -1.6 L11.6 -1.6" stroke="${SHADE}" stroke-width="1.6" stroke-linecap="round"/>
+      <g fill="${YELLOW}"><circle cx="-7.6" cy="5.4" r=".8"/><circle cx="7.6" cy="5.4" r=".8"/><circle cx="0" cy="8" r=".8"/></g>
+      <g class="awake-only"><g class="pet-flame"><g class="pet-flicker">
+        <path d="M0 -12 Q2.6 -8 2 -5.6 Q0 -3.2 -2 -5.6 Q-2.6 -8 0 -12 Z" fill="${YELLOW}"/>
+        <ellipse cy="-5.8" rx=".8" ry="1.4" fill="${CREAM}"/></g></g></g>
+      <g class="sleep-only">
+        <path d="M0 -2.4 L0 -3.6" stroke="var(--ink)" stroke-width=".6" stroke-linecap="round"/>
+        <g class="pet-smoke"><path d="M0 -4.4 Q-1.2 -6 0 -7.4 Q1.2 -8.8 0 -10.4" fill="none" stroke="var(--muted)" stroke-width=".7" stroke-linecap="round"/></g>
+      </g>`,
+    face: { y: 1.4, eyeX: 3.4, blushX: 6.2 },
+    reward: `<svg class="pet-heart" viewBox="0 0 10 10" style="left: 22px; top: 2px"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`,
+  },
+
+  lantern: {
+    label: 'Red lantern',
+    back: `<path d="M0 -14 L0 -10" stroke="var(--muted)" stroke-width=".6"/>
+      <path d="M-1.6 11 L-1.6 15 M0 11 L0 16 M1.6 11 L1.6 15" stroke="${YELLOW}" stroke-width=".7" stroke-linecap="round"/>`,
+    body: `<ellipse class="pet-lantern-body" rx="10.6" ry="9.2" fill="#e2574c"/>
+      <path d="M-5 -8.6 Q-8 0 -5 8.6 M5 -8.6 Q8 0 5 8.6 M0 -9.2 L0 -5.4" fill="none" stroke="#c4443a" stroke-width=".7"/>
+      <rect x="-5" y="-11" width="10" height="2.6" rx=".8" fill="${YELLOW}"/>
+      <rect x="-5" y="8.4" width="10" height="2.6" rx=".8" fill="${YELLOW}"/>`,
+    face: { y: 0.4, blush: '#f7a1a0' },
+  },
 };
 
 const HEART = `<svg class="pet-heart" viewBox="0 0 10 10"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`;
@@ -408,14 +504,15 @@ export function petMarkup(id: PetId): string {
   const ex = f.eyeX ?? 3.3;
   const bx = f.blushX ?? 5.6;
   const blush = f.blush ?? 'var(--blush)';
+  const brx = f.blushRx ?? 2.3;
   const eye = (x: number) =>
     `<g class="e" data-x="${x}" data-y="${f.eyeY ?? -1}">${f.eye ?? `<ellipse rx="1.55" ry="2.15" fill="${INK}"/><circle cx="-.5" cy="-.8" r=".6" fill="#fff"/>`}</g>`;
   return `<svg viewBox="-16 -16 32 32">
     ${p.back ?? ''}
     <g class="b">${p.body}
-      <g class="f"><g transform="translate(0,${f.y ?? 0})">
-        <ellipse cx="${-bx}" cy="2.4" rx="2.3" ry="1.3" fill="${blush}" opacity=".85"/>
-        <ellipse cx="${bx}" cy="2.4" rx="2.3" ry="1.3" fill="${blush}" opacity=".85"/>
+      <g class="f"><g transform="translate(${f.x ?? 0},${f.y ?? 0})">
+        <ellipse cx="${-bx}" cy="2.4" rx="${brx}" ry="1.3" fill="${blush}" opacity=".85"/>
+        <ellipse cx="${bx}" cy="2.4" rx="${brx}" ry="1.3" fill="${blush}" opacity=".85"/>
         ${eye(-ex)}${eye(ex)}
         ${f.mouth ?? SMILE}
       </g></g>
