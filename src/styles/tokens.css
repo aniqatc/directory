@@ -5,6 +5,10 @@
   --pop: #79d6cf;
   --pop-lab: #16756f; /* mint-blue */
   --pet: var(--pop);
+  /* darker shades of the pet for its wings, leaves, stems and stripes; they follow --pop */
+  --pet-shade: color-mix(in oklab, var(--pet) 86%, #000);
+  --pet-leaf: color-mix(in oklab, var(--pet) 76%, #000);
+  --pet-deep: color-mix(in oklab, var(--pet) 64%, #000);
   --blush: #f491b2;
   --ink: #2a2418;
   --heart: var(--accent); /* likes follow the accent, darkened on the light lab */

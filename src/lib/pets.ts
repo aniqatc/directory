@@ -68,8 +68,10 @@ const SMILE = `<path d="M-1.9 2.7 Q0 4.6 1.9 2.7" stroke="${INK}" stroke-width="
 const SHELL =
   'fill="#fbf6ea" stroke="var(--ink)" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"';
 const WING = 'fill="#fff" fill-opacity=".85" stroke="var(--ink)" stroke-opacity=".3" stroke-width=".6"';
-const LEAF = '#3fae9f';
-const STEM = '#2f8f86';
+// darker shades of the pet colour (tokens.css), so they follow the accent if it changes
+const SHADE = 'var(--pet-shade)'; // wings, flippers
+const LEAF = 'var(--pet-leaf)';
+const STEM = 'var(--pet-deep)'; // stems, the bee's stripes, the snowball's beanie
 const CAP = '#b7834f';
 const CAP_LINE = '#8f6237';
 
@@ -82,8 +84,8 @@ export const PETS: Record<PetId, PetDrawing> = {
   chick: {
     label: 'Egg & chick',
     back: `<g class="hop-only">
-      <g class="pet-flap-l"><ellipse cx="-10" cy="0" rx="3.2" ry="1.8" transform="rotate(-35 -10 0)" fill="#5fc4bd"/></g>
-      <g class="pet-flap-r"><ellipse cx="10" cy="0" rx="3.2" ry="1.8" transform="rotate(35 10 0)" fill="#5fc4bd"/></g></g>`,
+      <g class="pet-flap-l"><ellipse cx="-10" cy="0" rx="3.2" ry="1.8" transform="rotate(-35 -10 0)" fill="${SHADE}"/></g>
+      <g class="pet-flap-r"><ellipse cx="10" cy="0" rx="3.2" ry="1.8" transform="rotate(35 10 0)" fill="${SHADE}"/></g></g>`,
     body: `<circle cy="-1" r="9.6" fill="var(--pet)"/>
       <path d="M-1.6 -10.2 Q-0.6 -14 0.8 -10.4 Q1.8 -13.2 3.2 -10" fill="none" stroke="var(--pet)" stroke-width="1.6" stroke-linecap="round"/>`,
     face: { y: -1.4, mouth: '<path d="M-1.5 1.4 L1.5 1.4 L0 3.3 Z" fill="#f2b54b"/>' },
