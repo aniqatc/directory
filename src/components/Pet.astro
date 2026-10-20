@@ -68,6 +68,162 @@
   .pet.hop .pet-heart {
     animation: pet-heart 0.9s ease-out;
   }
+  /* ---- parts of the drawings in src/lib/pets.ts ---- */
+  .pet .sleep-only,
+  .pet .hop-only,
+  .pet .born-only {
+    display: none;
+  }
+  .pet.sleep .sleep-only {
+    display: inline;
+  }
+  .pet.sleep .awake-only {
+    display: none;
+  }
+  /* shows for a moment on a tap; stays hidden when motion is reduced (no animation, opacity 0) */
+  .pet.hop .hop-only {
+    display: inline;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: pet-extra 0.9s ease-out forwards;
+  }
+  .pet.born .born-only {
+    display: inline;
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: pet-born 0.6s ease-in forwards;
+  }
+  .pet .pet-cap {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transition: transform 0.4s ease;
+  }
+  .pet.hop .pet-cap {
+    animation: pet-cap 0.56s ease-out;
+  }
+  .pet[data-pet='acorn'].sleep .pet-cap {
+    transform: translateY(2.6px) rotate(-7deg);
+  }
+  .pet[data-pet='snowball'].sleep .pet-cap {
+    transform: translateY(3.4px) rotate(-6deg);
+  }
+  .pet .pet-wing-l,
+  .pet .pet-wing-r,
+  .pet .pet-flap-l,
+  .pet .pet-flap-r {
+    transform-box: fill-box;
+    animation: pet-flutter-l 0.5s ease-in-out infinite;
+  }
+  .pet .pet-wing-l,
+  .pet .pet-flap-l {
+    transform-origin: 100% 100%;
+  }
+  .pet .pet-wing-r,
+  .pet .pet-flap-r {
+    transform-origin: 0% 100%;
+    animation-name: pet-flutter-r;
+  }
+  .pet .pet-flap-l,
+  .pet .pet-flap-r {
+    animation-duration: 0.25s;
+  }
+  .pet .pet-sway {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: pet-sway 2.2s ease-in-out infinite;
+  }
+  .pet .pet-ghost {
+    transition: fill-opacity 0.6s ease;
+  }
+  .pet.sleep .pet-ghost {
+    fill-opacity: 0.55;
+  }
+  .pet[data-pet='ghost'] > svg:first-child {
+    animation: pet-float 2.2s ease-in-out infinite;
+  }
+  .pet[data-pet='heart'] > svg:first-child {
+    animation: pet-beat 1.2s ease-in-out infinite;
+  }
+  .pet[data-pet='mochi'] > svg:first-child {
+    transform-origin: 50% 81%;
+    transition: transform 0.6s ease;
+  }
+  .pet[data-pet='mochi'].sleep > svg:first-child {
+    transform: scale(1.35, 0.62); /* melts into a puddle */
+  }
+  @keyframes pet-extra {
+    0% {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+    18% {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    30%,
+    75% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+  @keyframes pet-born {
+    0% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(3px, -12px) rotate(25deg);
+    }
+  }
+  @keyframes pet-cap {
+    40% {
+      transform: translateY(-3.5px) rotate(-10deg);
+    }
+  }
+  @keyframes pet-flutter-l {
+    50% {
+      transform: rotate(-18deg);
+    }
+  }
+  @keyframes pet-flutter-r {
+    50% {
+      transform: rotate(18deg);
+    }
+  }
+  @keyframes pet-sway {
+    0%,
+    100% {
+      transform: rotate(-6deg);
+    }
+    50% {
+      transform: rotate(6deg);
+    }
+  }
+  @keyframes pet-float {
+    50% {
+      transform: translateY(-2px);
+    }
+  }
+  @keyframes pet-beat {
+    12% {
+      transform: scale(1.07);
+    }
+    24% {
+      transform: scale(0.98);
+    }
+    34% {
+      transform: scale(1.04);
+    }
+    45% {
+      transform: none;
+    }
+  }
   @keyframes pet-zz {
     0% {
       opacity: 0;

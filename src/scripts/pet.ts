@@ -3,7 +3,9 @@
 // clicked, and shrinks back into the logo on double-click or Esc. On touch screens it follows your taps.
 // It comes with you between pages: it lives in #pet-layer, which survives page changes (view transitions); on a
 // full reload its spot is saved for this tab and it reappears there.
+// Which pet comes out (a ghost, a bee, the plain dot…) is set in src/lib/pets.ts.
 import { onPage } from './page';
+import { currentPet, petMarkup } from '../lib/pets';
 
 // the header (and so the dot) is replaced on every page change, so look it up each time
 const dot = () => document.querySelector<HTMLElement>('.brand i');
@@ -81,18 +83,16 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
 
     pet = document.createElement('div');
     pet.className = 'pet';
+    pet.dataset.pet = currentPet();
     pet.setAttribute('aria-hidden', 'true');
-    pet.innerHTML = `<svg viewBox="-16 -16 32 32">
-      <g class="b"><circle r="10" fill="var(--pet)"/>
-        <g class="f">
-          <ellipse cx="-5.6" cy="2.4" rx="2.3" ry="1.3" fill="var(--blush)" opacity=".85"/>
-          <ellipse cx="5.6" cy="2.4" rx="2.3" ry="1.3" fill="var(--blush)" opacity=".85"/>
-          <g class="e" data-x="-3.3"><ellipse rx="1.55" ry="2.15" fill="var(--ink)"/><circle cx="-.5" cy="-.8" r=".6" fill="#fff"/></g>
-          <g class="e" data-x="3.3"><ellipse rx="1.55" ry="2.15" fill="var(--ink)"/><circle cx="-.5" cy="-.8" r=".6" fill="#fff"/></g>
-          <path d="M-1.9 2.7 Q0 4.6 1.9 2.7" stroke="var(--ink)" stroke-width="1.25" fill="none" stroke-linecap="round"/>
-        </g></g></svg>
-      <span class="pet-z">z</span><span class="pet-z">z</span>
-      <svg class="pet-heart" viewBox="0 0 10 10"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`;
+    pet.innerHTML = petMarkup(pet.dataset.pet as ReturnType<typeof currentPet>);
+    // a fresh pet plays its way out of the dot once (the chick's shell pops off); one coming back after a
+    // reload is already out
+    if (!saved && !still) {
+      pet.classList.add('born');
+      const p = pet;
+      setTimeout(() => p.classList.remove('born'), 700);
+    }
     shadow = document.createElement('div');
     shadow.className = 'pet-shadow';
     (document.getElementById('pet-layer') ?? document.body).append(shadow, pet);
@@ -166,7 +166,10 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
     parts.face.setAttribute('transform', `translate(${(lx * 2.2).toFixed(2)},${(ly * 1.6).toFixed(2)})`);
     lid += ((asleep || now < blinkUntil ? 0.12 : 1) - lid) * 0.45;
     parts.eyes.forEach((e) =>
-      e.setAttribute('transform', `translate(${e.dataset.x},-1) scale(1,${lid.toFixed(3)})`),
+      e.setAttribute(
+        'transform',
+        `translate(${e.dataset.x},${e.dataset.y ?? -1}) scale(1,${lid.toFixed(3)})`,
+      ),
     );
 
     // grow out of the logo, shrink back into it

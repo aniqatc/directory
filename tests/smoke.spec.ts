@@ -115,6 +115,7 @@ test.describe('interactions', () => {
     await page.goto('/');
     await page.click('.brand i');
     await expect(page.locator('.pet')).toHaveCount(1);
+    await expect(page.locator('.pet')).toHaveAttribute('data-pet', /^[a-z]+$/); // whichever pet src/lib/pets.ts picks
     await page.focus('.switch a[href="/lab"]');
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/lab$/);

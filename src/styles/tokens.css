@@ -24,6 +24,7 @@
   --body: #cfcad6;
   --muted: #9690a3;
   --accent: var(--pop);
+  --pet-line: var(--pop); /* thin lines on the pet (a bee's antennae) that would vanish into the dark */
   color-scheme: dark;
 }
 
@@ -35,5 +36,6 @@
   --body: #34323a;
   --muted: #6a6571;
   --accent: var(--pop-lab);
+  --pet-line: var(--ink);
   color-scheme: light;
 }
