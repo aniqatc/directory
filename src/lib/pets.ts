@@ -13,16 +13,39 @@ export type PetId =
   | 'mochi'
   | 'acorn'
   | 'snowball'
-  | 'heart';
+  | 'heart'
+  | 'owl'
+  | 'frog'
+  | 'party'
+  | 'penguin'
+  | 'cupcake';
 
-/** The pet everyone gets. 'auto' follows the calendar in SEASONS. */
-export const PET: PetId | 'auto' = 'ghost';
+/** The pet everyone gets: a name to pin one, or 'auto' to follow the calendar in SEASONS. */
+export const PET: PetId | 'auto' = 'auto';
 
-/** Used when PET is 'auto'. Dates are MM-DD and inclusive; anything not listed gets FALLBACK. */
+/**
+ * Used when PET is 'auto'. Dates are MM-DD and inclusive, and the first match wins, so single days sit at the
+ * top and override the month they fall in. Anything not listed gets FALLBACK.
+ */
 export const SEASONS: { from: string; to: string; pet: PetId }[] = [
-  { from: '02-01', to: '02-14', pet: 'heart' },
-  { from: '03-01', to: '04-30', pet: 'chick' },
-  { from: '05-01', to: '08-31', pet: 'bee' },
+  // special days
+  { from: '02-27', to: '02-27', pet: 'cupcake' }, // my birthday
+  { from: '06-26', to: '06-26', pet: 'party' }, // our anniversary
+  { from: '06-30', to: '06-30', pet: 'cupcake' }, // my son's birthday
+  { from: '09-20', to: '09-20', pet: 'cupcake' }, // my husband's birthday
+  { from: '12-31', to: '12-31', pet: 'party' }, // New Year's Eve
+
+  // the rest of the year
+  { from: '01-01', to: '01-07', pet: 'party' }, // New Year's week
+  { from: '01-08', to: '01-31', pet: 'penguin' },
+  { from: '02-01', to: '02-14', pet: 'heart' }, // Valentine's
+  { from: '02-15', to: '02-29', pet: 'mochi' },
+  { from: '03-01', to: '03-31', pet: 'chick' }, // spring, Easter
+  { from: '04-01', to: '04-30', pet: 'bunny' },
+  { from: '05-01', to: '05-31', pet: 'sprout' },
+  { from: '06-01', to: '06-30', pet: 'bee' },
+  { from: '07-01', to: '08-31', pet: 'frog' },
+  { from: '09-01', to: '09-30', pet: 'owl' }, // back to school
   { from: '10-01', to: '10-31', pet: 'ghost' },
   { from: '11-01', to: '11-30', pet: 'acorn' },
   { from: '12-01', to: '12-31', pet: 'snowball' },
@@ -49,6 +72,8 @@ export function currentPet(today = new Date()): PetId {
 type Face = {
   y?: number; // moves the whole face
   eyeX?: number;
+  eyeY?: number;
+  eye?: string; // replaces the eye drawing (centred on 0, 0); it still blinks and closes in its sleep
   blushX?: number;
   blush?: string;
   mouth?: string;
@@ -72,6 +97,10 @@ const WING = 'fill="#fff" fill-opacity=".85" stroke="var(--ink)" stroke-opacity=
 const SHADE = 'var(--pet-shade)'; // wings, flippers
 const LEAF = 'var(--pet-leaf)';
 const STEM = 'var(--pet-deep)'; // stems, the bee's stripes, the snowball's beanie
+const BELLY = 'var(--pet-light)'; // the owl's and frog's bellies
+const CREAM = '#fbf6ea';
+const YELLOW = '#f2b54b'; // beaks and feet
+const BEAK = `<path d="M-1.2 0.4 L1.2 0.4 L0 2.4 Z" fill="${YELLOW}"/>`;
 const CAP = '#b7834f';
 const CAP_LINE = '#8f6237';
 
@@ -208,6 +237,108 @@ export const PETS: Record<PetId, PetDrawing> = {
       <path d="M11 7.5 L8.6 5.1 A1.4 1.4 0 0 1 11 3.3 A1.4 1.4 0 0 1 13.4 5.1 Z" fill="#e8709a"/>
       <path d="M18 10 L15.8 7.8 A1.25 1.25 0 0 1 18 6.2 A1.25 1.25 0 0 1 20.2 7.8 Z" fill="var(--pet)"/></svg>`,
   },
+
+  owl: {
+    label: 'Owl',
+    back: `<ellipse cx="-9.6" cy="3" rx="2.4" ry="4.6" fill="${SHADE}"/>
+      <ellipse cx="9.6" cy="3" rx="2.4" ry="4.6" fill="${SHADE}"/>
+      <g class="hop-only">
+        <g class="pet-flap-l"><ellipse cx="-10.6" cy="0" rx="2.4" ry="4.6" transform="rotate(40 -10.6 0)" fill="${SHADE}"/></g>
+        <g class="pet-flap-r"><ellipse cx="10.6" cy="0" rx="2.4" ry="4.6" transform="rotate(-40 10.6 0)" fill="${SHADE}"/></g>
+      </g>`,
+    body: `<path d="M-8.4 -5 L-9.4 -13 L-3.6 -8.6 Z M8.4 -5 L9.4 -13 L3.6 -8.6 Z" fill="var(--pet)" stroke="var(--pet)" stroke-width="1" stroke-linejoin="round"/>
+      <ellipse cy="0.5" rx="10" ry="10.5" fill="var(--pet)"/>
+      <ellipse cy="5" rx="5.6" ry="4.8" fill="${BELLY}"/>
+      <path d="M-2.6 4 Q-1.8 5 -1 4 M1 4 Q1.8 5 2.6 4 M-0.8 6.6 Q0 7.6 0.8 6.6" fill="none" stroke="${SHADE}" stroke-width=".6" stroke-linecap="round"/>`,
+    face: {
+      eyeX: 3.8,
+      eyeY: -2.6,
+      blushX: 7.2,
+      eye: `<circle r="3.4" fill="${CREAM}"/><circle r="1.8" fill="${INK}"/><circle cx="-.6" cy="-.7" r=".6" fill="#fff"/>`,
+      mouth: BEAK,
+    },
+  },
+
+  frog: {
+    label: 'Frog',
+    body: `<ellipse cx="-6" cy="10.4" rx="3" ry="1.4" fill="${SHADE}"/>
+      <ellipse cx="6" cy="10.4" rx="3" ry="1.4" fill="${SHADE}"/>
+      <circle cx="-5" cy="-6" r="3.8" fill="var(--pet)"/><circle cx="5" cy="-6" r="3.8" fill="var(--pet)"/>
+      <ellipse cy="2" rx="11" ry="8.6" fill="var(--pet)"/>
+      <ellipse cy="6" rx="6" ry="3.6" fill="${BELLY}"/>`,
+    face: {
+      y: -1.8,
+      eyeX: 5,
+      eyeY: -4.2,
+      blushX: 7.4,
+      eye: `<circle r="2.5" fill="${CREAM}"/><circle r="1.4" fill="${INK}"/><circle cx="-.5" cy="-.6" r=".5" fill="#fff"/>`,
+      mouth: `<path d="M-4.6 2.2 Q0 5.4 4.6 2.2" fill="none" stroke="${INK}" stroke-width="1.1" stroke-linecap="round"/>`,
+    },
+    // the tongue zips out on a tap
+    front: `<g class="hop-only pet-tongue">
+      <path d="M1.5 1.4 Q8 0 14 -8" fill="none" stroke="#e8709a" stroke-width="1.4" stroke-linecap="round"/>
+      <circle cx="14" cy="-8" r="1.5" fill="#e8709a"/></g>`,
+  },
+
+  party: {
+    label: 'Party hat',
+    body: '<circle r="10" fill="var(--pet)"/>',
+    front: `<g class="pet-cap">
+      <path d="M-5.5 -7.6 L1 -21 L6.5 -7 Q0.5 -5.4 -5.5 -7.6 Z" fill="var(--blush)"/>
+      <path d="M-3.4 -11.6 L4.6 -10.9 M-1.3 -16 L3 -15.6" stroke="${CREAM}" stroke-width="1.2" stroke-linecap="round"/>
+      <circle cx="1" cy="-21.2" r="1.9" fill="#f5c451"/></g>`,
+    reward: `<svg class="pet-heart" viewBox="0 0 24 14" style="left: 4px; top: -12px; width: 24px; height: 14px">
+      <rect x="2" y="6" width="1.6" height="3" rx=".4" transform="rotate(-30 2.8 7.5)" fill="#f5c451"/>
+      <circle cx="7" cy="3" r="1.1" fill="var(--pet)"/>
+      <rect x="11" y="1" width="1.6" height="3" rx=".4" transform="rotate(20 11.8 2.5)" fill="var(--blush)"/>
+      <circle cx="16" cy="4" r="1.1" fill="#f5c451"/>
+      <rect x="20" y="7" width="1.6" height="3" rx=".4" transform="rotate(35 20.8 8.5)" fill="var(--pet)"/>
+      <circle cx="12" cy="10" r=".9" fill="var(--blush)"/></svg>`,
+  },
+
+  penguin: {
+    label: 'Penguin',
+    back: `<g class="awake-only">
+        <ellipse cx="-10" cy="3" rx="2" ry="5" transform="rotate(15 -10 3)" fill="${SHADE}"/>
+        <ellipse cx="10" cy="3" rx="2" ry="5" transform="rotate(-15 10 3)" fill="${SHADE}"/>
+      </g>
+      <g class="sleep-only">
+        <ellipse cx="-9.2" cy="3.4" rx="2" ry="5" fill="${SHADE}"/>
+        <ellipse cx="9.2" cy="3.4" rx="2" ry="5" fill="${SHADE}"/>
+      </g>
+      <g class="hop-only">
+        <g class="pet-flap-l"><ellipse cx="-10.4" cy="0" rx="2" ry="5" transform="rotate(50 -10.4 0)" fill="${SHADE}"/></g>
+        <g class="pet-flap-r"><ellipse cx="10.4" cy="0" rx="2" ry="5" transform="rotate(-50 10.4 0)" fill="${SHADE}"/></g>
+      </g>`,
+    body: `<ellipse cx="-3.6" cy="11.4" rx="2.6" ry="1.2" fill="${YELLOW}"/>
+      <ellipse cx="3.6" cy="11.4" rx="2.6" ry="1.2" fill="${YELLOW}"/>
+      <ellipse cy="1" rx="10" ry="11" fill="var(--pet)"/>
+      <path d="M0 -6.5 C-2 -9 -7.4 -8 -7.4 -2.5 C-7.6 4 -5 10.6 0 10.6 C5 10.6 7.6 4 7.4 -2.5 C7.4 -8 2 -9 0 -6.5 Z" fill="${CREAM}"/>`,
+    face: { eyeX: 3, eyeY: -2.4, blushX: 5, mouth: `<path d="M-1.4 0 L1.4 0 L0 2 Z" fill="${YELLOW}"/>` },
+  },
+
+  cupcake: {
+    label: 'Cupcake',
+    body: `<path d="M-8.4 2.4 L8.4 2.4 L6.4 12 L-6.4 12 Z" fill="var(--blush)"/>
+      <path d="M-4.6 2.4 L-3.8 12 M-1.5 2.4 L-1.3 12 M1.5 2.4 L1.3 12 M4.6 2.4 L3.8 12" stroke="#e2789c" stroke-width=".8"/>
+      <path d="M-10 3.6 Q-11.2 -2.4 -6.4 -3.8 Q-6.4 -10.4 0 -10 Q6.4 -10.4 6.4 -3.8 Q11.2 -2.4 10 3.6 Q0 6 -10 3.6 Z" fill="var(--pet)"/>
+      <g stroke-width="1" stroke-linecap="round">
+        <path d="M-6.4 -4.8 L-5.4 -5.6" stroke="${YELLOW}"/><path d="M6 -5.4 L6.8 -4.4" stroke="var(--blush)"/>
+        <path d="M-2.4 -8.4 L-1.4 -8.8" stroke="${CREAM}"/><path d="M2.4 -8.2 L3.2 -7.4" stroke="${YELLOW}"/>
+      </g>
+      <rect x="-0.9" y="-15.6" width="1.8" height="5.8" rx=".5" fill="${CREAM}" stroke="var(--ink)" stroke-opacity=".2" stroke-width=".4"/>
+      <path d="M-0.9 -14 L0.9 -14.8 M-0.9 -11.8 L0.9 -12.6" stroke="var(--blush)" stroke-width=".6"/>
+      <g class="awake-only"><g class="pet-flicker">
+        <path d="M0 -20.6 Q1.6 -18.2 1.2 -17 Q0 -15.6 -1.2 -17 Q-1.6 -18.2 0 -20.6 Z" fill="${YELLOW}"/>
+        <ellipse cy="-17.4" rx=".5" ry=".8" fill="${CREAM}"/></g></g>
+      <g class="sleep-only">
+        <path d="M0 -15.6 L0 -16.6" stroke="var(--ink)" stroke-width=".6" stroke-linecap="round"/>
+        <g class="pet-smoke"><path d="M0 -17 Q-1.2 -18.6 0 -20 Q1.2 -21.4 0 -23" fill="none" stroke="var(--muted)" stroke-width=".7" stroke-linecap="round"/></g>
+      </g>`,
+    face: { y: -3, eyeX: 3.2, eyeY: -0.2, blushX: 5.8 },
+    // the usual heart, moved off the candle
+    reward: `<svg class="pet-heart" viewBox="0 0 10 10" style="left: 21px; top: -1px"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`,
+  },
 };
 
 const HEART = `<svg class="pet-heart" viewBox="0 0 10 10"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`;
@@ -220,7 +351,7 @@ export function petMarkup(id: PetId): string {
   const bx = f.blushX ?? 5.6;
   const blush = f.blush ?? 'var(--blush)';
   const eye = (x: number) =>
-    `<g class="e" data-x="${x}" data-y="-1"><ellipse rx="1.55" ry="2.15" fill="${INK}"/><circle cx="-.5" cy="-.8" r=".6" fill="#fff"/></g>`;
+    `<g class="e" data-x="${x}" data-y="${f.eyeY ?? -1}">${f.eye ?? `<ellipse rx="1.55" ry="2.15" fill="${INK}"/><circle cx="-.5" cy="-.8" r=".6" fill="#fff"/>`}</g>`;
   return `<svg viewBox="-16 -16 32 32">
     ${p.back ?? ''}
     <g class="b">${p.body}

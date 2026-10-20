@@ -20,7 +20,7 @@ My portfolio at aniqa.dev, with a lab of smaller experiments at aniqa.dev/lab. B
 
 - **Portfolio** (dark): selected projects with case studies and GitHub star counts, and an intro with what I'm building now.
 - **Lab** (light): an archive of experiments with hover previews, a random-entry button, and likes (five per visitor).
-- **Everywhere**: a share card for each entry, a pet that follows you between pages (a ghost, a bee, a snowball… one of ten, set by hand or by season), and a 404 with a sleeping dot.
+- **Everywhere**: a share card for each entry, a pet that follows you between pages (a ghost, a bee, a snowball… one of fifteen, changing through the year), and a 404 with a sleeping dot.
 
 ## Design
 
@@ -54,7 +54,7 @@ tests/          Playwright smoke tests
 - **Likes in Redis.** A total per entry and a count per visitor; the sixth like is refused. Visitors are anonymous browser IDs.
 - **Drawings** are HTML and CSS on a 200 × 140 board, coloured with the theme tokens `--pf`, `--pm`, `--pl` and `--hi`.
 - **Page scripts** set up in `onPage()` and clean up before the next page loads, since pages swap in place.
-- **The pet** is one behaviour (`src/scripts/pet.ts`) with swappable drawings in `src/lib/pets.ts`. Set `PET` there to choose one, or to `'auto'` to follow the `SEASONS` calendar (heart for Valentine's, chick in spring, bee in summer, ghost in October, acorn in November, snowball in December, the plain dot otherwise).
+- **The pet** is one behaviour (`src/scripts/pet.ts`) with swappable drawings in `src/lib/pets.ts`. `PET` is `'auto'`, which follows the `SEASONS` calendar there (a pet a month, plus birthdays and holidays, first match wins); set it to a pet's name to pin one.
 
 ## Setup
 
@@ -108,7 +108,7 @@ With Claude Code, `/new-project`, `/new-experiment` and `/new-drawing` do the wr
 - Rebuilt in Astro, replacing the React version (kept at the `react-v1` tag).
 - Added the lab, likes in Upstash, and build-time star counts.
 - Added the 404 page, the pet, page transitions and share cards.
-- Gave the pet ten looks, including seasonal ones; the ghost is out for October.
+- Gave the pet fifteen looks and a calendar: a pet for each month, plus birthdays and holidays.
 
 ### 2025
 

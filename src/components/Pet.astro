@@ -152,6 +152,94 @@
   .pet[data-pet='mochi'].sleep > svg:first-child {
     transform: scale(1.35, 0.62); /* melts into a puddle */
   }
+  .pet[data-pet='party'].sleep .pet-cap {
+    transform: translate(-3px, 6px) rotate(-38deg); /* the hat slips over an eye */
+  }
+  .pet[data-pet='owl'] > svg:first-child {
+    transform-origin: 50% 70%;
+    animation: pet-tilt 3.4s ease-in-out infinite;
+  }
+  .pet[data-pet='penguin'] > svg:first-child {
+    transform-origin: 50% 85%;
+    animation: pet-waddle 1s ease-in-out infinite;
+  }
+  .pet[data-pet='owl'].sleep > svg:first-child,
+  .pet[data-pet='penguin'].sleep > svg:first-child {
+    animation: none;
+  }
+  .pet.hop .pet-tongue {
+    transform-origin: 0% 100%;
+    animation: pet-tongue 0.6s ease-out forwards;
+  }
+  .pet .pet-flicker {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: pet-flicker 0.7s ease-in-out infinite;
+  }
+  .pet .pet-smoke {
+    animation: pet-smoke 2.2s ease-out infinite;
+  }
+  @keyframes pet-tilt {
+    0%,
+    30%,
+    100% {
+      transform: none;
+    }
+    40%,
+    55% {
+      transform: rotate(-9deg);
+    }
+    65%,
+    85% {
+      transform: rotate(7deg);
+    }
+  }
+  @keyframes pet-waddle {
+    0%,
+    100% {
+      transform: rotate(-5deg);
+    }
+    50% {
+      transform: rotate(5deg);
+    }
+  }
+  @keyframes pet-tongue {
+    0% {
+      opacity: 1;
+      transform: scale(0);
+    }
+    30%,
+    60% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(0);
+    }
+  }
+  @keyframes pet-flicker {
+    0%,
+    100% {
+      transform: scale(1, 1) rotate(-3deg);
+    }
+    50% {
+      transform: scale(0.9, 1.12) rotate(3deg);
+    }
+  }
+  @keyframes pet-smoke {
+    0% {
+      opacity: 0;
+      transform: translateY(1px);
+    }
+    30% {
+      opacity: 0.9;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
   @keyframes pet-extra {
     0% {
       opacity: 0;
