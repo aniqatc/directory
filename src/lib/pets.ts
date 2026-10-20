@@ -18,7 +18,8 @@ export type PetId =
   | 'frog'
   | 'party'
   | 'penguin'
-  | 'cupcake';
+  | 'cupcake'
+  | 'pumpkin';
 
 /** The pet everyone gets: a name to pin one, or 'auto' to follow the calendar in SEASONS. */
 export const PET: PetId | 'auto' = 'auto';
@@ -33,6 +34,7 @@ export const SEASONS: { from: string; to: string; pet: PetId }[] = [
   { from: '06-26', to: '06-26', pet: 'party' }, // our anniversary
   { from: '06-30', to: '06-30', pet: 'cupcake' }, // my son's birthday
   { from: '09-20', to: '09-20', pet: 'cupcake' }, // my husband's birthday
+  { from: '10-31', to: '10-31', pet: 'pumpkin' }, // Halloween
   { from: '12-31', to: '12-31', pet: 'party' }, // New Year's Eve
 
   // the rest of the year
@@ -338,6 +340,28 @@ export const PETS: Record<PetId, PetDrawing> = {
     face: { y: -3, eyeX: 3.2, eyeY: -0.2, blushX: 5.8 },
     // the usual heart, moved off the candle
     reward: `<svg class="pet-heart" viewBox="0 0 10 10" style="left: 21px; top: -1px"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`,
+  },
+
+  pumpkin: {
+    label: 'Pumpkin',
+    body: `<ellipse cx="-5" cy="1.5" rx="6.2" ry="8.6" fill="var(--pet)"/>
+      <ellipse cx="5" cy="1.5" rx="6.2" ry="8.6" fill="var(--pet)"/>
+      <ellipse cy="1" rx="6" ry="9.4" fill="var(--pet)"/>
+      <path d="M-4.4 -6.8 Q-7 1.5 -4.4 9.8 M4.4 -6.8 Q7 1.5 4.4 9.8" fill="none" stroke="${SHADE}" stroke-width=".8" stroke-linecap="round"/>`,
+    // jack-o'-lantern eyes and grin; they glow on a tap (Pet.astro)
+    face: {
+      eyeX: 3.4,
+      eyeY: -1.3,
+      blushX: 6.4,
+      eye: `<path d="M-1.6 1.5 L0 -1.5 L1.6 1.5 Z" fill="${INK}"/>`,
+      mouth: `<path d="M-4 2.2 Q0 5.8 4 2.2 L2.6 2.9 L1.4 2.2 L0 3 L-1.4 2.2 L-2.6 2.9 Z" fill="${INK}"/>`,
+    },
+    // the stem tips over like a nightcap when it naps
+    front: `<g class="pet-cap">
+      <path d="M-0.9 -7.6 L-0.5 -11.8 Q0.8 -12.6 1.7 -11.6 L1 -7.6 Z" fill="${CAP_LINE}"/>
+      <path d="M1.4 -10.2 Q4.2 -12.6 5.8 -10.8 Q6.8 -9.4 5.4 -8.6" fill="none" stroke="${LEAF}" stroke-width=".8" stroke-linecap="round"/>
+      <path d="M-1 -9.6 Q-4.6 -12 -6 -9 Q-3.4 -8 -1 -9.6 Z" fill="${LEAF}"/></g>`,
+    reward: '',
   },
 };
 

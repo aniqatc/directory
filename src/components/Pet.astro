@@ -155,6 +155,12 @@
   .pet[data-pet='party'].sleep .pet-cap {
     transform: translate(-3px, 6px) rotate(-38deg); /* the hat slips over an eye */
   }
+  .pet[data-pet='pumpkin'].sleep .pet-cap {
+    transform: rotate(-38deg); /* the stem tips over like a nightcap */
+  }
+  .pet[data-pet='pumpkin'].hop .f path {
+    animation: pet-glow 0.9s ease-out; /* the jack-o'-lantern lights up */
+  }
   .pet[data-pet='owl'] > svg:first-child {
     transform-origin: 50% 70%;
     animation: pet-tilt 3.4s ease-in-out infinite;
@@ -178,6 +184,12 @@
   }
   .pet .pet-smoke {
     animation: pet-smoke 2.2s ease-out infinite;
+  }
+  @keyframes pet-glow {
+    15%,
+    60% {
+      fill: #f5c451;
+    }
   }
   @keyframes pet-tilt {
     0%,
