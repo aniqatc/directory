@@ -132,7 +132,7 @@ test.describe('experiment pages', () => {
     const errors = watchErrors(page);
     await page.goto('/lab/word-cycle');
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
-    await expect(page.locator('.d-eyebrow .chip')).toHaveText('New');
+    await expect(page.locator('.d-eyebrow .chip')).toHaveText('Updated');
     await expect(page.locator('.heads-up')).toHaveCount(0);
     const stage = page.locator('.stage');
     await expect(stage).toHaveClass(/stage-fit/);

@@ -3,6 +3,8 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const month = z.string().regex(/^\d{4}-\d{2}$/, 'Use YYYY-MM');
+// a month, or a full date to order entries updated in the same month (2026-10-21 sorts after 2026-10)
+const monthOrDay = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, 'Use YYYY-MM or YYYY-MM-DD');
 // Every entry is a folder: <slug>/index.md (frontmatter = facts, ## sections = notes) and preview.astro (its
 // drawing). Experiments that run on the page also have sketch.ts or sketch.astro.
 const folder = (base: string) =>
@@ -17,7 +19,7 @@ const base = z.object({
   live: z.string().optional(), // host only, e.g. clock.aniqa.dev
   repo: z.string().optional(), // repo name under github.com/aniqatc
   summary: z.string(), // the lede on the detail page
-  updated: month.optional(), // last revisited; the 3 newest get an "Updated" tag
+  updated: monthOrDay.optional(), // last revisited; the 3 newest get an "Updated" tag (shown as the month)
   draft: z.boolean().default(false), // hidden from the portfolio and lab; /dev/drawings still lists it
 });
 

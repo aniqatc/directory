@@ -2,7 +2,8 @@
 title: Word Cycle
 type: CSS study
 stack: CSS keyframes / mix-blend-mode
-released: 2026-10
+released: 2022-12
+updated: 2026-10-21
 stage: fit
 themes: true
 hint: Slide the split · switch the blend · swap or roll
