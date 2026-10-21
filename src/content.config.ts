@@ -3,8 +3,12 @@ import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const month = z.string().regex(/^\d{4}-\d{2}$/, 'Use YYYY-MM');
-// a month, or a full date to order entries updated in the same month (2026-10-21 sorts after 2026-10)
-const monthOrDay = z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, 'Use YYYY-MM or YYYY-MM-DD');
+// a month, or a full date to order entries updated in the same month (2026-10-21 sorts after 2026-10). YAML
+// reads an unquoted 2026-10-21 as a Date, so that's turned back into text first.
+const monthOrDay = z.preprocess(
+  (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v),
+  z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, 'Use YYYY-MM or YYYY-MM-DD'),
+);
 // Every entry is a folder: <slug>/index.md (frontmatter = facts, ## sections = notes) and preview.astro (its
 // drawing). Experiments that run on the page also have sketch.ts or sketch.astro.
 const folder = (base: string) =>
