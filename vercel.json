@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "",
+  "buildCommand": "",
+  "outputDirectory": "public",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "lab.aniqa.dev" }],
+      "destination": "https://aniqa.dev/lab",
+      "permanent": false
+    }
+  ],
+  "rewrites": [{ "source": "/((?!fonts/|favicon|apple-touch-icon|og-portfolio|robots).*)", "destination": "/index.html" }]
+}

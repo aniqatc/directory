@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en" data-mode="portfolio">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aniqa · Coming very soon</title>
+<meta name="description" content="Aniqa's portfolio and lab. Coming very soon.">
+<meta name="author" content="Aniqa">
+<meta name="theme-color" content="#16151b">
+<link rel="canonical" href="https://aniqa.dev/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/Bricolage.woff" as="font" type="font/woff" crossorigin>
+
+<!-- aniqa.dev/lab opens in Lab: set before the first paint so it doesn't flash from night to day -->
+<script>
+  if (location.pathname.startsWith('/lab')) document.documentElement.dataset.mode = 'lab';
+</script>
+
+<!-- link previews (iMessage, Slack, LinkedIn, X…) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="aniqa.dev">
+<meta property="og:title" content="Aniqa · Coming very soon">
+<meta property="og:description" content="Aniqa's portfolio and lab. Coming very soon.">
+<meta property="og:url" content="https://aniqa.dev/">
+<meta property="og:image" content="https://aniqa.dev/og-portfolio.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aniqa. I build small things for the web, mostly for fun and to learn.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aniqa · Coming very soon">
+<meta name="twitter:description" content="Aniqa's portfolio and lab. Coming very soon.">
+<meta name="twitter:image" content="https://aniqa.dev/og-portfolio.png">
+<meta name="twitter:image:alt" content="Aniqa. I build small things for the web, mostly for fun and to learn.">
+
+<!-- Google Analytics, on the live site only, so Vercel previews and local copies don't count as visits -->
+<script>
+  if (/^(www\.)?aniqa\.dev$/.test(location.hostname) && !window.gtag) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      dataLayer.push(arguments);
+    };
+    gtag('js', new Date());
+    gtag('config', 'G-FSF86RLYT3');
+    const ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-FSF86RLYT3';
+    document.head.append(ga);
+  }
+</script>
+<style>
+@font-face { font-family: 'Bricolage Grotesque'; src: url('/fonts/Bricolage.woff') format('woff'); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: 'Geist Mono'; src: url('/fonts/GeistMono.woff') format('woff'); font-weight: 100 900; font-display: swap; }
+
+/* the site's tokens: Portfolio is night, Lab is day */
+:root {
+  --pop: #79d6cf; --pop-lab: #16756f;
+  --font-display: 'Bricolage Grotesque', 'Avenir Next', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --bg: #16151b; --line: #2e2b37; --fg: #ebe7f0; --body: #cfcad6; --muted: #9690a3; --accent: var(--pop);
+  color-scheme: dark;
+}
+:root[data-mode='lab'] {
+  --bg: #f1efea; --line: #d6d2c8; --fg: #1b1a20; --body: #34323a; --muted: #6a6571; --accent: var(--pop-lab);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  display: flex; flex-direction: column; min-height: 100dvh;
+  background: var(--bg); color: var(--fg); font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased; transition: background-color 0.6s ease, color 0.6s ease;
+}
+a { color: inherit; text-decoration: none; }
+.wrap { width: 100%; max-width: 1080px; margin: 0 auto;
+  padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+
+/* header: the brand and the Portfolio / Lab switch, as on the site */
+.hdr { border-bottom: 1px solid var(--line); transition: border-color 0.6s ease; }
+.hdr .wrap { height: 52px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 600 14px/1 var(--font-display); letter-spacing: -0.01em; }
+.brand i { width: 8px; height: 8px; border-radius: 50%; background: var(--pop); }
+.switch { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--line); border-radius: 999px;
+  font: 500 11.5px/1 var(--font-mono); letter-spacing: 0.04em; transition: border-color 0.6s; }
+.switch button { font: inherit; letter-spacing: inherit; border: 0; background: none; cursor: pointer;
+  padding: 7px 13px; border-radius: 999px; color: var(--muted); transition: background-color 0.6s, color 0.6s; }
+.switch button:hover { color: var(--fg); }
+.switch button[aria-pressed='true'] { background: var(--fg); color: var(--bg); }
+.switch button:focus-visible, .contact a:focus-visible, .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* the hero */
+main { flex: 1; display: flex; align-items: center; }
+.hero { padding-block: 72px 96px; }
+h1 { position: relative; margin: 0; font: 800 clamp(64px, 13vw, 168px) / 0.9 var(--font-display); letter-spacing: -0.035em; }
+h1 span { display: block; transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.45s ease; }
+h1 .lab { position: absolute; inset: 0; }
+h1 .dot { display: inline-block; color: var(--accent); transition: color 0.6s ease; }
+h1 .lab, :root[data-mode='lab'] h1 .pf { opacity: 0; transform: translateY(0.25em); filter: blur(8px); }
+:root[data-mode='lab'] h1 .lab { opacity: 1; transform: none; filter: none; }
+.soon { margin: 28px 0 0; font: 400 clamp(20px, 2.4vw, 26px)/1.4 var(--font-display); color: var(--body); transition: color 0.6s ease; }
+.soon em { font-style: normal; color: var(--accent); transition: color 0.6s ease; }
+
+/* contact, as on the site: mono links with a hairline under them */
+.contact { list-style: none; margin: 40px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px 22px;
+  font: 500 13px/1 var(--font-mono); }
+.contact a, .copy { display: inline-flex; align-items: center; gap: 6px; min-height: 30px;
+  border: 0; border-bottom: 1px solid var(--line); background: none; padding: 0; color: inherit; font: inherit; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s; }
+.contact a:hover, .copy:hover { color: var(--accent); border-color: var(--accent); }
+.copy .ok { color: var(--accent); }
+.copy .ok:empty { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, h1 span { transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="hdr">
+  <div class="wrap">
+    <a class="brand" href="/"><i aria-hidden="true"></i>aniqa.dev</a>
+    <div class="switch" role="group" aria-label="Portfolio or Lab">
+      <button type="button" data-mode="portfolio" aria-pressed="true">Portfolio</button>
+      <button type="button" data-mode="lab" aria-pressed="false">Lab</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <h1>
+      <span class="pf">Aniqa<span class="dot">.</span></span>
+      <span class="lab" aria-hidden="true">Lab<span class="dot">.</span></span>
+    </h1>
+    <p class="soon">Coming <em>very</em> soon.</p>
+    <ul class="contact" aria-label="Contact">
+      <li><button type="button" class="copy" data-email="hello@aniqa.dev" title="Copy email" aria-label="Copy email hello@aniqa.dev"><span>hello@aniqa.dev</span><span class="ok" aria-hidden="true"></span></button></li>
+      <li><a href="https://github.com/aniqatc" target="_blank" rel="noopener">GitHub ↗</a></li>
+    </ul>
+  </section>
+</main>
+
+<script>
+  // Portfolio / Lab: swaps the heading and the colours, like the real site's two moods
+  const root = document.documentElement;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const [pf, lab] = document.querySelectorAll('h1 > span');
+  const setMode = (mode) => {
+    root.dataset.mode = mode;
+    document.querySelectorAll('.switch button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.mode === mode)));
+    pf.setAttribute('aria-hidden', String(mode !== 'portfolio'));
+    lab.setAttribute('aria-hidden', String(mode !== 'lab'));
+    meta.content = mode === 'lab' ? '#f1efea' : '#16151b';
+  };
+  // aniqa.dev/lab (and lab.aniqa.dev, which redirects there) opens in Lab; the head already set the colours
+  setMode(root.dataset.mode);
+  document.querySelectorAll('.switch [data-mode]').forEach((b) =>
+    b.addEventListener('click', () => setMode(b.dataset.mode)),
+  );
+  // the email copies on click, with a tick
+  document.querySelector('.copy').addEventListener('click', async (e) => {
+    const b = e.currentTarget;
+    try {
+      await navigator.clipboard.writeText(b.dataset.email);
+      b.querySelector('.ok').textContent = '✓ copied';
+    } catch {
+      location.href = `mailto:${b.dataset.email}`; // no clipboard here: open their mail app instead
+    }
+    setTimeout(() => (b.querySelector('.ok').textContent = ''), 1600);
+  });
+</script>
+</body>
+</html>
