@@ -78,6 +78,7 @@ const themeColor = mode === 'lab' ? '#f1efea' : '#16151b';
       if (/^(www\.)?aniqa\.dev$/.test(location.hostname) && !window.gtag) {
         window.dataLayer = window.dataLayer || [];
         window.gtag = function () {
+          // eslint-disable-next-line prefer-rest-params -- gtag.js needs the real arguments object, not an array
           dataLayer.push(arguments);
         };
         gtag('js', new Date());
