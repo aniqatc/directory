@@ -71,6 +71,23 @@ const themeColor = mode === 'lab' ? '#f1efea' : '#16151b';
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <meta name="twitter:image:alt" content={imageAlt} />
+    <!-- Google Analytics, on the live site only, so Vercel previews, the dev server and tests don't count as
+         visits. Pages swap in place (ClientRouter), so GA4 counts them from history changes, which its
+         enhanced measurement does by default. The guard stops a second setup if this ever runs again. -->
+    <script is:inline>
+      if (/^(www\.)?aniqa\.dev$/.test(location.hostname) && !window.gtag) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+          dataLayer.push(arguments);
+        };
+        gtag('js', new Date());
+        gtag('config', 'G-FSF86RLYT3');
+        const ga = document.createElement('script');
+        ga.async = true;
+        ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-FSF86RLYT3';
+        document.head.append(ga);
+      }
+    </script>
     <!-- links swap pages in place with a cross-fade, so portfolio ↔ lab fades between night and day -->
     <ClientRouter />
   </head>
