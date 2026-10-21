@@ -65,7 +65,7 @@ const pages = [
     html: card(
       THEMES.portfolio,
       'Aniqa',
-      'I build small things for the web, mostly for fun and to learn.',
+      'I build small things for the web, and now I’m working toward ones that solve real problems.',
       'PORTFOLIO',
     ),
   },
