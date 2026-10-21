@@ -2,7 +2,7 @@
 // Word Cycle: a "New York is ___" headline over a page that's half white and half black.
 // Swap changes the word with `content` in keyframes (the original pen); Roll slides a list of real words.
 // mix-blend-mode: exclusion flips the text against whichever half it's on; the Split slider moves the edge.
-const WORDS = ['Eclectic', 'Vibrant', 'Evolving', 'Colorful', 'Diverse', 'Busy', 'Lively', 'Inspiring', 'Exciting'];
+const WORDS = 'Eclectic Vibrant Evolving Colorful Diverse Busy Lively Inspiring Exciting'.split(' ');
 const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
 ---
 
@@ -10,14 +10,24 @@ const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
   <div class="demo-bar">
     <span class="demo-opts" role="group" aria-label="How the word changes">
       <span class="label">Word</span>
-      <button type="button" class="demo-btn" data-mode="swap" aria-pressed="true">Swap</button>
-      <button type="button" class="demo-btn" data-mode="roll" aria-pressed="false">Roll</button>
+      <button type="button" class="demo-btn" data-mode="swap" aria-pressed="true">
+        Swap
+      </button>
+      <button type="button" class="demo-btn" data-mode="roll" aria-pressed="false">
+        Roll
+      </button>
     </span>
     <span class="demo-opts" role="group" aria-label="Blend mode">
       <span class="label">Blend</span>
-      <button type="button" class="demo-btn" data-blend="normal" aria-pressed="false">Normal</button>
-      <button type="button" class="demo-btn" data-blend="difference" aria-pressed="false">Difference</button>
-      <button type="button" class="demo-btn" data-blend="exclusion" aria-pressed="true">Exclusion</button>
+      <button type="button" class="demo-btn" data-blend="normal" aria-pressed="false">
+        Normal
+      </button>
+      <button type="button" class="demo-btn" data-blend="difference" aria-pressed="false">
+        Difference
+      </button>
+      <button type="button" class="demo-btn" data-blend="exclusion" aria-pressed="true">
+        Exclusion
+      </button>
     </span>
   </div>
 
@@ -32,13 +42,17 @@ const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
       </span>
       <span class="sr-only">{WORDS.join(', ').toLowerCase()}</span>
     </p>
-    <span class="edge" aria-hidden="true"><span>white / black</span></span>
+    <span class="edge" aria-hidden="true">
+      <span>white / black</span>
+    </span>
   </div>
 
   <label class="demo-range">
     <span class="label">Split</span>
     <input type="range" min="0" max="100" value="50" aria-label="Split" data-split />
-    <output class="demo-out" data-split-out>50%</output>
+    <output class="demo-out" data-split-out>
+      50%
+    </output>
   </label>
 
   <pre class="demo-code" data-code aria-label="The CSS doing it"></pre>
@@ -176,7 +190,7 @@ const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
   import { STAGE_PAUSE, type StagePauseEvent } from '../../../lib/sketch';
   import { onPage } from '../../../scripts/page';
 
-  const WORDS = ['Eclectic', 'Vibrant', 'Evolving', 'Colorful', 'Diverse', 'Busy', 'Lively', 'Inspiring', 'Exciting'];
+  const WORDS = 'Eclectic Vibrant Evolving Colorful Diverse Busy Lively Inspiring Exciting'.split(' ');
   const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
   const STOPS = ['0%', '12.5%', '25%', '37.5%', '50%', '62.5%', '75%', '87.5%', '100%'];
 
