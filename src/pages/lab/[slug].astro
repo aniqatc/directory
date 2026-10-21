@@ -104,6 +104,16 @@ const codeLinks = !isExperiment
         >
           {Art && <Art />}
           <span class="fig label">Fig. {pad(entry.n)}</span>
+          {themes && (
+            <span class="stage-theme label" role="group" aria-label="Stage colours">
+              <button type="button" data-theme-set="day" aria-pressed="true">
+                Day
+              </button>
+              <button type="button" data-theme-set="night" aria-pressed="false">
+                Night
+              </button>
+            </span>
+          )}
           {!fit && (
             <button type="button" class="fs-exit label">
               Exit · Esc
@@ -113,16 +123,6 @@ const codeLinks = !isExperiment
         <figcaption class="stage-bar label">
           <span>{hint}</span>
           <span>
-            {themes && (
-              <span class="stage-theme" role="group" aria-label="Stage colours">
-                <button type="button" data-theme-set="day" aria-pressed="true">
-                  Day
-                </button>
-                <button type="button" data-theme-set="night" aria-pressed="false">
-                  Night
-                </button>
-              </span>
-            )}
             <button type="button" data-act="pause" hidden>
               Pause
             </button>

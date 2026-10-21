@@ -3,6 +3,8 @@
 // It renders inside a stage that grows to fit it (stage: fit). Use the shared parts in src/styles/demo.css
 // (.demo, .demo-bar, .demo-btn, .demo-check, .demo-range, .demo-out, .demo-grid) so it matches the lab, and
 // the stage colours (var(--fg), var(--muted), var(--line), var(--accent), var(--bg)) so Day / Night works.
+// If it moves on its own (a loop, not a Play you press), add data-pausable to .demo and listen for stage:pause
+// (STAGE_PAUSE in src/lib/sketch.ts): the caption then shows the same Pause / Play every sketch has.
 ---
 
 <div class="demo" data-study="{{slug}}">

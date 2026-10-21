@@ -1,7 +1,7 @@
 // Experiment pages: Fullscreen for a framed stage, the Day / Night switch (themes: true), and for a JavaScript sketch
 // (src/content/experiments/<slug>/sketch.ts) load it into the stage and wire up Pause / Restart. Each sketch is its own bundle, so a page only downloads its
 // own sketch (and p5 or three if it uses them). Everything is torn down before the next page swaps in.
-import { STAGE_THEME, type Sketch, type StartSketch } from '../lib/sketch';
+import { STAGE_PAUSE, STAGE_THEME, type Sketch, type StartSketch } from '../lib/sketch';
 import { onPage } from './page';
 
 const sketches = import.meta.glob<{ default: StartSketch }>('../content/experiments/*/sketch.ts');
@@ -56,8 +56,9 @@ onPage(() => {
   }
 
   // Day / Night: .night gives the stage the portfolio's colours (tokens.css). A JavaScript sketch redraws through
-  // recolor(); CSS art and studies follow the colours on their own, or listen for the stage:theme event.
-  const themeBtns = bar?.querySelectorAll<HTMLButtonElement>('[data-theme-set]') ?? [];
+  // recolor(); CSS art and studies follow the colours on their own, or listen for the stage:theme event. The switch
+  // sits in the stage's top-right corner, across from the Fig. label.
+  const themeBtns = stage.querySelectorAll<HTMLButtonElement>('[data-theme-set]');
   themeBtns.forEach((b) =>
     b.addEventListener('click', () => {
       const night = b.dataset.themeSet === 'night';
@@ -68,6 +69,22 @@ onPage(() => {
       stage.dispatchEvent(new CustomEvent(STAGE_THEME, { detail: { night } }));
     }),
   );
+
+  // Pause / Play is in the caption for everything that moves on its own. A study (sketch.astro) that loops marks
+  // itself with data-pausable and listens for stage:pause; a JavaScript sketch is wired below once it loads.
+  const pausable = stage.querySelector('[data-pausable]');
+  const studyPause = btn('pause');
+  if (pausable && studyPause) {
+    const set = (paused: boolean) => {
+      studyPause.textContent = paused ? 'Play' : 'Pause';
+      studyPause.toggleAttribute('data-paused', paused);
+      stage.dispatchEvent(new CustomEvent(STAGE_PAUSE, { detail: { paused } }));
+    };
+    let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    studyPause.hidden = false;
+    studyPause.addEventListener('click', () => set((paused = !paused)), { signal });
+    if (paused) set(true);
+  }
 
   // the sketch itself, loaded on demand
   const load = stage.dataset.sketch && sketches[`../content/experiments/${stage.dataset.sketch}/sketch.ts`];
@@ -85,6 +102,7 @@ onPage(() => {
           if (p) s.pause!();
           else s.resume!();
           pauseBtn.textContent = p ? 'Play' : 'Pause';
+          pauseBtn.toggleAttribute('data-paused', p);
         };
         pauseBtn.hidden = false;
         pauseBtn.addEventListener('click', () => set(!paused));

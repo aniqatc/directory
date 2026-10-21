@@ -240,6 +240,31 @@
 .stage-bar > span:last-child > a:hover {
   color: var(--accent);
 }
+/* the hint on the left is muted; what you can press (Pause, Restart, Fullscreen, Code) is in the text colour */
+.stage-bar > span:last-child > a,
+.stage-bar > span:last-child > button {
+  color: var(--fg);
+}
+.stage-bar > span:last-child > a:hover,
+.stage-bar > span:last-child > button:hover {
+  color: var(--accent);
+}
+/* Pause / Play has a mark in the accent: two bars while it runs, a triangle when paused (data-paused) */
+/* the mark is an inline box sitting on the text's baseline, as tall as a capital (0.7em), so it lines up with the
+   letters. Centring it in the line would put it low: the line keeps room under the letters for descenders. */
+.stage-bar [data-act='pause']::before {
+  content: '';
+  display: inline-block;
+  vertical-align: baseline;
+  width: 0.62em;
+  height: 0.7em;
+  margin-right: 8px;
+  background: linear-gradient(90deg, var(--accent) 0 35%, transparent 35% 65%, var(--accent) 65%);
+}
+.stage-bar [data-act='pause'][data-paused]::before {
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
 .stage-bar button,
 .fs-exit {
   font: inherit;
@@ -299,23 +324,50 @@ body.fs-lock {
   padding: 44px 24px 24px;
 }
 
-/* Day / Night under the stage (themes: true): a small version of the Portfolio / Lab switch.
-   Night gives the stage the portfolio's colours (.night in tokens.css); the rest of the page stays light. */
+/* Day / Night (themes: true): a small version of the Portfolio / Lab switch in the stage's top-right corner, across
+   from the Fig. label, in the same place on every experiment. Night gives the stage the portfolio's colours
+   (.night in tokens.css), so the switch turns with it; the rest of the page stays light. */
 .stage-theme {
+  position: absolute;
+  right: 12px;
+  top: 7px;
+  z-index: 2;
   display: inline-flex;
   padding: 2px;
   gap: 2px;
   border: 1px solid var(--line);
   border-radius: 999px;
+  background: var(--bg);
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease;
 }
-.stage-bar .stage-theme button {
-  min-height: 0;
-  padding: 6px 10px;
+.stage-theme button {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 5px 10px;
   border-radius: 999px;
+  cursor: pointer;
 }
-.stage-bar .stage-theme button[aria-pressed='true'] {
+.stage-theme button:hover {
+  color: var(--accent);
+}
+.stage-theme button[aria-pressed='true'] {
   background: var(--fg);
   color: var(--bg);
+}
+.stage-theme button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* in fullscreen the Exit button takes the corner, so the switch moves left of it */
+.stage.fs .stage-theme {
+  top: calc(env(safe-area-inset-top, 0px) + 13px);
+  right: 128px;
 }
 
 /* headsUp: "Before you start", for the rare entry that needs it */
@@ -356,5 +408,12 @@ body.fs-lock {
     flex-direction: column;
     align-items: flex-start;
     gap: 0;
+  }
+  /* on a phone the buttons go on their own row under the hint, with a line between them */
+  .d .stage-bar > span:last-child {
+    align-self: stretch;
+    margin-top: 10px;
+    border-top: 1px solid var(--line);
+    gap: 0 24px;
   }
 }

@@ -126,22 +126,24 @@ test.describe('interactions', () => {
 });
 
 test.describe('experiment pages', () => {
-  test('a study: the lab-note header, a stage that fits, Day / Night and a Code link, but no Fullscreen', async ({
+  test('a study: the lab-note header, a stage that fits, Day / Night, Pause and a Code link, but no Fullscreen', async ({
     page,
   }) => {
     const errors = watchErrors(page);
-    await page.goto('/lab/example-study');
+    await page.goto('/lab/word-cycle');
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
-    await expect(page.locator('.heads-up')).toBeVisible();
+    await expect(page.locator('.d-eyebrow .chip')).toHaveText('New');
+    await expect(page.locator('.heads-up')).toHaveCount(0);
     const stage = page.locator('.stage');
     await expect(stage).toHaveClass(/stage-fit/);
     await expect(page.locator('[data-act="fullscreen"], .fs-exit')).toHaveCount(0);
     await expect(page.locator('.stage-bar a', { hasText: 'Code' })).toHaveAttribute(
       'href',
-      /\/directory\/tree\/main\/src\/content\/experiments\/example-study$/,
+      /\/directory\/tree\/main\/src\/content\/experiments\/word-cycle$/,
     );
 
-    // Night gives the stage the portfolio's colours and leaves the page light
+    // Day / Night sits in the stage's corner; Night gives the stage the portfolio's colours and leaves the page light
+    await expect(stage.locator('.stage-theme')).toBeVisible();
     const bg = (sel: string) =>
       page.locator(sel).evaluate((el) => getComputedStyle(el).getPropertyValue('--bg').trim());
     await page.click('[data-theme-set="night"]');
@@ -150,9 +152,15 @@ test.describe('experiment pages', () => {
     expect(await bg('.stage')).toBe('#16151b');
     expect(await bg('body')).toBe('#f1efea');
 
-    // and the study itself works
-    await page.click('[data-play]');
-    await expect(page.locator('.stage .track')).toHaveClass(/go/);
+    // and the study itself works: Roll swaps the version, and the caption's Pause stops it like a sketch
+    await page.click('button[data-mode="roll"]');
+    await expect(page.locator('.scene')).toHaveAttribute('data-mode', 'roll');
+    await expect(page.locator('.demo-code')).toContainText('translateY');
+    const pause = page.locator('.stage-bar [data-act="pause"]');
+    await expect(pause).toHaveText('Pause');
+    await pause.click();
+    await expect(pause).toHaveText('Play');
+    await expect(page.locator('.scene')).toHaveCSS('--play', 'paused');
     expect(errors).toEqual([]);
   });
 
@@ -273,7 +281,7 @@ test.describe('likes', () => {
 
 test.describe('accessibility', () => {
   test('keyboard: every link and button can be reached and shows a focus ring', async ({ page }) => {
-    for (const path of ['/', '/lab', '/work/weather', '/lab/world-clock', '/lab/example-study']) {
+    for (const path of ['/', '/lab', '/work/weather', '/lab/world-clock', '/lab/word-cycle']) {
       await page.goto(path, { waitUntil: 'load' });
       // number every visible link and button, then Tab through and tick them off
       // (document.querySelectorAll, not $$eval: Playwright's selectors reach into the dev toolbar's shadow DOM)

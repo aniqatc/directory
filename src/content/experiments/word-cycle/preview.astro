@@ -1,0 +1,59 @@
+---
+// Word Cycle: "NEW YORK IS" over a white / black split, the word swapping and flipping colour across the edge.
+---
+
+<i class="pv-bg"></i>
+<span class="hl">
+  <b class="lead">New York is</b>
+  <b class="w"><b class="a">Lively</b><b class="b">Busy</b></b>
+</span>
+
+<style>
+  .pv-bg {
+    background: linear-gradient(#fff 0 58%, #111 58%);
+  }
+  .hl {
+    left: 0;
+    right: 0;
+    top: 46px;
+    text-align: center;
+    mix-blend-mode: exclusion;
+    color: #fff;
+    font: 800 21px/1 var(--font-display);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+  .hl b {
+    position: static;
+    font: inherit;
+  }
+  .lead {
+    display: block;
+  }
+  .w {
+    display: inline-grid;
+  }
+  .w b {
+    grid-area: 1 / 1;
+    color: var(--hi);
+  }
+  .w .b {
+    color: oklch(0.72 0.19 20);
+    opacity: 0;
+  }
+  /* two words take turns, like the study's Swap */
+  .w .a {
+    animation: wc-swap 3.2s steps(1) infinite;
+  }
+  .w .b {
+    animation: wc-swap 3.2s steps(1) -1.6s infinite;
+  }
+  @keyframes wc-swap {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

@@ -33,3 +33,8 @@ export function colours(stage: HTMLElement) {
 /** Fired on the stage when Day / Night flips, for CSS art and studies (sketch.astro) with their own script. */
 export const STAGE_THEME = 'stage:theme';
 export type StageThemeEvent = CustomEvent<{ night: boolean }>;
+
+/** Fired on the stage when the caption's Pause / Play is pressed, for a study (sketch.astro) that moves on its own
+ * and marks itself with data-pausable. It also fires once on load, paused, for people who prefer reduced motion. */
+export const STAGE_PAUSE = 'stage:pause';
+export type StagePauseEvent = CustomEvent<{ paused: boolean }>;

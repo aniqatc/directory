@@ -1,0 +1,303 @@
+---
+// Word Cycle: a "New York is ___" headline over a page that's half white and half black.
+// Swap changes the word with `content` in keyframes (the original pen); Roll slides a list of real words.
+// mix-blend-mode: exclusion flips the text against whichever half it's on; the Split slider moves the edge.
+const WORDS = ['Eclectic', 'Vibrant', 'Evolving', 'Colorful', 'Diverse', 'Busy', 'Lively', 'Inspiring', 'Exciting'];
+const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
+---
+
+<div class="demo" data-study="word-cycle" data-pausable>
+  <div class="demo-bar">
+    <span class="demo-opts" role="group" aria-label="How the word changes">
+      <span class="label">Word</span>
+      <button type="button" class="demo-btn" data-mode="swap" aria-pressed="true">Swap</button>
+      <button type="button" class="demo-btn" data-mode="roll" aria-pressed="false">Roll</button>
+    </span>
+    <span class="demo-opts" role="group" aria-label="Blend mode">
+      <span class="label">Blend</span>
+      <button type="button" class="demo-btn" data-blend="normal" aria-pressed="false">Normal</button>
+      <button type="button" class="demo-btn" data-blend="difference" aria-pressed="false">Difference</button>
+      <button type="button" class="demo-btn" data-blend="exclusion" aria-pressed="true">Exclusion</button>
+    </span>
+  </div>
+
+  <div class="scene" data-mode="swap">
+    <p class="headline">
+      <span class="lead">New York is</span>
+      <span class="word-a" aria-hidden="true"></span>
+      <span class="word-b" aria-hidden="true">
+        <span class="roll">
+          {WORDS.map((w, i) => <span style={`color: oklch(0.72 0.19 ${HUES[i]})`}>{w}</span>)}
+        </span>
+      </span>
+      <span class="sr-only">{WORDS.join(', ').toLowerCase()}</span>
+    </p>
+    <span class="edge" aria-hidden="true"><span>white / black</span></span>
+  </div>
+
+  <label class="demo-range">
+    <span class="label">Split</span>
+    <input type="range" min="0" max="100" value="50" aria-label="Split" data-split />
+    <output class="demo-out" data-split-out>50%</output>
+  </label>
+
+  <pre class="demo-code" data-code aria-label="The CSS doing it"></pre>
+</div>
+
+<style>
+  .scene {
+    --split: 50%;
+    position: relative;
+    isolation: isolate;
+    container-type: inline-size;
+    aspect-ratio: 16 / 8;
+    max-width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(#fff 0 var(--split), #000 var(--split) 100%);
+  }
+  .edge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: var(--split);
+    pointer-events: none;
+  }
+  .edge span {
+    position: absolute;
+    right: 10px;
+    top: -9px;
+    font: 500 9.5px/1 var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    mix-blend-mode: difference;
+  }
+  @container (max-width: 480px) {
+    .edge span {
+      display: none;
+    }
+  }
+  .headline {
+    margin: 0;
+    padding-inline: 4cqi;
+    color: #fff;
+    mix-blend-mode: var(--blend, exclusion);
+    font: 800 9.4cqi/1 var(--font-display);
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .lead {
+    display: block;
+  }
+
+  /* Swap: the pen's own trick, words set with `content` inside the keyframes */
+  .word-a::after {
+    content: 'Eclectic';
+    animation: word-cycle 8s ease infinite alternate;
+    animation-play-state: var(--play, running);
+  }
+  @keyframes word-cycle {
+    0% {
+      content: 'Eclectic';
+      color: oklch(0.72 0.19 350);
+    }
+    12.5% {
+      content: 'Vibrant';
+      color: oklch(0.72 0.19 20);
+    }
+    25% {
+      content: 'Evolving';
+      color: oklch(0.72 0.19 60);
+    }
+    37.5% {
+      content: 'Colorful';
+      color: oklch(0.72 0.19 120);
+    }
+    50% {
+      content: 'Diverse';
+      color: oklch(0.72 0.19 170);
+    }
+    62.5% {
+      content: 'Busy';
+      color: oklch(0.72 0.19 210);
+    }
+    75% {
+      content: 'Lively';
+      color: oklch(0.72 0.19 250);
+    }
+    87.5% {
+      content: 'Inspiring';
+      color: oklch(0.72 0.19 285);
+    }
+    100% {
+      content: 'Exciting';
+      color: oklch(0.72 0.19 315);
+    }
+  }
+
+  /* Roll: a list of the real words, slid up one line at a time */
+  .word-b {
+    display: inline-block;
+    height: 1em;
+    overflow: hidden;
+    vertical-align: bottom;
+  }
+  .roll {
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.65, 0, 0.25, 1);
+  }
+  .roll > span {
+    display: block;
+    height: 1em;
+    line-height: 1;
+  }
+  .scene[data-mode='roll'] .word-a,
+  .scene[data-mode='swap'] .word-b {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .scene {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .roll {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { STAGE_PAUSE, type StagePauseEvent } from '../../../lib/sketch';
+  import { onPage } from '../../../scripts/page';
+
+  const WORDS = ['Eclectic', 'Vibrant', 'Evolving', 'Colorful', 'Diverse', 'Busy', 'Lively', 'Inspiring', 'Exciting'];
+  const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
+  const STOPS = ['0%', '12.5%', '25%', '37.5%', '50%', '62.5%', '75%', '87.5%', '100%'];
+
+  // onPage runs on every page change, so look for this study first and do nothing on other pages
+  onPage(() => {
+    const root = document.querySelector<HTMLElement>('[data-study="word-cycle"]');
+    if (!root) return;
+    const scene = root.querySelector<HTMLElement>('.scene')!;
+    const roll = root.querySelector<HTMLElement>('.roll')!;
+    const code = root.querySelector<HTMLElement>('[data-code]')!;
+    const split = root.querySelector<HTMLInputElement>('[data-split]')!;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let mode = 'swap';
+    let blend = 'exclusion';
+    let playing = !reduce; // the caption's Pause / Play starts on Play with reduced motion, so match it
+    let word = 0;
+    let dir = 1;
+    let timer = 0;
+    let raf = 0;
+    let shown = '';
+
+    const press = (sel: string, on: Element) =>
+      root.querySelectorAll(sel).forEach((b) => b.setAttribute('aria-pressed', String(b === on)));
+
+    // which word Swap is showing: read the real animation's progress (8s, alternating). `ease` runs inside each
+    // step between two keyframes, and `content` flips when the eased step reaches halfway, which for `ease` is
+    // 29.33% of the way through the step in time, not 50%
+    const FLIP = 0.2933;
+    const swapWord = () => {
+      const anim = document.getAnimations().find((a) => (a as CSSAnimation).animationName === 'word-cycle');
+      const t = Number(anim?.currentTime ?? 0) % 16000;
+      const x = (t <= 8000 ? t / 8000 : 2 - t / 8000) * 8;
+      const step = Math.floor(x);
+      return Math.min(8, step + (x - step >= FLIP ? 1 : 0));
+    };
+
+    // the CSS for whichever version is on, one property per line, with the live part marked
+    const k = (s: string) => `<span class="k">${s}</span>`;
+    const v = (s: string) => `<span class="v">${s}</span>`;
+    function render() {
+      const now = mode === 'swap' ? swapWord() : word;
+      const lines =
+        mode === 'swap'
+          ? [
+              `${k('.word::after {')}`,
+              `  animation: word-cycle 8s ease infinite alternate;`,
+              `${k('}')}`,
+              ``,
+              `${k('@keyframes word-cycle {')}`,
+              ...STOPS.map((s, i) => {
+                const l = `  ${s.padEnd(6)}{ content: "${WORDS[i]}";${' '.repeat(10 - WORDS[i].length)}color: oklch(0.72 0.19 ${HUES[i]}); }`;
+                return i === now ? `<span class="on">${l}</span>` : l;
+              }),
+              `${k('}')}`,
+            ]
+          : [
+              `${k('.word .roll {')}`,
+              `  transform: translateY(${v(`-${now}em`)});`,
+              `  transition: transform 0.6s cubic-bezier(0.65, 0, 0.25, 1);`,
+              `${k('}')}`,
+            ];
+      lines.push(``, `${k('.headline {')}`, `  color: #fff;`, `  mix-blend-mode: ${v(blend)};`, `${k('}')}`);
+      const html = lines.join('\n');
+      if (html !== shown) code.innerHTML = shown = html;
+    }
+
+    // Swap changes on its own; keep the highlighted keyframe in step with it
+    const follow = () => {
+      render();
+      raf = requestAnimationFrame(follow);
+    };
+    // Roll: one word a second, back and forth like the pen's `alternate`
+    const step = () => {
+      if (word + dir < 0 || word + dir >= WORDS.length) dir = -dir;
+      word += dir;
+      roll.style.transform = `translateY(-${word}em)`;
+      render();
+    };
+    function run() {
+      clearInterval(timer);
+      cancelAnimationFrame(raf);
+      scene.style.setProperty('--play', playing ? 'running' : 'paused');
+      if (!playing) return render();
+      if (mode === 'roll') timer = window.setInterval(step, reduce ? 2000 : 1000);
+      else raf = requestAnimationFrame(follow);
+      render();
+    }
+
+    root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) =>
+      b.addEventListener('click', () => {
+        mode = b.dataset.mode!;
+        scene.dataset.mode = mode;
+        press('[data-mode]', b);
+        run();
+      }),
+    );
+    root.querySelectorAll<HTMLButtonElement>('[data-blend]').forEach((b) =>
+      b.addEventListener('click', () => {
+        blend = b.dataset.blend!;
+        scene.style.setProperty('--blend', blend);
+        press('[data-blend]', b);
+        render();
+      }),
+    );
+    // Pause / Play is the caption's button, the same one every sketch uses (data-pausable above asks for it)
+    const stage = root.closest('.stage')!;
+    const onPause = (e: Event) => {
+      playing = !(e as StagePauseEvent).detail.paused;
+      run();
+    };
+    stage.addEventListener(STAGE_PAUSE, onPause);
+    split.addEventListener('input', () => {
+      scene.style.setProperty('--split', `${split.value}%`);
+      root.querySelector('[data-split-out]')!.textContent = `${split.value}%`;
+    });
+
+    run();
+    return () => {
+      stage.removeEventListener(STAGE_PAUSE, onPause);
+      clearInterval(timer);
+      cancelAnimationFrame(raf);
+    };
+  });
+</script>

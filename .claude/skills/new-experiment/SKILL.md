@@ -13,7 +13,7 @@ An experiment is a folder, `src/content/experiments/<slug>/`. There are two kind
 | **Runs on the page**             | `index.md`, `preview.astro`, `sketch.ts` or `sketch.astro` | The sketch, with Pause / Restart / Fullscreen | Lab hover preview only             |
 | **A study** (runs on the page)   | `index.md`, `preview.astro`, `sketch.astro`                | The study in a stage that grows to fit it     | Lab hover preview only             |
 
-Every lab entry has the same header (Made / Type / Stack under the lede). Optional fields: `themes: true` (a Day / Night switch under the stage) and `headsUp` (a "Before you start" box, rare).
+Every lab entry has the same header (Made / Type / Stack under the lede). Optional fields: `themes: true` (a Day / Night switch in the top-right corner of the stage) and `headsUp` (a "Before you start" box, rare).
 
 Every experiment gets a drawing. `npm run new` copies the matching `templates/experiment*/` folder.
 
@@ -27,7 +27,7 @@ Ask unless it's clear:
   - `p5`: p5.js.
   - `three`: Three.js.
   - `css`: CSS art.
-  - `study`: one idea with controls (type `CSS study` or `JS study`). Its stage grows to fit it (`stage: fit`) and has no Fullscreen. Build it from the shared parts in `src/styles/demo.css`; `experiments/example-study` shows one.
+  - `study`: one idea with controls (type `CSS study` or `JS study`). Its stage grows to fit it (`stage: fit`) and has no Fullscreen. Build it from the shared parts in `src/styles/demo.css`; `experiments/word-cycle` shows one.
 
 ## 2. Links out
 

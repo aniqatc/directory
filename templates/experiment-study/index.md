@@ -8,7 +8,7 @@ stack: HTML / CSS
 released: 2026-10 # YYYY-MM
 stage: fit # the stage grows to the study, with no Fullscreen
 hint: Press Play · pick an easing # shown under the stage
-# themes: true # optional: a Day / Night switch under the stage (studies follow it on their own)
+# themes: true # optional: a Day / Night switch in the top-right corner of the stage (studies follow it on their own)
 # headsUp: Made for a mouse. # optional, rare: a "Before you start" box above the figure
 # draft: true # optional: hide it from the portfolio and lab until it's ready
 summary: Two sentences for the top of the page. The one idea it shows, and how to play with it.
