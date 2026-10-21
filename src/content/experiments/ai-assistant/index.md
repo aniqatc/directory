@@ -5,7 +5,7 @@ stack: JS / Tailwind / Webpack
 released: 2023-12
 live: code.aniqa.dev
 repo: ai-assistant
-updated: 2026-10
+updated: 2026-10-19
 summary: A coding chat that explains, refactors, debugs or converts a snippet in one click, with highlighted answers you can copy, save or download.
 ---
 

@@ -5,7 +5,7 @@ stack: React / Vite / Framer Motion
 released: 2025-01
 live: rflect.aniqa.dev
 repo: rflect-landing
-updated: 2026-10
+updated: 2026-10-19
 summary: The landing page for rflect. It walks through each command as a terminal session you scroll through.
 ---
 
