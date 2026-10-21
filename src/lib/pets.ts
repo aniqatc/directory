@@ -34,8 +34,7 @@ export const PET: PetId | 'auto' = 'auto';
  * override the month they fall in. Anything not listed gets FALLBACK.
  */
 export type Season =
-  | { from: string; to: string; pet: PetId }
-  | { on: (day: Date) => boolean; label: string; pet: PetId };
+  { from: string; to: string; pet: PetId } | { on: (day: Date) => boolean; label: string; pet: PetId };
 
 export const SEASONS: Season[] = [
   // special days
