@@ -37,7 +37,9 @@ const HUES = [350, 20, 60, 120, 170, 210, 250, 285, 315];
       <span class="word-a" aria-hidden="true"></span>
       <span class="word-b" aria-hidden="true">
         <span class="roll">
-          {WORDS.map((w, i) => <span style={`color: oklch(0.72 0.19 ${HUES[i]})`}>{w}</span>)}
+          {WORDS.map((w, i) => (
+            <span style={`color: oklch(0.72 0.19 ${HUES[i]})`}>{w}</span>
+          ))}
         </span>
       </span>
       <span class="sr-only">{WORDS.join(', ').toLowerCase()}</span>
