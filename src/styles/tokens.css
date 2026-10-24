@@ -2,8 +2,8 @@
    Base.astro sets data-mode on <html>. */
 :root {
   /* --pop is the accent on dark pages and in drawings; --pop-lab is the same hue darkened for text on the light lab */
-  --pop: #79d6cf;
-  --pop-lab: #16756f; /* mint-blue */
+  --pop: #79d3e6;
+  --pop-lab: #177282; /* lagoon */
   --pet: var(--pop);
   /* darker shades of the pet for its wings, leaves, stems and stripes; they follow --pop */
   --pet-shade: color-mix(in oklab, var(--pet) 86%, #000);

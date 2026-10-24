@@ -31,8 +31,8 @@ const FONTS = `
 
 // the same tokens as src/styles/tokens.css
 const THEMES = {
-  portfolio: { bg: '#16151b', fg: '#ebe7f0', muted: '#9690a3', line: '#2e2b37', accent: '#79d6cf' },
-  lab: { bg: '#f1efea', fg: '#1b1a20', muted: '#6a6571', line: '#d6d2c8', accent: '#16756f' },
+  portfolio: { bg: '#16151b', fg: '#ebe7f0', muted: '#9690a3', line: '#2e2b37', accent: '#79d3e6' },
+  lab: { bg: '#f1efea', fg: '#1b1a20', muted: '#6a6571', line: '#d6d2c8', accent: '#177282' },
 };
 
 const card = (t, title, lede, label) => `<!doctype html><html><head><meta charset="utf-8"><style>
@@ -43,7 +43,7 @@ const card = (t, title, lede, label) => `<!doctype html><html><head><meta charse
   .top { display: flex; justify-content: space-between; align-items: center; font: 500 22px GeistMono; color: ${t.muted};
          letter-spacing: .04em; padding-bottom: 28px; border-bottom: 2px solid ${t.line}; }
   .brand { display: flex; align-items: center; gap: 16px; font: 600 28px Bricolage; color: ${t.fg}; letter-spacing: -.01em; }
-  .brand i { width: 16px; height: 16px; border-radius: 50%; background: #79d6cf; }
+  .brand i { width: 16px; height: 16px; border-radius: 50%; background: #79d3e6; }
   h1 { font: 800 200px/.9 Bricolage; letter-spacing: -.04em; }
   h1 span { color: ${t.accent}; }
   p { font: 400 38px/1.35 Bricolage; color: ${t.muted}; max-width: 26ch; }
