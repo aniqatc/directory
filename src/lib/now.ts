@@ -10,10 +10,12 @@ export const BUILDING = [
     blurb:
       'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
   },
-  {
-    title: 'unsent.day',
-    blurb: 'An anonymous, text-only board where strangers can read and mark your unsent words as read.',
-  },
+  { title: 'For Zayn', blurb: 'A gallery of pure-CSS pieces, each one something that reminds me of my son.' },
+  // next up:
+  // {
+  //   title: 'unsent.day',
+  //   blurb: 'An anonymous, text-only board where strangers can read your unsent words.',
+  // },
 ];
 
 /** "On the bench" in the lab. The card hides itself when this is empty. */
