@@ -5,8 +5,8 @@ stack: HTML / CSS
 released: 2026-10
 order: 6
 draft: true
-blurb: A gallery of pure-CSS pieces, each one something that reminds me of my son.
-summary: A small, growing gallery of pure-CSS pieces. Each one is something that reminds me of my son Zayn, drawn with nothing but HTML and CSS.
+blurb: A gallery of CSS art, each one something that reminds me of my son.
+summary: A small, growing gallery of CSS art. Each one is something that reminds me of my son Zayn.
 ---
 
 ## Why

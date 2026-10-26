@@ -10,7 +10,7 @@ export const BUILDING = [
     blurb:
       'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
   },
-  { title: 'For Zayn', blurb: 'A gallery of pure-CSS pieces, each one something that reminds me of my son.' },
+  { title: 'For Zayn', blurb: 'A gallery of CSS art, each one something that reminds me of my son.' },
   // next up:
   // {
   //   title: 'unsent.day',
