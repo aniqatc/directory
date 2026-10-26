@@ -134,6 +134,8 @@ test.describe('experiment pages', () => {
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
     await expect(page.locator('.d-eyebrow .chip')).toHaveText('Updated');
     await expect(page.locator('.heads-up')).toHaveCount(0);
+    // links in the notes go to other sites, so they open in a new tab like Live and Code
+    await expect(page.locator('.sec a[href^="https://codepen.io"]')).toHaveAttribute('target', '_blank');
     const stage = page.locator('.stage');
     await expect(stage).toHaveClass(/stage-fit/);
     await expect(page.locator('[data-act="fullscreen"], .fs-exit')).toHaveCount(0);

@@ -1,6 +1,7 @@
 // Sätteri hast plugin. Wraps each `## Heading` in a project file, plus everything up to the next one, in
 //   <section class="sec" data-sec="heading-slug"><h2 class="label">Heading</h2><div>…</div></section>
-// so detail pages get the label-left section layout straight from Markdown.
+// so detail pages get the label-left section layout straight from Markdown. Links to other sites in the notes
+// (a CodePen, a repo, a day's notes on GitHub) open in a new tab, like the Live and Code links do.
 
 const slugify = (s) =>
   s
@@ -8,13 +9,23 @@ const slugify = (s) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
+const isExternalLink = (node) =>
+  node.tagName === 'a' &&
+  /^https?:\/\//.test(String(node.properties.href ?? '')) &&
+  !/^https?:\/\/(www\.)?aniqa\.dev(\/|$)/.test(String(node.properties.href));
+
 // copy a node read from the tree into a plain object Sätteri can write back
 const plain = (n) => {
   if (n.type === 'element') {
+    const properties = { ...n.properties };
+    if (isExternalLink(n)) {
+      properties.target = '_blank';
+      properties.rel = ['noopener'];
+    }
     return {
       type: 'element',
       tagName: n.tagName,
-      properties: { ...n.properties },
+      properties,
       children: n.children.map(plain),
     };
   }
