@@ -25,4 +25,9 @@ export const BENCH = [
   //   blurb: 'A p5.js garden where a new flower blooms for every week since my son was born.',
   //   tag: 'p5.js · Generative sketch',
   // },
+  {
+    title: 'Codepens',
+    blurb: 'Migration of my CodePen experiments to my new lab, with a few new enhancements.',
+    tag: 'CSS · JavaScript',
+  },
 ];

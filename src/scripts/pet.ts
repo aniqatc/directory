@@ -63,6 +63,15 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
     }
   };
 
+  const hop = () => {
+    if (!pet || homing) return;
+    hopAt = performance.now();
+    pet.classList.remove('hop');
+    void pet.offsetWidth;
+    pet.classList.add('hop');
+    wake();
+  };
+
   /** Out of the logo, or straight back where it was on the last page (already full size, staying put). */
   function release(saved?: Saved) {
     if (saved) {
@@ -103,13 +112,10 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
     };
     dot()?.classList.add('out');
 
-    pet.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      hopAt = performance.now();
-      pet!.classList.remove('hop');
-      void pet!.offsetWidth;
-      pet!.classList.add('hop');
-      wake();
+    // Click anywhere to make the pet hop with a heart
+    document.addEventListener('click', (ev) => {
+      if ((ev.target as Element).closest('.brand i')) return;
+      hop();
     });
     pet.addEventListener('dblclick', (ev) => {
       ev.stopPropagation();
