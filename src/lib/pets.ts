@@ -1,8 +1,6 @@
-// The pets that can come out of the dot by aniqa.dev. They all behave the same (src/scripts/pet.ts follows,
-// blinks, sleeps, hops and goes home); each one here is only a drawing.
-//
-// To change the pet, set PET below. 'auto' picks one by today's date from SEASONS.
+// This file defines the pets for the dot by aniqa.dev and their seasonal assignments.
 
+// Pet definitions and seasonal assignments for the dot by aniqa.dev.
 export type PetId =
   | 'dot'
   | 'chick'
@@ -25,7 +23,7 @@ export type PetId =
   | 'diya'
   | 'lantern';
 
-/** The pet everyone gets: a name to pin one, or 'auto' to follow the calendar in SEASONS. */
+// The pet everyone gets: a name to pin one, or 'auto' to follow the calendar in SEASONS.
 export const PET: PetId | 'auto' = 'auto';
 
 /**
@@ -36,6 +34,7 @@ export const PET: PetId | 'auto' = 'auto';
 export type Season =
   { from: string; to: string; pet: PetId } | { on: (day: Date) => boolean; label: string; pet: PetId };
 
+// The seasonal assignments for the pets.
 export const SEASONS: Season[] = [
   // special days
   { from: '02-27', to: '02-27', pet: 'cupcake' }, // my birthday
@@ -78,7 +77,7 @@ export const SEASONS: Season[] = [
 ];
 export const FALLBACK: PetId = 'dot';
 
-// Holidays without a calendar the browser can work out. Add more years when these run out.
+// Holidays without a calendar the browser can work out.
 const DIWALI = ['2026-11-08', '2027-10-29', '2028-10-17', '2029-11-05', '2030-10-26'];
 const LUNAR_NEW_YEAR = [
   '2026-02-17',
@@ -92,35 +91,41 @@ const LUNAR_NEW_YEAR = [
   '2034-02-19',
   '2035-02-08',
 ];
-/** Whether `d` is one of the listed YYYY-MM-DD dates. */
+
+// Checks if a given date matches any date in a list of YYYY-MM-DD strings.
 function listed(d: Date, dates: string[]): boolean {
   const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   return dates.includes(ymd);
 }
 
-/** Whether `d` is the nth Sunday of a month (1–12), for Mother's and Father's Day. */
+// Checks if a given date is the nth Sunday of a specified month (1–12), for Mother's and Father's Day.
 function nthSunday(d: Date, month: number, n: number): boolean {
   return d.getMonth() + 1 === month && d.getDay() === 0 && Math.ceil(d.getDate() / 7) === n;
 }
 
 // The browser's own Islamic (Umm al-Qura) calendar. Eid can land a day off where it's set by moon sighting.
 const islamic = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { month: 'numeric', day: 'numeric' });
-/** Whether `d` is the given day of the given month in the Islamic calendar. */
+
+// Checks if a given date matches the specified day and month in the Islamic (Umm al-Qura) calendar.
 function hijri(d: Date, month: number, day: number): boolean {
   // an old browser without that calendar quietly falls back to the Gregorian one, so check before trusting it
   if (islamic.resolvedOptions().calendar !== 'islamic-umalqura') return false;
   try {
+    // format the date into parts and map them into an object
     const p = Object.fromEntries(islamic.formatToParts(d).map((x) => [x.type, x.value]));
+    // check if the month and day match the specified Islamic date
     return Number(p.month) === month && Number(p.day) === day;
   } catch {
     return false; // then the month's pet shows instead
   }
 }
 
-/** The pet for a given day (the visitor's own date, so it changes without a rebuild). */
+// Determines the current pet based on today's date and the seasonal assignments.
 export function currentPet(today = new Date()): PetId {
   if (PET !== 'auto') return PET;
+  // format the month and day as MM-DD
   const md = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  // find the first season that matches today's date
   return SEASONS.find((s) => ('on' in s ? s.on(today) : md >= s.from && md <= s.to))?.pet ?? FALLBACK;
 }
 
@@ -134,43 +139,48 @@ export function currentPet(today = new Date()): PetId {
 //   pet-cap                   a hat that gets pulled down for a nap and bounces on a tap
 //   pet-wing-l / -r, pet-flap-l / -r, pet-sway   small idle loops
 
+// The following types and constants define the structure and appearance of the pets.
 type Face = {
   x?: number; // moves the whole face
-  y?: number;
-  eyeX?: number;
-  eyeY?: number;
+  y?: number; // moves the whole face vertically
+  eyeX?: number; // moves the eyes horizontally
+  eyeY?: number; // moves the eyes vertically
   eye?: string; // replaces the eye drawing (centred on 0, 0); it still blinks and closes in its sleep
-  blushX?: number;
+  blushX?: number; // moves the blush horizontally
   blushRx?: number; // cheek width (2.3)
-  blush?: string;
-  mouth?: string;
+  blush?: string; // replaces the blush drawing
+  mouth?: string; // replaces the mouth drawing
 };
 
+// Represents the drawing of a pet, including its body, face, and optional additional elements.
 export type PetDrawing = {
-  label: string;
-  back?: string; // behind the body
-  body: string;
-  front?: string; // over the face
-  face?: Face;
+  label: string; // the name or description of the pet
+  back?: string; // elements drawn behind the body
+  body: string; // the main body of the pet
+  front?: string; // elements drawn over the face
+  face?: Face; // the facial features and their positions
   reward?: string; // replaces the heart that floats up on a tap
 };
 
+// Common constants and SVG snippets used in pet drawings.
 const INK = 'var(--ink)';
 const SMILE = `<path d="M-1.9 2.7 Q0 4.6 1.9 2.7" stroke="${INK}" stroke-width="1.25" fill="none" stroke-linecap="round"/>`;
 const SHELL =
   'fill="#fbf6ea" stroke="var(--ink)" stroke-opacity=".25" stroke-width=".6" stroke-linejoin="round"';
 const WING = 'fill="#fff" fill-opacity=".85" stroke="var(--ink)" stroke-opacity=".3" stroke-width=".6"';
+
 // darker shades of the pet colour (tokens.css), so they follow the accent if it changes
 const SHADE = 'var(--pet-shade)'; // wings, flippers
-const LEAF = 'var(--pet-leaf)';
-const STEM = 'var(--pet-deep)'; // stems, the bee's stripes, the snowball's beanie
-const BELLY = 'var(--pet-light)'; // the owl's and frog's bellies
-const CREAM = '#fbf6ea';
-const YELLOW = '#f2b54b'; // beaks and feet
-const BEAK = `<path d="M-1.2 0.4 L1.2 0.4 L0 2.4 Z" fill="${YELLOW}"/>`;
-const CAP = '#b7834f';
-const CAP_LINE = '#8f6237';
+const LEAF = 'var(--pet-leaf)'; // leaves and plant elements
+const STEM = 'var(--pet-deep)'; // stems, the bee's stripes, the snowball's beanie (darker elements)
+const BELLY = 'var(--pet-light)'; // the owl's and frog's bellies (lighter elements)
+const CREAM = '#fbf6ea'; // a cream colour used in various pet elements
+const YELLOW = '#f2b54b'; // a yellow colour used for beaks and feet
+const BEAK = `<path d="M-1.2 0.4 L1.2 0.4 L0 2.4 Z" fill="${YELLOW}"/>`; // the SVG path for a beak
+const CAP = '#b7834f'; // a brown colour used for caps
+const CAP_LINE = '#8f6237'; // a darker brown used for cap lines
 
+// The collection of all pet drawings, indexed by their PetId.
 export const PETS: Record<PetId, PetDrawing> = {
   dot: {
     label: 'The dot',
@@ -494,9 +504,10 @@ export const PETS: Record<PetId, PetDrawing> = {
   },
 };
 
+// The default heart SVG used as a reward for pets.
 const HEART = `<svg class="pet-heart" viewBox="0 0 10 10"><path d="M5 9 L1.2 5.2 A2.2 2.2 0 0 1 5 2.4 A2.2 2.2 0 0 1 8.8 5.2 Z" fill="var(--blush)"/></svg>`;
 
-/** The pet's markup: the drawing in an svg, the z's for sleeping, and what floats up on a tap. */
+// Generates the complete SVG markup for a pet, including its body, face, sleeping z's, and reward.
 export function petMarkup(id: PetId): string {
   const p = PETS[id];
   const f = p.face ?? {};
