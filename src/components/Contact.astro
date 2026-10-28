@@ -8,9 +8,10 @@ interface Props {
 
 const { variant = 'intro' } = Astro.props;
 // only the links set in contact.ts are shown
-const c: { github?: string; linkedin?: string; x?: string; email?: string } = CONTACT;
+const c: { github?: string; linkedin?: string; x?: string; email?: string; codepen?: string } = CONTACT;
 const links = (
   [
+    ['CodePen', c.codepen],
     ['GitHub', c.github],
     ['LinkedIn', c.linkedin],
     ['X', c.x],
