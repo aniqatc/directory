@@ -6,14 +6,23 @@
 // finish downloading after that page's astro:page-load has fired (on a slow connection), so it must set up
 // straight away instead of waiting for an event that already happened.
 let loaded = false;
+
+// Listen for the page load event to set the loaded state.
 document.addEventListener('astro:page-load', () => (loaded = true));
+
+// Listen for the before-swap event to reset the loaded state.
 document.addEventListener('astro:before-swap', () => (loaded = false));
 
+// onPage sets up a function to run on the first page load and after every page change.
+// It also handles cleanup before the next page swap.
 export function onPage(setup: () => void | (() => void)) {
   const run = () => {
+    // Run the setup function and register its cleanup if provided.
     const cleanup = setup();
+    // If a cleanup function is returned, register it to run before the next page swap.
     if (cleanup) document.addEventListener('astro:before-swap', cleanup, { once: true });
   };
+  // Attach the run function to the page load event and run it immediately if the page is already loaded.
   document.addEventListener('astro:page-load', run);
   if (loaded) run();
 }
