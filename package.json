@@ -1,6 +1,6 @@
 {
-  "name": "portfolio",
-  "description": "Personal portfolio website for @aniqatc.",
+  "name": "aniqatc",
+  "description": "Personal portfolio and sketchbook for @aniqatc.",
   "private": true,
   "version": "2.0.0",
   "type": "module",

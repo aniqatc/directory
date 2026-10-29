@@ -4,24 +4,30 @@ import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
 import { BENCH } from '../src/lib/now';
 
-/** Fails the test if the page logs an error or throws. */
+// Watches for page errors and console errors during the test.
 function watchErrors(page: Page) {
   const errors: string[] = [];
+  // Listen for page errors and console errors and collect them in the `errors` array.
   page.on('pageerror', (e) => errors.push(e.message));
+  // Listen for console messages of type 'error' and collect them in the `errors` array.
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   return errors;
 }
 
-/** Every case study and lab page, read from the two index pages. */
+// Returns a list of all case study and lab page URLs by reading the two index pages.
 async function allPages(page: Page) {
   await page.goto('/');
+  // Get all work project links from the portfolio index page.
   const work = await page.$$eval('.project h3 a', (a) => a.map((x) => x.getAttribute('href')!));
   await page.goto('/lab');
+  // Get all lab project links from the lab index page.
   const lab = await page.$$eval('.row .t a', (a) => a.map((x) => x.getAttribute('href')!));
   return [...work, ...lab];
 }
 
+// Test suite for various pages and their expected behaviors.
 test.describe('pages', () => {
+  // Test for the portfolio index page.
   test('portfolio is dark, with five projects and the intro', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/');
@@ -33,6 +39,7 @@ test.describe('pages', () => {
     expect(errors).toEqual([]);
   });
 
+  // Test for the lab index page.
   test('lab is light, with the archive, stats and bench (when listed)', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/lab');
@@ -44,6 +51,7 @@ test.describe('pages', () => {
     expect(errors).toEqual([]);
   });
 
+  // Test that every case study and lab page loads without errors.
   test('every case study and lab page loads without errors', async ({ page }) => {
     const errors = watchErrors(page);
     for (const href of await allPages(page)) {
@@ -58,6 +66,7 @@ test.describe('pages', () => {
     expect(errors).toEqual([]);
   });
 
+  // Test that every entry has its own link-preview card.
   test('every entry has its own link-preview card (run npm run og if this fails)', async ({
     page,
     request,
@@ -72,14 +81,14 @@ test.describe('pages', () => {
       expect(res.status(), `${href}: ${image}`).toBe(200);
     }
   });
-
+  // Test that a missing page returns the 404 with the sleeping dot.
   test('a missing page gets the 404 with the sleeping dot', async ({ page }) => {
     const res = await page.goto('/no-such-page');
     expect(res?.status()).toBe(404);
     await page.click('.nf-pet');
     await expect(page.locator('.nf-pet')).toHaveClass(/awake/);
   });
-
+  // Test that draft projects never show up in the portfolio.
   test('drafts never show', async ({ page }) => {
     expect((await page.goto('/work/for-zayn'))?.status()).toBe(404);
     await page.goto('/');
@@ -87,7 +96,9 @@ test.describe('pages', () => {
   });
 });
 
+// Test suite for interactive elements and user interactions.
 test.describe('interactions', () => {
+  // Test that the Portfolio / Lab switch correctly changes the site mode.
   test('the Portfolio / Lab switch flips the mood', async ({ page }) => {
     await page.goto('/');
     await page.click('.switch a[href="/lab"]');
@@ -96,6 +107,7 @@ test.describe('interactions', () => {
     await expect(page.locator('.switch a[href="/lab"]')).toHaveAttribute('aria-current', 'page');
   });
 
+  // Test that hovering over an archive row reveals its associated drawing.
   test('hovering an archive row shows its drawing', async ({ page }) => {
     await page.goto('/lab');
     const row = page.locator('.row').first();
@@ -105,12 +117,14 @@ test.describe('interactions', () => {
     await expect(page.locator('.tip .pvbox:not([hidden])')).toHaveCount(1);
   });
 
+  // Test that clicking the random entry button navigates to a lab page.
   test('random entry opens a lab page', async ({ page }) => {
     await page.goto('/lab');
     await page.click('.dice');
     await expect(page).toHaveURL(/\/lab\/.+/, { timeout: 5000 });
   });
 
+  // Test that the pet comes out, follows you to the next page, and goes home.
   test('the pet comes out, follows you to the next page, and goes home', async ({ page }) => {
     await page.goto('/');
     await page.click('.brand i');
@@ -125,7 +139,9 @@ test.describe('interactions', () => {
   });
 });
 
+// Test suite for individual experiment pages.
 test.describe('experiment pages', () => {
+  // Test that an individual experiment page has the expected elements and behaviors.
   test('a study: the lab-note header, a stage that fits, Day / Night, Pause and a Code link, but no Fullscreen', async ({
     page,
   }) => {
@@ -134,7 +150,7 @@ test.describe('experiment pages', () => {
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
     await expect(page.locator('.d-eyebrow .chip')).toHaveText('Updated');
     await expect(page.locator('.heads-up')).toHaveCount(0);
-    // links in the notes go to other sites, so they open in a new tab like Live and Code
+    // Links in the notes go to other sites, so they open in a new tab like Live and Code
     await expect(page.locator('.sec a[href^="https://codepen.io"]')).toHaveAttribute('target', '_blank');
     const stage = page.locator('.stage');
     await expect(stage).toHaveClass(/stage-fit/);
@@ -154,7 +170,7 @@ test.describe('experiment pages', () => {
     expect(await bg('.stage')).toBe('#16151b');
     expect(await bg('body')).toBe('#f1efea');
 
-    // and the study itself works: Roll swaps the version, and the caption's Pause stops it like a sketch
+    // The study itself works: Roll swaps the version, and the caption's Pause stops it like a sketch
     await page.click('button[data-mode="roll"]');
     await expect(page.locator('.scene')).toHaveAttribute('data-mode', 'roll');
     await expect(page.locator('.demo-code')).toContainText('translateY');
@@ -166,6 +182,7 @@ test.describe('experiment pages', () => {
     expect(errors).toEqual([]);
   });
 
+  // Test that a lab note retains its drawing and displays the Live and Code links correctly.
   test('a lab note keeps its drawing, with Live and Code under it', async ({ page }) => {
     await page.goto('/lab/world-clock');
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
@@ -175,7 +192,9 @@ test.describe('experiment pages', () => {
   });
 });
 
+// Test suite for page changes and view transitions, ensuring smooth navigation and script persistence.
 test.describe('page changes (view transitions)', () => {
+  // Test that navigating between pages does not trigger a full reload and that scripts continue to function.
   test('links swap pages without a reload, and every script still works afterwards', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/');
@@ -192,15 +211,14 @@ test.describe('page changes (view transitions)', () => {
     await page.mouse.move(400, (await row.boundingBox())!.y + 20);
     await expect(page.locator('.tip')).toHaveClass(/show/); // hover preview
 
-    // lab → a lab note: the big heart and the drawing's scaling start (a lab note by name: the newest row can
-    // be an experiment, which has a stage instead of a drawing)
+    // lab → a lab note: the big heart and the drawing's scaling start (a lab note by name: the newest row can be an experiment, which has a stage instead of a drawing)
     await page.click('.row[data-slug="world-clock"] .t a');
     await expect(page.locator('.d-title')).toBeVisible();
     expect(await sameDocument()).toBe(true);
     await expect(page.locator('.like-lg .lc')).toHaveText(/\d+/);
     await expect(page.locator('.pvbig')).toHaveAttribute('style', /--s:/);
 
-    // back to the portfolio: the scroll counter and card drawings work again
+    // portfolio → lab → a lab note → back to the portfolio: the scroll counter and card drawings work again
     await page.click('.switch a[href="/"]');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'portfolio');
     expect(await sameDocument()).toBe(true);
@@ -210,25 +228,29 @@ test.describe('page changes (view transitions)', () => {
     expect(errors).toEqual([]);
   });
 
+  // Test that the pet element remains visible and connected across page changes.
   test('the pet stays out across page changes', async ({ page }) => {
     await page.goto('/');
     await page.click('.brand i');
     const pet = await page.locator('.pet').elementHandle();
     await page.click('.switch a[href="/lab"]');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'lab');
-    // the very same element, still out, and the new header's dot stays hidden
+    // Ensure the pet element is still connected to the DOM after the page change.
     expect(await pet!.evaluate((el) => el.isConnected)).toBe(true);
     await expect(page.locator('.brand i')).toHaveClass(/out/);
   });
 });
 
+// Test suite for the like functionality, including the heart filling and API limits.
 test.describe('likes', () => {
+  // Test that the heart fills to five likes and refuses a sixth like.
   test('the heart fills to five, then a sixth like is refused', async ({ page }) => {
-    // an in-memory stand-in for /api/likes with the same rules, so the test never touches the real counts
+    // Intercept API requests to /api/likes and simulate like counts in memory.
     const counts = new Map<string, number>();
     await page.route('**/api/likes**', async (route) => {
       const req = route.request();
       if (req.method() === 'GET') {
+        // Respond to GET requests with the current like counts for the requested slugs.
         const slugs = new URL(req.url()).searchParams.get('slugs')!.split(',');
         return route.fulfill({
           json: Object.fromEntries(
@@ -240,6 +262,7 @@ test.describe('likes', () => {
       const mine = counts.get(slug) ?? 0;
       if (mine < 5) counts.set(slug, mine + 1);
       const n = counts.get(slug)!;
+      // Respond to POST requests by incrementing the like count if under the limit.
       return route.fulfill({ json: { total: n, mine: n, ok: mine < 5 } });
     });
 
@@ -256,6 +279,7 @@ test.describe('likes', () => {
     await expect(heart.locator('.lc')).toHaveText('5');
   });
 
+  // Test that the API correctly enforces the limit of five likes per visitor.
   test('the API refuses a sixth like from the same visitor', async ({ request }) => {
     const env = readEnv();
     test.skip(!env.UPSTASH_REDIS_REST_URL, 'needs Upstash credentials in .env');
@@ -270,7 +294,7 @@ test.describe('likes', () => {
       expect(results[4].mine).toBe(5);
       expect(results[5]).toMatchObject({ ok: false, mine: 5 });
     } finally {
-      // take this test visitor's likes back out of the real counts
+      // Clean up the likes for this test visitor to avoid affecting other tests.
       const { Redis } = await import('@upstash/redis');
       const redis = new Redis({ url: env.UPSTASH_REDIS_REST_URL, token: env.UPSTASH_REDIS_REST_TOKEN });
       const mine = Number((await redis.get(`likes:${slug}:by:${visitor}`)) ?? 0);
@@ -281,11 +305,13 @@ test.describe('likes', () => {
   });
 });
 
+// Accessibility tests for keyboard navigation and focus rings.
 test.describe('accessibility', () => {
+  // Test that every link and button can be reached via keyboard and shows a focus ring.
   test('keyboard: every link and button can be reached and shows a focus ring', async ({ page }) => {
     for (const path of ['/', '/lab', '/work/weather', '/lab/world-clock', '/lab/word-cycle']) {
       await page.goto(path, { waitUntil: 'load' });
-      // number every visible link and button, then Tab through and tick them off
+      // Number every visible link and button, then Tab through and tick them off.
       // (document.querySelectorAll, not $$eval: Playwright's selectors reach into the dev toolbar's shadow DOM)
       const ids = await page.evaluate(() =>
         [...document.querySelectorAll<HTMLElement>('a[href], button:not([hidden])')]
@@ -297,12 +323,13 @@ test.describe('accessibility', () => {
       );
       const reached = new Set<string>();
       for (let i = 0; i < ids.length + 20; i++) {
-        // extra presses: the dev toolbar (dev only) takes a few
+        // Press Tab to move focus to the next interactive element (dev only for navigating the page)
         await page.keyboard.press('Tab');
         const info = await page.evaluate(() => {
           const el = document.activeElement as HTMLElement | null;
           if (!el?.dataset.kb) return null; // body, or the dev toolbar
           const s = getComputedStyle(el);
+          // Check if the element has a visible focus ring.
           return {
             id: el.dataset.kb,
             html: el.outerHTML.slice(0, 80),
@@ -320,6 +347,7 @@ test.describe('accessibility', () => {
     }
   });
 
+  // Test for reduced motion settings affecting animations.
   test('reduced motion: drawings and the dot stop moving', async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
@@ -332,6 +360,7 @@ test.describe('accessibility', () => {
   });
 });
 
+// Utility function to read environment variables from the .env file.
 function readEnv(): Record<string, string> {
   try {
     return Object.fromEntries(
