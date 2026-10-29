@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-// Draw the link-preview images and the Apple touch icon with the site's fonts and colours:
-//   public/og/<collection>/<slug>.png  one card per entry (1200 × 630), from the dev page /dev/og/<collection>/<slug>
-//   public/og-portfolio.png            the general dark card: home page, and any entry without its own card
-//   public/og-lab.png                  the general light card: lab page, and any lab entry without its own card
-//   public/apple-touch-icon.png        180 × 180
-// Run `npm run og` after adding an entry or changing a drawing. Uses Playwright's Chromium (installed for the
-// tests) and the dev server: a running `npm run dev` is reused, otherwise one is started for the run.
+// Generate Open Graph images and the Apple touch icon using the site's fonts and colours.
+//
+//   public/og/<collection>/<slug>.png  One card per published entry, rendered from /dev/og/<collection>/<slug>
+//   public/og-portfolio.png            Fallback card for the home page and entries without a custom card
+//   public/og-lab.png                  Fallback card for the lab page and entries without a custom card
+//   public/apple-touch-icon.png        180 × 180 home-screen icon
+//
+// Run `npm run og` after adding an entry or changing a drawing.
+// Uses Playwright's Chromium and reuses the dev server on port 4321 when available.
+// Otherwise, starts a temporary server on port 4399.
 import { spawn } from 'node:child_process';
 import {
   existsSync,
@@ -21,6 +24,7 @@ import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from '@playwright/test';
 
+// ---------- fonts and themes ----------
 const font = (pkg, file) =>
   pathToFileURL(resolve('node_modules/@fontsource-variable', pkg, 'files', file)).href;
 const FONTS = `
@@ -35,6 +39,7 @@ const THEMES = {
   lab: { bg: '#f1efea', fg: '#1b1a20', muted: '#6a6571', line: '#d6d2c8', accent: '#177282' },
 };
 
+// ---------- HTML templates for cards and icons ----------
 const card = (t, title, lede, label) => `<!doctype html><html><head><meta charset="utf-8"><style>
   ${FONTS}
   * { box-sizing: border-box; margin: 0; }
@@ -58,6 +63,7 @@ const icon = () => `<!doctype html><html><head><style>
   img { width: 128px; height: 128px; }
 </style></head><body><img src="data:image/svg+xml;base64,${readFileSync('public/favicon.svg').toString('base64')}"></body></html>`;
 
+// ---------- pages to render ----------
 const pages = [
   {
     out: 'public/og-portfolio.png',
@@ -77,6 +83,7 @@ const pages = [
   { out: 'public/apple-touch-icon.png', size: [180, 180], html: icon() },
 ];
 
+// ---------- temporary directory and browser setup ----------
 const dir = mkdtempSync(join(tmpdir(), 'og-'));
 const browser = await chromium.launch();
 for (const { out, size, html } of pages) {
@@ -89,8 +96,7 @@ for (const { out, size, html } of pages) {
   await page.close();
   console.log(`✓ ${out} (${size.join(' × ')})`);
 }
-
-// ---------- one card per entry, screenshotted from the dev page ----------
+// This section generates individual Open Graph images for each published entry.
 const entries = ['projects', 'experiments'].flatMap((collection) =>
   readdirSync(`src/content/${collection}`)
     .filter((slug) => existsSync(`src/content/${collection}/${slug}/index.md`))
@@ -114,6 +120,7 @@ if (!(await up(`${base}/dev/drawings`))) {
     await new Promise((r) => setTimeout(r, 1000));
 }
 
+// ---------- clean up old cards and generate new ones ----------
 rmSync('public/og', { recursive: true, force: true }); // start clean, so deleted entries lose their cards
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
 for (const { collection, slug } of entries) {

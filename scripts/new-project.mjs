@@ -1,50 +1,77 @@
 #!/usr/bin/env node
-// Scaffold a new entry by copying a folder from templates/. Asks for what it needs, or takes flags:
+// Create a content entry from a template, with interactive prompts or CLI flags.
 //
+// Examples:
 //   npm run new
 //   npm run new -- --kind project --title "Huckleberry"
 //   npm run new -- --kind experiment --title "World Clock" --live clock.aniqa.dev --repo world-clock
 //   npm run new -- --kind experiment --title "Zayn's Garden" --sketch p5
 //   npm run new -- --kind experiment --title "Easing Lanes" --sketch study
 //
-// Flags: --kind project|experiment  --sketch none|canvas|p5|three|css|study (experiments)  --title  --slug  --type
-//        --stack  --released YYYY-MM  --updated YYYY-MM  --live  --repo  --summary  --blurb  --draft
-//        --yes (no prompts)
+// Options:
+//   --kind       project | experiment
+//   --sketch     none | canvas | p5 | three | css | study
+//   --title      Entry title (required)
+//   --slug       Folder name and URL slug (defaults to title)
+//   --type       Entry category
+//   --stack      Technologies used
+//   --released   Release month (YYYY-MM)
+//   --updated    Last updated month (YYYY-MM)
+//   --live       Live site hostname
+//   --repo       GitHub repository name under aniqatc
+//   --summary    Entry summary
+//   --blurb      Short project card description
+//   --draft      Mark the entry as a draft
+//   --yes        Skip prompts and use defaults for missing options
 //
-// Every entry is a folder in src/content/ with index.md and preview.astro (its drawing, a placeholder to replace).
-// The matching templates/ folder is copied: index.md gets the frontmatter filled in; in every other file
-// {{title}} and {{slug}} are replaced.
-//   project                   templates/project/              → projects/<slug>/      portfolio, /work/<slug>
-//   experiment, no sketch     templates/experiment/           → experiments/<slug>/   lab, links out
-//   experiment with --sketch  templates/experiment-<sketch>/  → experiments/<slug>/   lab, runs on the page
+// Each entry gets an index.md and preview.astro file from its template.
+// Template placeholders {{title}} and {{slug}} are replaced in other files.
+//
+// Projects appear in Selected Work; experiments appear in the Lab.
+// Experiments can link to an external site or run a sketch directly on the page.
 
+// Imports and constants for scaffolding new content entries.
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { stdin, stdout, argv, exit } from 'node:process';
 
+// Paths and configuration for content and templates.
 const CONTENT = 'src/content';
 const TEMPLATES = 'templates';
-// sketch kinds: defaults for the frontmatter, and the packages each needs (templates/experiment-<kind>/)
+
+// Default frontmatter and dependencies for each embedded sketch type (templates/experiment-<kind>/)
 const SKETCHES = {
+  // a canvas-based generative sketch
   canvas: { type: 'Generative sketch', stack: 'Canvas / JS', needs: [] },
+  // a p5.js-based generative sketch
   p5: { type: 'Generative sketch', stack: 'p5.js', needs: ['p5', '@types/p5'] },
+  // a three.js-based 3D sketch
   three: { type: '3D', stack: 'Three.js', needs: ['three', '@types/three'] },
+  // a CSS-based art piece
   css: { type: 'CSS art', stack: 'HTML / CSS', needs: [] },
   // a study: one idea with controls, in a stage that grows to fit it (stage: fit)
   study: { type: 'CSS study', stack: 'HTML / CSS', needs: [] },
 };
+
+// Aliases for command-line flags and shorthand references.
 const ALIASES = { selected: 'project', portfolio: 'project', lab: 'experiment', ts: 'canvas', astro: 'css' };
 
 // --key value pairs; a bare --flag is true
 const flags = {};
+// Parse command-line flags into the `flags` object.
 for (let i = 2; i < argv.length; i++) {
+  // Match command-line flags of the form --key
   const m = argv[i].match(/^--([\w-]+)$/);
+  // If the current argument is not a flag, skip it.
   if (!m) continue;
+  // Determine the value for this flag: true if no value is provided, otherwise the next argument.
   const next = argv[i + 1];
+  // Assign the value to the flag: true if no value is provided, otherwise the next argument.
   flags[m[1]] = next === undefined || next.startsWith('--') ? true : (i++, next);
 }
 
+// ---------- utility functions ----------
 const fail = (msg) => {
   console.error(`✗ ${msg}`);
   exit(1);
@@ -57,9 +84,12 @@ const slugify = (s) =>
 const now = new Date();
 const thisMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
+// ---------- interactive prompt setup ----------
 const interactive = stdin.isTTY && !flags.yes;
 const rl = interactive ? createInterface({ input: stdin, output: stdout }) : null;
-/** flag if given, else a prompt (interactive), else the default */
+
+// ---------- prompt helper ----------
+// Ask the user for input, using a flag if provided, an interactive prompt if available, or a fallback value.
 async function ask(key, question, fallback = '') {
   if (flags[key] !== undefined) return flags[key] === true ? '' : String(flags[key]);
   if (!rl) return fallback;
@@ -69,22 +99,31 @@ async function ask(key, question, fallback = '') {
 }
 
 // ---------- answers ----------
+// Collect user input for the new project or experiment.
 const rawKind = await ask('kind', 'Kind: project (portfolio) or experiment (lab)', 'experiment');
 const kind = ALIASES[rawKind] ?? rawKind;
 if (kind !== 'project' && kind !== 'experiment')
   fail(`--kind must be project or experiment (got "${rawKind}")`);
 const isProject = kind === 'project';
 
+/**
+ * Prompt for the title of the new project or experiment.
+ */
 const title = await ask('title', 'Title');
 if (!title) fail('A title is required: --title "Project Name"');
 
+/**
+ * Prompt for the folder name / URL slug of the new project or experiment.
+ */
 const slug = slugify(await ask('slug', 'Folder name / URL slug', slugify(title)));
 for (const coll of ['projects', 'experiments']) {
   if (existsSync(`${CONTENT}/${coll}/${slug}`)) fail(`${CONTENT}/${coll}/${slug} already exists`);
 }
 const dir = `${CONTENT}/${isProject ? 'projects' : 'experiments'}/${slug}`;
 
-// experiments either link out to their own site, or run a sketch on the page
+/**
+ * Prompt for the sketch type if this is an experiment.
+ */
 const rawSketch = isProject
   ? 'none'
   : await ask('sketch', 'Run it on the site? none (links out), canvas, p5, three, css or study', 'none');
@@ -94,26 +133,49 @@ if (sketchKind !== 'none' && !SKETCHES[sketchKind]) {
 }
 const sketch = SKETCHES[sketchKind];
 
+/**
+ * Prompt for the type, stack, release date, and other metadata of the new project or experiment.
+ */
 const type = await ask(
   'type',
   'Type, a label (Web app, Dashboard, Generative sketch, CSS study…)',
   sketch?.type ?? 'Web app',
 );
+
+/**
+ * Prompt for the stack of the new project or experiment.
+ */
 const stack = await ask('stack', 'Stack, " / " between tools', sketch?.stack ?? '');
+
+/**
+ * Prompt for the release date of the new project or experiment.
+ */
 const released = await ask('released', 'Released (YYYY-MM)', thisMonth);
 if (!/^\d{4}-\d{2}$/.test(released)) fail(`--released must be YYYY-MM (got "${released}")`);
+
+/**
+ * Prompt for the live host and GitHub repo of the new project or experiment.
+ */
 const live = sketch ? '' : await ask('live', 'Live host, no https:// (blank for none)');
 const repo = await ask('repo', 'GitHub repo name under aniqatc (blank for none)');
 
-// last revisited: flag only, since most new entries haven't been
+/**
+ * Prompt for the last revisited date of the new project or experiment.
+ * This is a flag only, since most new entries haven't been revisited yet.
+ */
 const updated = typeof flags.updated === 'string' ? flags.updated : '';
 if (updated && !/^\d{4}-\d{2}$/.test(updated)) fail(`--updated must be YYYY-MM (got "${updated}")`);
 
+/**
+ * Prompt for the summary and card blurb of the new project or experiment.
+ */
 const summary = await ask('summary', 'Summary, two sentences (blank to fill in later)');
 const blurb = isProject ? await ask('blurb', 'Card blurb, one line (blank to fill in later)') : '';
 rl?.close();
 
-// new projects go to the end of Selected work
+/**
+ * Determine the order of the new project in the list of selected work.
+ */
 const order = isProject
   ? 1 +
     Math.max(
@@ -129,7 +191,7 @@ const order = isProject
   : undefined;
 
 // ---------- index.md from the template ----------
-// a value: write it; null: drop the line; undefined: leave the template's line for you to fill in
+// ---------- fill index.md template ----------
 const values = {
   title,
   type,
@@ -143,11 +205,17 @@ const values = {
   summary: summary || undefined,
   blurb: blurb || undefined,
 };
+/**
+ * Convert a value to YAML-compatible string.
+ */
 const yaml = (v) =>
   typeof v === 'string' && /^[\s\-?[\]{},&*!|>'"%@`~]|: | #|^\d+$/.test(v)
     ? `'${v.replace(/'/g, "''")}'`
     : String(v);
 
+/**
+ * Determine the source template directory for the new project or experiment.
+ */
 const from = join(TEMPLATES, isProject ? 'project' : sketch ? `experiment-${sketchKind}` : 'experiment');
 const fillIndex = (text) => {
   const [, front, body] = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
@@ -165,6 +233,7 @@ const fillIndex = (text) => {
 };
 const safeTitle = title.replace(/[<>&{}]/g, ''); // it lands in .astro markup too
 
+// ---------- create project directory and copy template files ----------
 mkdirSync(dir, { recursive: true });
 const files = readdirSync(from);
 for (const f of files) {
