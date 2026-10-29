@@ -11,8 +11,8 @@ interface Props {
   title: string;
   lede: string;
   back: { href: string; label: string };
-  /** e.g. "01 / 05" or "No. 03 / 12" */
-  position: string;
+  /** e.g. "01 / 05"; lab entries leave it out */
+  position?: string;
   /** the entry, to find its own link-preview card in public/og/ */
   entry: { collection: string; id: string };
 }
@@ -32,7 +32,7 @@ const ogImage = existsSync(`public${card}`) ? card : undefined;
         </a>
         <span class="d-top-r">
           <slot name="actions" />
-          <span>{position}</span>
+          {position && <span>{position}</span>}
         </span>
       </div>
       <div class="d-head">

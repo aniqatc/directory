@@ -14,7 +14,7 @@ Aniqa's portfolio (`aniqa.dev`, dark) and lab (`aniqa.dev/lab`, light). One Astr
 
 - One folder per entry in `src/content/`; the folder name is the slug. `projects/` is Selected work (`/work/<slug>`), `experiments/` is the lab (`/lab/<slug>`). Schema: `src/content.config.ts`.
 - Every entry needs `index.md` and `preview.astro` (its drawing); a missing drawing fails the build. An experiment with `sketch.ts` or `sketch.astro` gets a live stage page; without one it's a note that links out.
-- Every lab entry has the same header: Made / Type / Stack under the lede. An experiment's Code ↗ link sits under the stage and points at its folder in this repo (or its own `repo`).
+- Every lab entry has the same header: Made / Type / Stack / Links under the lede. Links is Live ↗ (or npm ↗), Code ↗, then v1 ↗ when the entry has a `v1` URL. An experiment's Code ↗ points at its folder in this repo (or its own `repo`).
 - Experiment stages: `stage: frame` (default, 16:9, square on phones, with Fullscreen) for canvas, p5, Three.js and CSS art; `stage: fit` (grows to its content, no Fullscreen) for studies, types `CSS study` / `JS study`, built from `templates/experiment-study/` with the shared parts in `src/styles/demo.css`.
 - `themes: true` adds Day / Night under the stage. Night puts `.night` on the stage, which gives it the portfolio's tokens (`tokens.css`); the rest of the page stays light. Sketches read colours with `colours(stage)` and return `recolor()` (`src/lib/sketch.ts`); CSS art and studies follow on their own.
 - `headsUp` is the "Before you start" box, for something the reader must know before using the page. Keep it rare; history like "first made on CodePen" goes in a Revisited section instead.

@@ -57,7 +57,7 @@ onPage(() => {
 
   // Day / Night: .night gives the stage the portfolio's colours (tokens.css). A JavaScript sketch redraws through
   // recolor(); CSS art and studies follow the colours on their own, or listen for the stage:theme event. The switch
-  // sits in the stage's top-right corner, across from the Fig. label.
+  // sits in the stage's top-right corner.
   const themeBtns = stage.querySelectorAll<HTMLButtonElement>('[data-theme-set]');
   themeBtns.forEach((b) =>
     b.addEventListener('click', () => {

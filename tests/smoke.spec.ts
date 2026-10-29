@@ -156,12 +156,14 @@ test.describe('interactions', () => {
 // Test suite for individual experiment pages.
 test.describe('experiment pages', () => {
   // Test that an individual experiment page has the expected elements and behaviors.
-  test('a study: the lab-note header, a stage that fits, Day / Night, Pause and a Code link, but no Fullscreen', async ({
+  test('a study: the lab-note header with Links, a stage that fits, Day / Night and Pause, but no Fullscreen', async ({
     page,
   }) => {
     const errors = watchErrors(page);
     await page.goto('/lab/word-cycle');
-    await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
+    await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack', 'Links']);
+    // the top bar has Archive and the like button, but no position (No. 04 / 12)
+    await expect(page.locator('.d-top')).not.toContainText('No.');
     await expect(page.locator('.d-eyebrow .chip')).toHaveText('Updated');
     await expect(page.locator('.heads-up')).toHaveCount(0);
     // Links in the notes go to other sites, so they open in a new tab like Live and Code
@@ -169,10 +171,17 @@ test.describe('experiment pages', () => {
     const stage = page.locator('.stage');
     await expect(stage).toHaveClass(/stage-fit/);
     await expect(page.locator('[data-act="fullscreen"], .fs-exit')).toHaveCount(0);
-    await expect(page.locator('.stage-bar a', { hasText: 'Code' })).toHaveAttribute(
+    // Links holds Code and v1, both in a new tab; the stage has no Fig. label and its caption no links
+    const entryLinks = page.locator('.entry-facts dd a');
+    await expect(entryLinks).toHaveText(['Code ↗', 'v1 ↗']);
+    await expect(entryLinks.first()).toHaveAttribute(
       'href',
       /\/directory\/tree\/main\/src\/content\/experiments\/word-cycle$/,
     );
+    await expect(entryLinks.last()).toHaveAttribute('href', 'https://codepen.io/aniqatc/pen/xxJVMYK');
+    for (const link of await entryLinks.all()) await expect(link).toHaveAttribute('target', '_blank');
+    await expect(page.locator('.stage-bar a')).toHaveCount(0);
+    await expect(stage).not.toContainText('Fig.');
 
     // Day / Night sits in the stage's corner; Night gives the stage the portfolio's colours and leaves the page light
     await expect(stage.locator('.stage-theme')).toBeVisible();
@@ -196,12 +205,14 @@ test.describe('experiment pages', () => {
     expect(errors).toEqual([]);
   });
 
-  // Test that a lab note retains its drawing and displays the Live and Code links correctly.
-  test('a lab note keeps its drawing, with Live and Code under it', async ({ page }) => {
+  // Test that a lab note retains its drawing and shows its Live and Code links in the header facts.
+  test('a lab note keeps its drawing, with Live and Code in its Links', async ({ page }) => {
     await page.goto('/lab/world-clock');
-    await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack']);
+    await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack', 'Links']);
     await expect(page.locator('.pvbig')).toBeVisible();
-    await expect(page.locator('figcaption .l a')).toHaveText(['Live ↗', 'Code ↗']);
+    await expect(page.locator('.entry-facts dd a')).toHaveText(['Live ↗', 'Code ↗']);
+    await expect(page.locator('.d-top')).not.toContainText('No.');
+    await expect(page.locator('figcaption')).toHaveCount(0);
     await expect(page.locator('.heads-up, .stage')).toHaveCount(0);
   });
 });

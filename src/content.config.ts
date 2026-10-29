@@ -51,6 +51,7 @@ const experiments = defineCollection({
     // a "Before you start" box above the figure, for something the reader needs to know first
     // ("Made for a mouse", "The live site is down"). Use it rarely.
     headsUp: z.string().optional(),
+    v1: z.url().optional(), // the first version's full URL (a CodePen), shown as "v1 ↗" in Links
   }),
 });
 

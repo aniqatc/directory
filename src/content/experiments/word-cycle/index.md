@@ -6,6 +6,7 @@ released: 2022-12
 updated: 2026-10-21
 stage: fit
 themes: true
+v1: https://codepen.io/aniqatc/pen/xxJVMYK
 hint: Slide the split · switch the blend · swap or roll
 summary: A headline that cycles through nine words and changes colour as it crosses from a white page to a black one.
 ---

@@ -13,7 +13,7 @@ An experiment is a folder, `src/content/experiments/<slug>/`. There are two kind
 | **Runs on the page**             | `index.md`, `preview.astro`, `sketch.ts` or `sketch.astro` | The sketch, with Pause / Restart / Fullscreen | Lab hover preview only             |
 | **A study** (runs on the page)   | `index.md`, `preview.astro`, `sketch.astro`                | The study in a stage that grows to fit it     | Lab hover preview only             |
 
-Every lab entry has the same header (Made / Type / Stack under the lede). Optional fields: `themes: true` (a Day / Night switch in the top-right corner of the stage) and `headsUp` (a "Before you start" box, rare).
+Every lab entry has the same header (Made / Type / Stack / Links under the lede). Optional fields: `v1` (the first version's full URL, like a CodePen, shown as v1 ↗ in Links), `themes: true` (a Day / Night switch in the top-right corner of the stage) and `headsUp` (a "Before you start" box, rare).
 
 Every experiment gets a drawing. `npm run new` copies the matching `templates/experiment*/` folder.
 

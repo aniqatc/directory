@@ -19,7 +19,6 @@ export async function getStaticPaths() {
     params: { slug: entry.id },
     props: {
       entry,
-      total: lab.length,
       older: lab[i - 1],
       newer: lab[i + 1],
       badge: badgeFor(entry, updated),
@@ -29,14 +28,13 @@ export async function getStaticPaths() {
 
 interface Props {
   entry: LabEntry;
-  total: number;
   older?: LabEntry;
   newer?: LabEntry;
   badge: ReturnType<typeof badgeFor>;
 }
 
-const { entry, total, older, newer, badge } = Astro.props;
-const { title, type, stack, released, summary, example, hint, repo, stage, themes, headsUp } = entry.data;
+const { entry, older, newer, badge } = Astro.props;
+const { title, type, stack, released, summary, example, hint, repo, stage, themes, headsUp, v1 } = entry.data;
 const { Content } = await render(entry);
 const no = `No. ${pad(entry.n)}`;
 const toLink = (e?: LabEntry) => e && { href: `/lab/${e.id}`, title: e.data.title };
@@ -60,6 +58,11 @@ const codeLinks = !isExperiment
   : repo
     ? links(entry).filter((l) => l.label === 'Code ↗')
     : [folderLink(entry)];
+// the Links fact: Live (or npm), Code, then v1 if the entry has a first version elsewhere
+const entryLinks = [
+  ...(isExperiment ? codeLinks : links(entry)),
+  ...(v1 ? [{ label: 'v1 ↗', href: v1 }] : []),
+];
 ---
 
 <Detail
@@ -69,7 +72,6 @@ const codeLinks = !isExperiment
   title={title}
   lede={summary}
   back={{ href: '/lab', label: '← Archive' }}
-  position={`${no} / ${pad(total)}`}
 >
   <LikeButton slot="actions" slug={entry.id} title={title} big />
   <Fragment slot="eyebrow">
@@ -80,11 +82,12 @@ const codeLinks = !isExperiment
   {/* every lab entry, lab note or experiment, has the same header facts */}
   <Facts
     slot="facts"
-    cols={3}
+    class="entry-facts"
     items={[
       { label: 'Made', value: fmtMonth(released) },
       { label: 'Type', value: type },
       { label: 'Stack', value: stack },
+      { label: 'Links', value: entryLinks },
     ]}
   />
 
@@ -99,11 +102,10 @@ const codeLinks = !isExperiment
     <>
       <figure>
         <div
-          class:list={['stage', { 'stage-art': Art, 'stage-fit': fit }]}
+          class:list={['stage', { 'stage-art': Art, 'stage-fit': fit, 'stage-with-themes': themes }]}
           data-sketch={hasScript ? entry.id : undefined}
         >
           {Art && <Art />}
-          <span class="fig label">Fig. {pad(entry.n)}</span>
           {themes && (
             <span class="stage-theme label" role="group" aria-label="Stage colours">
               <button type="button" data-theme-set="day" aria-pressed="true">
@@ -134,11 +136,6 @@ const codeLinks = !isExperiment
                 Fullscreen ⤢
               </button>
             )}
-            {codeLinks.map((l) => (
-              <a href={l.href} target="_blank" rel="noopener">
-                {l.label}
-              </a>
-            ))}
           </span>
         </figcaption>
       </figure>
@@ -148,16 +145,6 @@ const codeLinks = !isExperiment
     <>
       <figure>
         <Preview entry={entry} fit="width" />
-        <figcaption class="label">
-          <span>Fig. {pad(entry.n)}</span>
-          <span class="l">
-            {links(entry).map((l) => (
-              <a href={l.href} target="_blank" rel="noopener">
-                {l.label}
-              </a>
-            ))}
-          </span>
-        </figcaption>
       </figure>
       <Content />
     </>

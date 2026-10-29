@@ -35,6 +35,7 @@ const HEART =
       <path d="M10.4 13.7q1.6 1.3 3.2 0"></path>
     </g>
   </svg>
+  {big && <span class="like-word">Like</span>}
   <span class="lc"></span>
 </button>
 
@@ -120,17 +121,39 @@ const HEART =
   .like.nope svg {
     animation: like-nope 0.4s ease;
   }
+  /* the top-bar version says "Like" and wears the accent, so it reads as a button */
   .like-lg {
     gap: 7px;
     padding: 6px 12px 6px 10px;
-    border: 1px solid var(--line);
+    border: 1px solid color-mix(in srgb, var(--heart) 45%, var(--line));
     border-radius: 999px;
+    color: var(--fg);
     font-size: 11px;
-    transition: border-color 0.2s;
+    transition:
+      border-color 0.2s,
+      background-color 0.2s;
+  }
+  .like-lg .h-o {
+    stroke: var(--heart);
+  }
+  .like-lg .like-word {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .like-lg .lc {
+    padding-left: 8px;
+    border-left: 1px solid var(--line);
+    color: var(--muted);
   }
   .like-lg:hover,
   .like-lg.full {
     border-color: var(--heart);
+    background: color-mix(in srgb, var(--heart) 8%, transparent);
+  }
+  .like-lg:hover .lc,
+  .like-lg.full .lc {
+    color: var(--heart);
   }
   .like-lg svg {
     width: 17px;

@@ -12,10 +12,10 @@
   max-width: 720px;
 }
 .d-nb {
-  max-width: 640px;
+  max-width: 800px;
 }
 .d-xp {
-  max-width: 760px;
+  max-width: 800px;
 }
 .d-top {
   display: flex;
@@ -66,6 +66,10 @@
 }
 .d-head .facts {
   margin-top: 10px;
+}
+/* lab entries: Made / Type / Stack / Links, two by two */
+.d-head .entry-facts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .d figure {
   margin: 0;
@@ -213,12 +217,6 @@
   height: 100%;
   display: block;
 }
-.stage .fig {
-  position: absolute;
-  left: 14px;
-  top: 12px;
-  pointer-events: none;
-}
 .stage-bar {
   display: flex;
   flex-wrap: wrap;
@@ -232,20 +230,10 @@
   align-items: center;
   gap: 0 20px;
 }
-.stage-bar > span:last-child > a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 40px;
-}
-.stage-bar > span:last-child > a:hover {
-  color: var(--accent);
-}
-/* the hint on the left is muted; what you can press (Pause, Restart, Fullscreen, Code) is in the text colour */
-.stage-bar > span:last-child > a,
+/* the hint on the left is muted; what you can press (Pause, Restart, Fullscreen) is in the text colour */
 .stage-bar > span:last-child > button {
   color: var(--fg);
 }
-.stage-bar > span:last-child > a:hover,
 .stage-bar > span:last-child > button:hover {
   color: var(--accent);
 }
@@ -316,16 +304,19 @@ body.fs-lock {
 .stage-art {
   cursor: auto;
 }
-/* stage: fit (studies): the stage grows to its content instead of a fixed 16:9, with room for the Fig. label */
+/* stage: fit (studies): the stage grows to its content instead of a fixed 16:9, with room for Day / Night if it has it */
 .stage.stage-fit {
   aspect-ratio: auto;
   cursor: auto;
   touch-action: auto;
-  padding: 44px 24px 24px;
+  padding: 24px;
+}
+.stage.stage-fit.stage-with-themes {
+  padding-top: 44px;
 }
 
-/* Day / Night (themes: true): a small version of the Portfolio / Lab switch in the stage's top-right corner, across
-   from the Fig. label, in the same place on every experiment. Night gives the stage the portfolio's colours
+/* Day / Night (themes: true): a small version of the Portfolio / Lab switch in the stage's top-right corner, in the
+   same place on every experiment. Night gives the stage the portfolio's colours
    (.night in tokens.css), so the switch turns with it; the rest of the page stays light. */
 .stage-theme {
   position: absolute;
@@ -400,10 +391,16 @@ body.fs-lock {
     aspect-ratio: 1 / 1;
   }
   .stage.stage-fit {
-    padding: 40px 16px 16px;
+    padding: 16px;
+  }
+  .stage.stage-fit.stage-with-themes {
+    padding-top: 40px;
   }
 }
 @media (max-width: 560px) {
+  .d-head .entry-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .d .stage-bar {
     flex-direction: column;
     align-items: flex-start;
