@@ -14,7 +14,7 @@
     "node": ">=22.22.0"
   },
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --ignore-lock",
     "build": "astro check && astro build",
     "check": "astro check",
     "lint": "eslint .",
@@ -22,7 +22,8 @@
     "format:check": "prettier --check .",
     "test": "playwright test",
     "new": "node scripts/new-project.mjs",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "start": "npm run dev"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.11",

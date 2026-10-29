@@ -1,11 +1,11 @@
 ---
 import '../../styles/lab.css';
 import Base from '../../layouts/Base.astro';
-import Bench from '../../components/Bench.astro';
 import Dice from '../../components/Dice.astro';
 import Facts from '../../components/Facts.astro';
 import HoverPreview from '../../components/HoverPreview.astro';
 import LabRow from '../../components/LabRow.astro';
+import NextEntry from '../../components/NextEntry.astro';
 import { badgeFor, updatedSet } from '../../lib/badges';
 import { byYear, fmtMonth, getLab, pad, stats } from '../../lib/projects';
 
@@ -30,29 +30,15 @@ const facts = [
         <h1 id="lab-h">
           Lab<span class="dot">.</span>
         </h1>
-        <p class="lede">
-          A digital sketchbook, where I make things for fun and learn as I go. Newest first.{' '}
-          <span class="peek">Hover a row to peek.</span>
-        </p>
+        <p class="lede">A digital sketchbook, where I make things for fun and learn as I go.</p>
       </div>
-      <Facts items={facts} cols={3} />
-    </section>
-
-    <Bench />
-
-    <section class="archive" aria-label="Archive">
-      <div class="arch-head">
-        <h2 class="label">Archive</h2>
+      <div class="lab-stats">
+        <Facts items={facts} cols={3} />
         <Dice />
       </div>
-      <div class="cols label" aria-hidden="true">
-        <span>No.</span>
-        <span>Project</span>
-        <span>Type</span>
-        <span>Year</span>
-        <span></span>
-        <span></span>
-      </div>
+    </section>
+
+    <section class="archive" aria-label="Archive">
       {byYear(lab).map(([y, entries]) => (
         <>
           <h3 class="year label">{y}</h3>
@@ -63,6 +49,7 @@ const facts = [
           </ol>
         </>
       ))}
+      <NextEntry number={lab.length + 1} />
     </section>
   </main>
   <HoverPreview entries={lab} />

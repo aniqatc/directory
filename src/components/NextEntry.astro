@@ -1,0 +1,60 @@
+---
+// End of the lab archive: the next entry's number and an email sign-up for when it lands.
+// For now the form only says thanks; nothing is sent or stored yet.
+import { pad } from '../lib/projects';
+
+interface Props {
+  /** the number the next entry will get (entry count + 1) */
+  number: number;
+}
+
+const { number } = Astro.props;
+---
+
+<form class="next-entry" aria-labelledby="next-entry-title" novalidate>
+  <span class="next-entry-number">{pad(number)}</span>
+  <span class="next-entry-text">
+    <span class="next-entry-title" id="next-entry-title">
+      The next entry isn't made yet.
+    </span>
+    <span class="next-entry-note">Get an email when it lands.</span>
+  </span>
+  <span class="next-entry-form">
+    <input
+      class="next-entry-email"
+      type="email"
+      name="email"
+      placeholder="you@example.com"
+      autocomplete="email"
+      aria-label="Email address"
+      required
+    />
+    <button class="next-entry-button" type="submit">
+      Notify me
+    </button>
+  </span>
+  <span class="next-entry-thanks" role="status" hidden></span>
+</form>
+
+<script>
+  import { onPage } from '../scripts/page';
+
+  // say thanks once there's a valid address; storing it comes later
+  onPage(() => {
+    const form = document.querySelector<HTMLFormElement>('.next-entry');
+    if (!form) return;
+    const email = form.querySelector<HTMLInputElement>('.next-entry-email')!;
+    const fields = form.querySelector<HTMLElement>('.next-entry-form')!;
+    const thanks = form.querySelector<HTMLElement>('.next-entry-thanks')!;
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      if (!email.checkValidity()) {
+        email.reportValidity();
+        return;
+      }
+      fields.hidden = true;
+      thanks.hidden = false;
+      thanks.textContent = 'Thanks! You’ll hear when it lands.';
+    });
+  });
+</script>

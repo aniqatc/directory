@@ -1,10 +1,13 @@
 // Short lists for the portfolio intro and the lab
 
+/** One in-progress item. `href` is optional: a full URL opens in a new tab with ↗, a site path (/lab/…) opens in place. */
+export type NowItem = { title: string; blurb: string; href?: string };
+
 /** "Currently tinkering with" chips in the portfolio intro. */
 export const TINKERING = ['TypeScript', 'p5.js', 'React', 'Next.js', 'Astro', 'Agentic coding'];
 
 /** "Now building" in the portfolio intro */
-export const BUILDING = [
+export const BUILDING: NowItem[] = [
   {
     title: 'huckleberry.csv',
     blurb:
@@ -16,18 +19,4 @@ export const BUILDING = [
   //   title: 'unsent.day',
   //   blurb: 'An anonymous, text-only board where strangers can read your unsent words.',
   // },
-];
-
-/** "On the bench" in the lab. The card hides itself when this is empty. */
-export const BENCH = [
-  // {
-  //   title: 'Zayn’s garden',
-  //   blurb: 'A p5.js garden where a new flower blooms for every week since my son was born.',
-  //   tag: 'p5.js · Generative sketch',
-  // },
-  {
-    title: 'Codepens',
-    blurb: 'Migration of my CodePen experiments to my new lab, with a few new enhancements.',
-    tag: 'CSS · JavaScript',
-  },
 ];

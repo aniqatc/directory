@@ -1,5 +1,6 @@
 ---
 // Portfolio intro: what's in progress. Edit BUILDING in src/lib/now.ts; the section hides itself when it's empty.
+import NowTitle from './NowTitle.astro';
 import { BUILDING } from '../lib/now';
 ---
 
@@ -7,11 +8,13 @@ import { BUILDING } from '../lib/now';
   <div class="now">
     <span class="label">Now building</span>
     <ul class="building">
-      {BUILDING.map(({ title, blurb }) => (
+      {BUILDING.map(({ title, blurb, href }) => (
         <li>
           <i class="dot-on" aria-hidden="true" />
           <div>
-            <b>{title}</b>
+            <b>
+              <NowTitle title={title} href={href} />
+            </b>
             <span>{blurb}</span>
           </div>
         </li>

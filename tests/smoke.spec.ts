@@ -2,7 +2,6 @@
 // Run with `npm test` (starts or reuses the dev server).
 import { readFileSync } from 'node:fs';
 import { expect, test, type Page } from '@playwright/test';
-import { BENCH } from '../src/lib/now';
 
 // Watches for page errors and console errors during the test.
 function watchErrors(page: Page) {
@@ -40,15 +39,30 @@ test.describe('pages', () => {
   });
 
   // Test for the lab index page.
-  test('lab is light, with the archive, stats and bench (when listed)', async ({ page }) => {
+  test('lab is light, with the stats row, archive and next-entry row', async ({ page }) => {
     const errors = watchErrors(page);
     await page.goto('/lab');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'lab');
     await expect(page.locator('.row').first()).toBeVisible();
-    await expect(page.locator('.lab-top .facts dd').first()).not.toBeEmpty();
-    // the bench card only shows when src/lib/now.ts has something on it
-    await expect(page.locator('.bench')).toHaveCount(BENCH.length > 0 ? 1 : 0);
+    await expect(page.locator('.lab-stats .facts dd').first()).not.toBeEmpty();
+    // random entry sits at the end of the stats row
+    await expect(page.locator('.lab-stats .dice')).toBeVisible();
+    // the list ends with the next entry, numbered one past the last
+    const entries = await page.locator('.row').count();
+    await expect(page.locator('.next-entry-number')).toHaveText(String(entries + 1).padStart(2, '0'));
     expect(errors).toEqual([]);
+  });
+
+  // Test the next-entry sign-up: it only says thanks for now, and sends nothing.
+  test('the next-entry form thanks you without sending anything', async ({ page }) => {
+    await page.goto('/lab');
+    const requests: string[] = [];
+    page.on('request', (r) => r.method() !== 'GET' && requests.push(r.url()));
+    await page.fill('.next-entry-email', 'someone@example.com');
+    await page.click('.next-entry-button');
+    await expect(page.locator('.next-entry-thanks')).toBeVisible();
+    await expect(page.locator('.next-entry-form')).toBeHidden();
+    expect(requests).toEqual([]);
   });
 
   // Test that every case study and lab page loads without errors.
@@ -352,7 +366,7 @@ test.describe('accessibility', () => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await context.newPage();
     await page.goto('/lab');
-    const anim = await page.$$eval('.pv *, .dot, .bench .dot-on', (els) =>
+    const anim = await page.$$eval('.pv *, .dot', (els) =>
       els.map((e) => getComputedStyle(e).animationName).filter((n) => n !== 'none'),
     );
     expect(anim).toEqual([]);

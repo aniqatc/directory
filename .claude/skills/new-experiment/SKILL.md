@@ -70,7 +70,6 @@ Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to repl
    - **For a sketch:** check that it draws, that Pause / Play and Restart work, that Fullscreen opens and Esc closes it, and that it starts paused on a still frame with reduced motion (Playwright `reducedMotion: 'reduce'`).
    - **For a study:** check that the stage fits it at desktop and phone widths, that every control works by keyboard, and with `themes: true` that it reads well on Night.
 3. On `/lab`, hover the new row and check the drawing appears.
-4. If it was on "On the bench" in `src/lib/now.ts`, remove it from `BENCH`.
-5. **Not ready yet:** add `draft: true` to `index.md` to keep it off the portfolio and the lab. Its drawing still shows in `/dev/drawings`.
+4. **Not ready yet:** add `draft: true` to `index.md` to keep it off the portfolio and the lab. Its drawing still shows in `/dev/drawings`.
 
 Tell the user what you built, what's still a placeholder, and where. Don't commit unless they ask; when they do, use no Claude co-author line.

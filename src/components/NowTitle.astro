@@ -1,0 +1,33 @@
+---
+// A Now building title: plain text, or a link when the item has an `href`.
+// Full URLs open in a new tab with ↗; site paths (/lab/…) open in place.
+interface Props {
+  title: string;
+  href?: string;
+}
+
+const { title, href } = Astro.props;
+const external = href ? /^https?:\/\//.test(href) : false;
+---
+
+{href ? (
+  <a class="now-link" href={href} {...(external ? { target: '_blank', rel: 'noopener' } : {})}>
+    {title}
+    {external && <span aria-hidden="true"> ↗</span>}
+  </a>
+) : (
+  title
+)}
+
+<style>
+  .now-link {
+    border-bottom: 1px solid var(--line);
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+  }
+  .now-link:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+</style>

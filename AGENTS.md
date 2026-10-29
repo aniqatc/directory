@@ -5,6 +5,7 @@ Aniqa's portfolio (`aniqa.dev`, dark) and lab (`aniqa.dev/lab`, light). One Astr
 ## Commands
 
 - Dev server: `astro dev --background` (manage with `astro dev stop` / `status` / `logs`). Restart it after changing `package.json` or `astro.config.mjs`, or Vite serves "504 Outdated Optimize Dep".
+- `npm run dev` is `astro dev --ignore-lock` on purpose: Astro auto-backgrounds the server when it thinks an AI agent ran it, and VS Code's terminal can trip that detection (`TERM_PROGRAM=vscode` + `GIT_PAGER=cat`), so `npm run dev` would return straight away. `--ignore-lock` keeps a normal foreground server (Ctrl+C stops it) that `astro dev stop` / `status` don't track. Playwright's `webServer` and `npm run og` rely on it staying in the foreground.
 - `npm run build` (type-check + build), `npm test` (Playwright against the dev server), `npm run lint`, `npm run format`.
 - There is no `npm run preview`; the Vercel adapter doesn't support it.
 - Check changes in a real browser with Playwright screenshots, not just the build.

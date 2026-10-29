@@ -115,7 +115,10 @@ const up = (url) =>
     .catch(() => false);
 if (!(await up(`${base}/dev/drawings`))) {
   base = 'http://localhost:4399';
-  server = spawn('npx', ['astro', 'dev', '--port', '4399'], { stdio: 'ignore', detached: true });
+  server = spawn('npx', ['astro', 'dev', '--port', '4399', '--ignore-lock'], {
+    stdio: 'ignore',
+    detached: true,
+  });
   for (let i = 0; i < 60 && !(await up(`${base}/dev/drawings`)); i++)
     await new Promise((r) => setTimeout(r, 1000));
 }
