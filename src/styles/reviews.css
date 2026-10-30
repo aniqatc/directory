@@ -151,12 +151,10 @@
   }
 }
 
-/* ---------- A review: the case study shell, with each section's heading above it ---------- */
+/* ---------- A review: the case study shell. Sections keep its two columns, heading on the left, and stack
+   at the same width it does (640px, in detail.css) ---------- */
 .d-rv {
   max-width: 800px;
-}
-.d-rv .sec {
-  grid-template-columns: minmax(0, 1fr);
 }
 .facts.review-facts {
   --cols: 3;
@@ -225,13 +223,15 @@
   content: 'I.' counter(n);
 }
 
-/* pictures in the notes: a screenshot or GIF under a point, in a frame like the case study screenshot.
-   Two in one paragraph sit side by side (phone screens). A line of _italics_ right after is its caption. */
+/* pictures in the notes: a screenshot or GIF under a point, in a frame like the case study screenshot, and
+   narrower than it so the one at the top stays the main one. Two in one paragraph sit side by side (phone
+   screens). A line of _italics_ right after is its caption. */
 .d-rv .sec li img,
 .d-rv .sec li video,
 .d-rv .sec > div > p img {
   display: block;
   width: 100%;
+  max-width: 460px;
   height: auto;
   margin-top: 12px;
   border: 1px solid var(--line);
