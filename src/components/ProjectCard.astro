@@ -1,7 +1,9 @@
 ---
-// One Selected work row: number, title and blurb, and the year, the whole row a link to the case study.
+// One Selected work row: number, title and blurb, and the year and GitHub stars, the whole row a link to the
+// case study (so the stars are plain text here, not a link of their own).
 // data-preview is the small screenshot that follows the cursor over the row (work-preview.ts).
 import { getImage } from 'astro:assets';
+import { getStars } from '../lib/github';
 import { pad, year, type Project } from '../lib/projects';
 import { screenshotFor } from '../lib/screenshots';
 
@@ -12,9 +14,13 @@ interface Props {
 }
 
 const { project, n } = Astro.props;
-const { title, blurb } = project.data;
+const { title, blurb, repo } = project.data;
+// hidden when GitHub can't be reached, like the star button
+const stars = repo ? await getStars(repo) : null;
 const screenshot = screenshotFor(project);
 const preview = screenshot ? await getImage({ src: screenshot, width: 600, format: 'webp' }) : undefined;
+// the five-point star, as on the star button (Stars.astro)
+const STAR = 'M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9.5l6.4-.9z';
 ---
 
 <li class="project" data-slug={project.id} data-preview={preview?.src}>
@@ -24,6 +30,17 @@ const preview = screenshot ? await getImage({ src: screenshot, width: 600, forma
       <h3 class="project-title">{title}</h3>
       <span class="project-blurb">{blurb}</span>
     </span>
-    <span class="project-year">{year(project)}</span>
+    <span class="project-side">
+      <span class="project-year">{year(project)}</span>
+      {stars !== null && (
+        <span class="project-stars">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d={STAR} />
+          </svg>
+          {stars}
+          <span class="sr-only">{stars === 1 ? ' GitHub star' : ' GitHub stars'}</span>
+        </span>
+      )}
+    </span>
   </a>
 </li>

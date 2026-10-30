@@ -397,12 +397,118 @@ h1 .dot.peek {
 .copy .ok:empty {
   display: none;
 }
+/* the footer: round icon buttons for the links and a pill for the email, like the other pill buttons */
 .contact-f {
-  gap: 6px 20px;
+  align-items: center;
+  gap: 8px;
   font: 400 11.5px/1 var(--font-mono);
 }
-.contact-f a,
-.contact-f .copy,
+.contact-f .contact-icon,
+.contact-f .copy {
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.contact-f .contact-icon {
+  justify-content: center;
+  width: 34px;
+}
+.contact-f .copy {
+  gap: 8px;
+  padding: 0 14px 0 12px;
+}
+.contact-f svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- Sign-up send-off (send-off.ts): a paper plane from the button, then thanks and a heart ---------- */
+.signup-send {
+  position: absolute;
+  left: var(--from-x);
+  top: var(--from-y);
+  pointer-events: none;
+}
+.signup-plane,
+.signup-trail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  animation: signup-fly 1s cubic-bezier(0.45, 0, 0.35, 1) forwards;
+}
+.signup-plane {
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.signup-trail {
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.signup-trail:nth-child(1) {
+  animation-delay: 0.18s;
+}
+.signup-trail:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.signup-trail:nth-child(3) {
+  animation-delay: 0.06s;
+}
+.signup-thanks {
+  animation: signup-thanks-in 0.45s 0.3s ease-out both;
+}
+.signup-heart {
+  color: var(--blush);
+  animation: signup-heart-pop 0.5s 0.75s cubic-bezier(0.3, 1.8, 0.5, 1) both;
+}
+@keyframes signup-fly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-6px, 4px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(26px, -72px) rotate(-8deg) scale(0.9);
+  }
+}
+@keyframes signup-thanks-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes signup-heart-pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 /* ---------- Footer ---------- */
 footer {

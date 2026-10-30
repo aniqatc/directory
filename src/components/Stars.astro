@@ -7,11 +7,9 @@ interface Props {
   title: string;
   /** "link": "★ 38" on portfolio cards. "button": "★ Star on GitHub 38" on case studies. */
   variant?: 'link' | 'button';
-  /** false hides the number on the button; case studies show just "★ Star on GitHub" */
-  count?: boolean;
 }
 
-const { repo, title, variant = 'link', count = true } = Astro.props;
+const { repo, title, variant = 'link' } = Astro.props;
 const stars = repo ? await getStars(repo) : null;
 const href = `${CONTACT.github}/${repo}`;
 // the five-point star from the prototype
@@ -24,8 +22,8 @@ const STAR = 'M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9
       href={href}
       target="_blank"
       rel="noopener"
-      aria-label={count ? `Star ${title} on GitHub (${stars} stars)` : `Star ${title} on GitHub`}
-      class:list={['star-btn', { 'star-btn-no-count': !count }]}
+      aria-label={`Star ${title} on GitHub (${stars} stars)`}
+      class="star-btn"
     >
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d={STAR} />
@@ -33,7 +31,7 @@ const STAR = 'M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9
       <span>
         Star<span class="star-btn-where"> on GitHub</span>
       </span>
-      {count && <b>{stars}</b>}
+      <b>{stars}</b>
     </a>
   ) : (
     <a class="stars" href={href} target="_blank" rel="noopener" title={`Star on GitHub (${stars} stars)`}>
@@ -98,9 +96,6 @@ const STAR = 'M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9
     font-variant-numeric: tabular-nums;
   }
   /* without the number, the right side gets the same padding as the left */
-  .star-btn-no-count {
-    padding-right: 12px;
-  }
   .star-btn:hover {
     border-color: var(--pop);
   }
@@ -114,9 +109,6 @@ const STAR = 'M12 2.8l2.8 5.8 6.4.9-4.6 4.5 1.1 6.3L12 17.3l-5.7 3 1.1-6.3L2.8 9
     }
     .star-btn {
       padding-left: 9px;
-    }
-    .star-btn-no-count {
-      padding-right: 9px;
     }
   }
 </style>

@@ -38,6 +38,7 @@ const { number } = Astro.props;
 
 <script>
   import { onPage } from '../scripts/page';
+  import { sendOff } from '../scripts/send-off';
 
   // say thanks once there's a valid address; storing it comes later
   onPage(() => {
@@ -46,15 +47,16 @@ const { number } = Astro.props;
     const email = form.querySelector<HTMLInputElement>('.next-entry-email')!;
     const fields = form.querySelector<HTMLElement>('.next-entry-form')!;
     const thanks = form.querySelector<HTMLElement>('.next-entry-thanks')!;
+    const button = form.querySelector<HTMLElement>('.next-entry-button')!;
     form.addEventListener('submit', (ev) => {
       ev.preventDefault();
       if (!email.checkValidity()) {
         email.reportValidity();
         return;
       }
+      // send-off first: it measures the button before the fields go
+      sendOff(form, button, thanks, 'Thanks! You’ll hear when it lands.');
       fields.hidden = true;
-      thanks.hidden = false;
-      thanks.textContent = 'Thanks! You’ll hear when it lands.';
     });
   });
 </script>

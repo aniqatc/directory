@@ -23,6 +23,7 @@
 
 <script>
   import { onPage } from '../scripts/page';
+  import { sendOff } from '../scripts/send-off';
 
   // say thanks once there's a valid address; storing it comes later
   onPage(() => {
@@ -31,15 +32,16 @@
     const email = form.querySelector<HTMLInputElement>('.updates-signup-email')!;
     const fields = form.querySelector<HTMLElement>('.updates-signup-fields')!;
     const thanks = form.querySelector<HTMLElement>('.updates-signup-thanks')!;
+    const button = form.querySelector<HTMLElement>('.updates-signup-button')!;
     form.addEventListener('submit', (ev) => {
       ev.preventDefault();
       if (!email.checkValidity()) {
         email.reportValidity();
         return;
       }
+      // send-off first: it measures the button before the fields go
+      sendOff(form, button, thanks, 'Thanks! You’ll hear about new things from me soon');
       fields.hidden = true;
-      thanks.hidden = false;
-      thanks.textContent = 'Thanks! You’ll hear about new things.';
     });
   });
 </script>
@@ -88,8 +90,16 @@
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
+  /* the same height as the field, so nothing moves when it swaps in */
   .updates-signup-thanks {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
     font-size: 12.5px;
     color: var(--muted);
+  }
+  .updates-signup-thanks[hidden] {
+    display: none;
   }
 </style>

@@ -159,6 +159,32 @@ body:has(.pf) > main {
   font-weight: 400;
   font-variant-numeric: tabular-nums;
 }
+/* the year, with the GitHub stars under it */
+.project-side {
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  padding-top: 6px;
+}
+.project-side .project-year {
+  padding-top: 0;
+}
+.project-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 400 10.5px/1 var(--font-mono);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.project-stars svg {
+  width: 13px;
+  height: 13px;
+  fill: var(--pop);
+}
 .project-text {
   min-width: 0;
 }

@@ -51,7 +51,7 @@ const facts = [
   back={{ href: '/', label: '← All work' }}
   position={`${pad(i + 1)} / ${pad(total)}`}
 >
-  <Stars slot="actions" repo={project.data.repo} title={title} variant="button" count={false} />
+  <Stars slot="actions" repo={project.data.repo} title={title} variant="button" />
   <Fragment slot="eyebrow">
     Selected work <b>{pad(i + 1)}</b>
   </Fragment>

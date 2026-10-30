@@ -5,4 +5,6 @@ export const CONTACT = {
   linkedin: '',
   x: '',
   codepen: 'https://codepen.io/aniqatc',
+  medium: '',
+  discord: '',
 };

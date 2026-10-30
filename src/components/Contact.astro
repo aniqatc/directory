@@ -10,23 +10,63 @@ interface Props {
 
 const { variant = 'intro', only } = Astro.props;
 // only the links set in contact.ts are shown
-const c: { github?: string; linkedin?: string; x?: string; email?: string; codepen?: string } = CONTACT;
+const c: {
+  github?: string;
+  linkedin?: string;
+  x?: string;
+  email?: string;
+  codepen?: string;
+  medium?: string;
+  discord?: string;
+} = CONTACT;
 const links = (
   [
     ['CodePen', c.codepen],
     ['GitHub', c.github],
     ['LinkedIn', c.linkedin],
     ['X', c.x],
+    ['Medium', c.medium],
+    ['Discord', c.discord],
   ] as const
 ).filter(([label, url]) => url && (!only || only.includes(label)));
+// the footer shows each link as a round icon button; 24 × 24 icons, drawn in the text colour
+const ICONS: Record<string, string> = {
+  CodePen:
+    '<path d="M12 2 22 8.5v7L12 22 2 15.5v-7L12 2Z"/><path d="M12 22v-6.5M22 8.5l-10 7-10-7M2 15.5l10-7 10 7M12 2v6.5"/>',
+  GitHub:
+    '<path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/>',
+  LinkedIn:
+    '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z"/><path d="M2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/>',
+  X: '<path d="M4 4l11.7 16H20L8.3 4H4ZM4 20l6.77-6.77M13.2 10.8 20 4"/>',
+  Medium:
+    '<circle cx="7.5" cy="12" r="5"/><ellipse cx="16.5" cy="12" rx="2.5" ry="5"/><path d="M21.5 7.5v9"/>',
+  Discord:
+    '<path d="M8.6 7.2a14 14 0 0 1 6.8 0M7.6 16.8c2.9 1.2 5.9 1.2 8.8 0"/><path d="M6.7 6c-2 2.9-2.9 6.2-2.6 10.6 1.7 1.3 3.4 2 5 2.4l1.1-1.9M17.3 6c2 2.9 2.9 6.2 2.6 10.6-1.7 1.3-3.4 2-5 2.4l-1.1-1.9"/><circle cx="9.3" cy="12.4" r="1.1"/><circle cx="14.7" cy="12.4" r="1.1"/>',
+};
+const MAIL =
+  '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>';
+const foot = variant === 'foot';
 ---
 
 <ul class:list={['contact', { 'contact-f': variant === 'foot' }]} aria-label="Contact">
   {links.map(([label, url]) => (
     <li>
-      <a href={url} target="_blank" rel="noopener">
-        {label} ↗
-      </a>
+      {foot ? (
+        <a
+          class="contact-icon"
+          href={url}
+          target="_blank"
+          rel="noopener"
+          aria-label={`${label} (opens in a new tab)`}
+          title={label}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" set:html={ICONS[label]} />
+        </a>
+      ) : (
+        <a href={url} target="_blank" rel="noopener">
+          {label} ↗
+        </a>
+      )}
     </li>
   ))}
   {c.email && (
@@ -38,6 +78,7 @@ const links = (
         title="Copy email"
         aria-label={`Copy email ${c.email}`}
       >
+        {foot && <svg class="contact-mail" viewBox="0 0 24 24" aria-hidden="true" set:html={MAIL} />}
         <span class="em">{c.email}</span>
         <span class="ok" aria-hidden="true" />
       </button>
