@@ -44,6 +44,10 @@ const OVERRIDES = {
   'projects/moji-canvas': {
     fallback: repoImage('moji-canvas/HEAD/public/og-img.png'), // no dark mode, so its normal look
   },
+  'projects/time-tapestry': {
+    switchTheme: (page) => page.click('button[aria-label="Switch to dark mode"]'), // the moon in the header
+    fallback: repoImage('time-tapestry/HEAD/public/screenshot.png'), // light, and signed in, so check it before using
+  },
   'projects/rflect-cli': {
     image: repoImage('rflect-cli/HEAD/assets/rflect-help-v2.png'),
   },
