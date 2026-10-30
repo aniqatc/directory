@@ -142,7 +142,8 @@ body:has(.pf) > main {
 }
 .project-link {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  /* the same side width on every row, so the years and stars line up down the list */
+  grid-template-columns: 2rem minmax(0, 1fr) 3rem;
   gap: 4px 16px;
   align-items: baseline;
   padding: 14px 0;
@@ -169,12 +170,16 @@ body:has(.pf) > main {
   padding-top: 6px;
 }
 .project-side .project-year {
+  align-self: flex-end;
   padding-top: 0;
 }
+/* the star sits in a column of its own and the count is right-aligned, so "★ 5" and "★ 38" share edges */
 .project-stars {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 13px minmax(2ch, max-content);
   align-items: center;
-  gap: 4px;
+  column-gap: 4px;
+  text-align: right;
   font: 400 10.5px/1 var(--font-mono);
   color: var(--muted);
   font-variant-numeric: tabular-nums;
