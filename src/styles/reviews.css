@@ -248,7 +248,7 @@
   padding: 14px;
 }
 .d-rv .sec p:has(> img + img) > img {
-  flex: 1 1 0;
+  flex: 1 1 140px;
   width: auto;
   min-width: 0;
   border: 1px solid var(--line);
@@ -267,6 +267,7 @@
 }
 /* the strip runs the full width of the frame, past the phone screens' padding */
 .d-rv .sec p:has(> img + img) > em {
+  flex-basis: calc(100% + 28px);
   margin: 2px -14px -14px;
 }
 /* a clip (<video>) under a point gets the same frame */
