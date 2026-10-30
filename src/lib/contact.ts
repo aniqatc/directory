@@ -3,7 +3,7 @@ export const CONTACT = {
   github: 'https://github.com/aniqatc',
   email: 'hello@aniqa.dev',
   linkedin: '',
-  x: '',
+  x: 'https://x.com/aniqatc',
   codepen: 'https://codepen.io/aniqatc',
   medium: '',
   discord: '',

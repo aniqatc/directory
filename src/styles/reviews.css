@@ -1,0 +1,351 @@
+/* ---------- App reviews: the archive (/reviews) and each review (/reviews/<slug>), both at night ---------- */
+:root {
+  /* the score words: green, amber and pink, light enough to read on the night background */
+  --score-polished: #7fd6a0;
+  --score-getting-there: #f2b766;
+  --score-needs-love: #f491b2;
+}
+
+/* ---------- Archive: the same type scale and width as the lab ---------- */
+.wrap.reviews {
+  max-width: 800px;
+  padding-block: 56px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+.wrap.reviews h1 {
+  font-size: clamp(44px, 6vw, 72px);
+}
+.wrap.reviews .lede {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 17px;
+  color: var(--muted);
+}
+.wrap.reviews .label,
+.wrap.reviews .facts dt {
+  font-size: 10px;
+}
+.wrap.reviews .facts dd {
+  font-size: 11.5px;
+}
+.reviews-top {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+.reviews-top > div {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.facts.reviews-facts {
+  --cols: 3;
+}
+
+/* the logo wall: each app's icon, name and number; the whole tile opens the review */
+.review-wall {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 28px 16px;
+}
+.review-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+.review-logo {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  background: var(--brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 800 30px/1 var(--font-display);
+  color: #fff;
+  transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.review-logo img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+/* the newest review: a dot in the accent, ringed in the background so it sits on the icon's corner */
+.review-new {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+.review-tile:hover .review-logo {
+  transform: translateY(-3px);
+}
+.review-tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+.review-name {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color 0.2s;
+}
+.review-tile:hover .review-name {
+  color: var(--accent);
+}
+.review-number {
+  margin-top: -6px;
+  font: 400 11px/1 var(--font-mono);
+  color: var(--muted);
+}
+.reviews-empty {
+  margin: 0;
+  font: 400 12px/1.5 var(--font-mono);
+  color: var(--muted);
+}
+
+/* Updates and Get reviewed: label on the left, like the portfolio intro */
+.reviews-rows {
+  margin: 0;
+  max-width: 560px;
+  border-bottom: 1px solid var(--line);
+}
+.reviews-row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+.reviews-row dd {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.reviews-row p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--body);
+}
+@media (max-width: 650px) {
+  .reviews-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+}
+
+/* ---------- A review: the case study shell, with each section's heading above it ---------- */
+.d-rv {
+  max-width: 800px;
+}
+.d-rv .sec {
+  grid-template-columns: minmax(0, 1fr);
+}
+.facts.review-facts {
+  --cols: 3;
+}
+@media (max-width: 860px) {
+  .facts.review-facts {
+    --cols: 2;
+  }
+}
+
+/* scores: a status word in its colour, then five dots */
+.score-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+  gap: 16px 24px;
+}
+.score-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.score-grid dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.score-status {
+  font: 500 10px/1.3 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.score-polished {
+  color: var(--score-polished);
+}
+.score-getting-there {
+  color: var(--score-getting-there);
+}
+.score-needs-love {
+  color: var(--score-needs-love);
+}
+.score-dots {
+  display: flex;
+  gap: 5px;
+}
+.score-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line);
+}
+.score-dots i.on {
+  background: var(--accent);
+}
+.d-rv .review-note {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+/* Small ideas are numbered I.1, I.2…, the way lab notes use L.1 */
+.d-rv [data-sec='small-ideas'] ol > li::before {
+  content: 'I.' counter(n);
+}
+
+/* pictures in the notes: a screenshot or GIF under a point, in a frame like the case study screenshot.
+   Two in one paragraph sit side by side (phone screens). A line of _italics_ right after is its caption. */
+.d-rv .sec li img,
+.d-rv .sec li video,
+.d-rv .sec > div > p img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.d-rv .sec p:has(> img + img) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.d-rv .sec p:has(> img + img) img {
+  width: auto;
+  flex: 0 1 180px;
+  min-width: 0;
+  border-radius: 22px;
+}
+.d-rv .sec img + em,
+.d-rv .sec video + em {
+  display: block;
+  flex-basis: 100%;
+  margin-top: 8px;
+  font: 500 10px/1.4 var(--font-mono);
+  font-style: normal;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* the closing block: send readers to the app and its maker */
+.try-it {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 32px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.try-it-text {
+  flex: 999 1 340px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.try-it-text .label {
+  margin: 0;
+  color: var(--accent);
+}
+.try-it-text h2 {
+  margin: 0;
+  font: 800 26px/1.05 var(--font-display);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.try-it-text p:last-child {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--body);
+}
+.try-it-actions {
+  flex: 1 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+}
+/* the same pill as the portfolio's Notify me */
+.try-it-button {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--fg);
+  color: var(--bg);
+  font: 500 10px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background-color 0.2s;
+}
+.try-it-button:hover {
+  background: var(--accent);
+}
+.try-it-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--line);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.try-it-link:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.try-it-button:focus-visible,
+.try-it-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-logo {
+    transition: none;
+  }
+  .review-tile:hover .review-logo {
+    transform: none;
+  }
+}

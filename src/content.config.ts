@@ -56,5 +56,41 @@ const experiments = defineCollection({
   }),
 });
 
+// A full date in the format YYYY-MM-DD (YAML reads an unquoted date as a Date, so turn it back into text)
+const day = z.preprocess(
+  (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v),
+  z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use YYYY-MM-DD'),
+);
+// A score from 1 to 5; 4–5 shows as "Polished", 3 "Getting there", 1–2 "Needs love" (src/lib/reviews.ts)
+const score = z.number().int().min(1).max(5);
+
+// App reviews: src/content/reviews/<slug>/ → /reviews/<slug>. The frontmatter holds the facts and scores; the
+// ## sections (First look, What I liked, Small ideas, Who it's for) are the review. Optional files in the folder:
+// logo.png (the app's icon on the archive) and screenshot.png (the framed screenshot under the facts).
+const reviews = defineCollection({
+  loader: folder('./src/content/reviews'),
+  schema: z.object({
+    app: z.string(), // the app's name
+    maker: z.string().regex(/^[A-Za-z0-9_]+$/, 'The X handle without the @'), // the maker's X handle
+    date: day, // the day the review went up
+    type: z.string(), // a label: Web app, iOS app, Chrome extension…
+    triedOn: z.string(), // where you tried it: "MacBook, Chrome", "iPhone 15"
+    live: z.string(), // the app's address without https://, e.g. tallyho.app
+    post: z.url().optional(), // the review's post on X
+    summary: z.string(), // one line on what the app does: the lede, and the card's description
+    verdict: z.string(), // the one-word overall, e.g. Promising, Delightful, Solid
+    brand: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a hex colour like #8b7cf6'), // the app's brand colour
+    scores: z.object({
+      firstImpression: score,
+      onboarding: score,
+      bestFeature: score,
+      easeOfUse: score,
+      value: score, // pricing / value
+    }),
+    screenshotAlt: z.string().optional(), // what's on screen in screenshot.png
+    draft: z.boolean().default(false), // only shown on the dev server
+  }),
+});
+
 // Export all defined collections so they can be used by the content system.
-export const collections = { projects, experiments };
+export const collections = { projects, experiments, reviews };

@@ -1,0 +1,111 @@
+---
+import { render } from 'astro:content';
+import '../../styles/reviews.css';
+import Detail from '../../layouts/Detail.astro';
+import Facts from '../../components/Facts.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import SiteScreenshot from '../../components/SiteScreenshot.astro';
+import { pad } from '../../lib/projects';
+import { fmtDay, getReviews, makerUrl, scoresFor, type Review } from '../../lib/reviews';
+import { screenshotFor } from '../../lib/screenshots';
+
+// One page per review; older / newer go along the series.
+export async function getStaticPaths() {
+  const reviews = await getReviews();
+  return reviews.map((review, index) => ({
+    params: { slug: review.id },
+    props: { review, total: reviews.length, older: reviews[index - 1], newer: reviews[index + 1] },
+  }));
+}
+
+interface Props {
+  review: Review;
+  total: number;
+  older?: Review;
+  newer?: Review;
+}
+
+const { review, total, older, newer } = Astro.props;
+const { app, maker, date, type, triedOn, live, post, summary, verdict } = review.data;
+const { Content } = await render(review);
+const appUrl = `https://${live}`;
+const scores = scoresFor(review);
+const facts = [
+  { label: 'Date', value: fmtDay(date) },
+  { label: 'Maker', value: [{ label: `@${maker}`, href: makerUrl(review) }] },
+  { label: 'Type', value: type },
+  { label: 'Tried on', value: triedOn },
+  {
+    label: 'Links',
+    value: [{ label: 'App ↗', href: appUrl }, ...(post ? [{ label: 'Post ↗', href: post }] : [])],
+  },
+  { label: 'Overall', value: verdict },
+];
+---
+
+<Detail
+  entry={review}
+  mode="portfolio"
+  variant="rv"
+  title={app}
+  lede={summary}
+  back={{ href: '/reviews', label: '← All reviews' }}
+  position={`${pad(review.number)} / ${pad(total)}`}
+>
+  <Fragment slot="eyebrow">
+    App review <b>{pad(review.number)}</b>
+  </Fragment>
+  <Facts slot="facts" class="review-facts" items={facts} />
+  {screenshotFor(review) && <SiteScreenshot entry={review} />}
+
+  <section class="sec review-scores" data-sec="scores">
+    <h2 class="label">Scores</h2>
+    <div>
+      <dl class="score-grid">
+        {scores.map((score) => (
+          <div>
+            <dt class="label">{score.label}</dt>
+            <dd>
+              <span class={`score-status score-${score.status}`}>{score.statusLabel}</span>
+              <span class="score-dots" role="img" aria-label={`${score.value} out of 5`}>
+                {[1, 2, 3, 4, 5].map((position) => (
+                  <i class:list={{ on: position <= score.value }} />
+                ))}
+              </span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+      <p class="review-note">
+        How the app feels today. Most of these are still being built, so “needs love” just means there’s room
+        to grow.
+      </p>
+    </div>
+  </section>
+
+  <Content />
+
+  <aside class="try-it" aria-labelledby="try-it-h">
+    <div class="try-it-text">
+      <p class="label">Try it yourself</p>
+      <h2 id="try-it-h">{app} is built by one person.</h2>
+      <p>
+        Give it a go, and if you like it, tell @{maker}. Early feedback means a lot when you’re building on your
+        own.
+      </p>
+    </div>
+    <div class="try-it-actions">
+      <a class="try-it-button" href={appUrl} target="_blank" rel="noopener">Try {app} ↗</a>
+      <a class="try-it-link" href={makerUrl(review)} target="_blank" rel="noopener">Follow @{maker} ↗</a>
+    </div>
+  </aside>
+
+  {total > 1 && (
+    <PrevNext
+      label="More reviews"
+      labels={['← Older', 'Newer →']}
+      prev={older && { href: `/reviews/${older.id}`, title: older.data.app }}
+      next={newer && { href: `/reviews/${newer.id}`, title: newer.data.app }}
+    />
+  )}
+</Detail>

@@ -3,11 +3,11 @@ import { existsSync } from 'node:fs';
 import '../styles/detail.css';
 import Base from './Base.astro';
 
-// Shared shell for case studies (cs), lab notes (nb) and experiments (xp):
+// Shared shell for case studies (cs), lab notes (nb), experiments (xp) and app reviews (rv):
 // top bar, eyebrow, title, lede and facts; the page fills in the rest.
 interface Props {
   mode: 'portfolio' | 'lab';
-  variant: 'cs' | 'nb' | 'xp';
+  variant: 'cs' | 'nb' | 'xp' | 'rv';
   title: string;
   lede: string;
   back: { href: string; label: string };

@@ -1,17 +1,28 @@
 ---
-// Portfolio intro: an email sign-up for new things.
+// An email sign-up: new things on the portfolio intro, new reviews on /reviews.
 // For now the form only says thanks; nothing is sent or stored yet.
+interface Props {
+  /** the field's placeholder, also its label for screen readers */
+  placeholder?: string;
+  /** what the form says once an address is in */
+  thanks?: string;
+}
+
+const {
+  placeholder = 'Your email, for new things',
+  thanks = 'Thanks! You’ll hear about new things from me soon',
+} = Astro.props;
 ---
 
-<form class="updates-signup" aria-label="Get updates" novalidate>
+<form class="updates-signup" aria-label="Get updates" data-thanks={thanks} novalidate>
   <span class="updates-signup-fields">
     <input
       class="updates-signup-email"
       type="email"
       name="email"
-      placeholder="Your email, for new things"
+      placeholder={placeholder}
       autocomplete="email"
-      aria-label="Your email, for new things"
+      aria-label={placeholder}
       required
     />
     <button class="updates-signup-button" type="submit">
@@ -40,7 +51,7 @@
         return;
       }
       // send-off first: it measures the button before the fields go
-      sendOff(form, button, thanks, 'Thanks! You’ll hear about new things from me soon');
+      sendOff(form, button, thanks, form.dataset.thanks ?? 'Thanks!');
       fields.hidden = true;
     });
   });

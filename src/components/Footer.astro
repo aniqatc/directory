@@ -1,10 +1,17 @@
 ---
 import Contact from './Contact.astro';
+import { getReviews } from '../lib/reviews';
+
+// the App reviews link shows once there's a review to read
+const hasReviews = (await getReviews()).length > 0;
 ---
 
 <footer>
   <div class="wrap">
-    <span>© {new Date().getFullYear()} Aniqa</span>
+    <span class="footer-start">
+      <span>© {new Date().getFullYear()} Aniqa</span>
+      {hasReviews && <a href="/reviews">App reviews</a>}
+    </span>
     <Contact variant="foot" />
   </div>
 </footer>

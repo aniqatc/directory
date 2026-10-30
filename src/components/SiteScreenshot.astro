@@ -2,11 +2,11 @@
 // A case study's or lab note's screenshot in a small browser frame; the whole thing opens the live site.
 // The image is src/content/<collection>/<slug>/screenshot.png, made by `npm run screenshots`.
 import { Image } from 'astro:assets';
-import type { Entry } from '../lib/projects';
 import { screenshotFor } from '../lib/screenshots';
 
 interface Props {
-  entry: Entry;
+  /** a project, lab entry or review: anything with a screenshot.png in its folder */
+  entry: { collection: string; id: string; data: { live?: string; screenshotAlt?: string } };
 }
 
 const { entry } = Astro.props;

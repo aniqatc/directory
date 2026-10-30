@@ -528,6 +528,18 @@ footer .wrap {
 footer a:hover {
   color: var(--accent);
 }
+/* © and the App reviews link, side by side */
+.footer-start {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+}
+.footer-start a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+}
 
 @media (max-width: 860px) {
   .facts {

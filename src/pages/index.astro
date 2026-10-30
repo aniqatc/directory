@@ -1,6 +1,7 @@
 ---
 import '../styles/portfolio.css';
 import Base from '../layouts/Base.astro';
+import LatestReview from '../components/LatestReview.astro';
 import NowBuilding from '../components/NowBuilding.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import UpdatesSignup from '../components/UpdatesSignup.astro';
@@ -34,6 +35,7 @@ const lab = await getLab();
           </dd>
         </div>
         <NowBuilding />
+        <LatestReview />
       </dl>
     </section>
 
