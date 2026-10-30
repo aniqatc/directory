@@ -160,8 +160,10 @@
   border: 1px dashed var(--line);
   background: var(--surface);
 }
+/* lines up with the title, like the numbers in the rows above */
 .next-entry-number {
-  font: 400 10px/1 var(--font-mono);
+  align-self: start;
+  font: 400 10px/calc(14.5px * 1.2) var(--font-mono);
   color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
@@ -226,14 +228,19 @@
 .next-entry-thanks[hidden] {
   display: none;
 }
+/* it takes the form's place in the grid, and the heart stays on the same line as the words */
 .next-entry-thanks {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  grid-column: 3;
+  display: block;
+  align-content: center;
   min-height: 34px;
   font: 500 10.5px/1.4 var(--font-mono);
   letter-spacing: 0.04em;
   color: var(--accent);
+}
+.next-entry-thanks .signup-heart {
+  display: inline-block;
+  margin-left: 6px;
 }
 
 /* ---------- Floating preview (desktop only) ---------- */
@@ -333,7 +340,8 @@
     column-gap: 8px;
     row-gap: 12px;
   }
-  .next-entry-form {
+  .next-entry-form,
+  .next-entry-thanks {
     grid-column: 2;
   }
   .next-entry-email {
