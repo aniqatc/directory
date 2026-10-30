@@ -67,5 +67,28 @@ const logos = import.meta.glob<{ default: ImageMetadata }>('../content/reviews/*
 /** The review's logo, or undefined if the folder has none. */
 export const logoFor = (review: Review) => logos[`../content/reviews/${review.id}/logo.png`]?.default;
 
+// A review's screens: screenshot.png, then screenshot-2.png and screenshot-3.png for a phone app.
+const screens = import.meta.glob<{ default: ImageMetadata }>('../content/reviews/*/screenshot*.png', {
+  eager: true,
+});
+
+/** The review's screenshots in order: screenshot.png, screenshot-2.png, screenshot-3.png (those it has). */
+export const screensFor = (review: Review) =>
+  ['screenshot', 'screenshot-2', 'screenshot-3']
+    .map((name) => screens[`../content/reviews/${review.id}/${name}.png`]?.default)
+    .filter((screen): screen is ImageMetadata => Boolean(screen));
+
+/** The app's link: a bare host gets https://; a full link (App Store, Google Play) stays as it is. */
+export const appUrlFor = (review: Review) =>
+  /^https?:\/\//.test(review.data.live) ? review.data.live : `https://${review.data.live}`;
+
+/** What the app's link says: App Store ↗, Google Play ↗ or App ↗. */
+export function appLinkLabel(review: Review) {
+  const url = appUrlFor(review);
+  if (/apps\.apple\.com/.test(url)) return 'App Store ↗';
+  if (/play\.google\.com/.test(url)) return 'Google Play ↗';
+  return 'App ↗';
+}
+
 /** The maker's profile on X. */
 export const makerUrl = (review: Review) => `https://x.com/${review.data.maker}`;

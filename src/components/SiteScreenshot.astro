@@ -16,9 +16,9 @@ const screenshot = screenshotFor(entry);
 if (!screenshot) throw new Error(`${entry.id}: no screenshot.png; run npm run screenshots -- ${entry.id}`);
 if (!screenshotAlt) throw new Error(`${entry.id}: add screenshotAlt to its index.md`);
 if (!live) throw new Error(`${entry.id}: the screenshot links to the live site, so it needs live`);
-const href = `https://${live}`;
+const href = /^https?:\/\//.test(live) ? live : `https://${live}`;
 // the address in the frame and the caption, without www.
-const address = live.replace(/^www\./, '');
+const address = live.replace(/^https?:\/\//, '').replace(/^www\./, '');
 ---
 
 <figure class="screenshot">

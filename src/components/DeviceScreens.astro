@@ -1,0 +1,46 @@
+---
+// A phone or iPad app's screenshots in device frames, at the top of its review: up to three phones side by side,
+// or one iPad in landscape. The whole frame opens the app's store page. Web apps use SiteScreenshot instead.
+import { Image } from 'astro:assets';
+import { appLinkLabel, appUrlFor, screensFor, type Review } from '../lib/reviews';
+
+interface Props {
+  review: Review;
+  device: 'phone' | 'tablet';
+}
+
+const { review, device } = Astro.props;
+const { app, screenshotAlt } = review.data;
+// a missing alt text fails the build, like the case study screenshots
+if (!screenshotAlt) throw new Error(`reviews/${review.id}: add screenshotAlt to its index.md`);
+const isPhone = device === 'phone';
+const shown = isPhone ? screensFor(review).slice(0, 3) : screensFor(review).slice(0, 1);
+const href = appUrlFor(review);
+const caption = isPhone
+  ? `${app} on a phone${shown.length > 1 ? `, ${shown.length} screens` : ''}`
+  : `${app} on iPad`;
+---
+
+{shown.length > 0 && (
+  <figure class:list={['device-shots', `device-shots-${device}`]}>
+    <a class="device-shots-link" href={href} target="_blank" rel="noopener">
+      {shown.map((screen, index) => (
+        <span class="device-frame">
+          <Image
+            class="device-screen"
+            src={screen}
+            alt={index === 0 ? screenshotAlt : ''}
+            widths={isPhone ? [240, 480] : [640, 1280]}
+            sizes={isPhone ? '200px' : '(max-width: 700px) 100vw, 600px'}
+          />
+        </span>
+      ))}
+    </a>
+    <figcaption class="label">
+      <span>{caption}</span>
+      <a class="screenshot-caption-link" href={href} target="_blank" rel="noopener">
+        {appLinkLabel(review)}
+      </a>
+    </figcaption>
+  </figure>
+)}

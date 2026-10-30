@@ -66,7 +66,8 @@ const score = z.number().int().min(1).max(5);
 
 // App reviews: src/content/reviews/<slug>/ → /reviews/<slug>. The frontmatter holds the facts and scores; the
 // ## sections (First look, What I liked, Small ideas, Who it's for) are the review. Optional files in the folder:
-// logo.png (the app's icon on the archive) and screenshot.png (the framed screenshot under the facts).
+// logo.png (the app's icon on the archive) and screenshot.png (the framed screenshot under the facts). A phone
+// app can add screenshot-2.png and screenshot-3.png to show up to three screens side by side.
 const reviews = defineCollection({
   loader: folder('./src/content/reviews'),
   schema: z.object({
@@ -75,7 +76,8 @@ const reviews = defineCollection({
     date: day, // the day the review went up
     type: z.string(), // a label: Web app, iOS app, Chrome extension…
     triedOn: z.string(), // where you tried it: "MacBook, Chrome", "iPhone 15"
-    live: z.string(), // the app's address without https://, e.g. tallyho.app
+    live: z.string(), // a web app's address without https:// (tallyho.app), or a full App Store / Google Play link
+    device: z.enum(['browser', 'phone', 'tablet']).default('browser'), // the frame around the screenshot
     post: z.url().optional(), // the review's post on X
     summary: z.string(), // one line on what the app does: the lede, and the card's description
     verdict: z.string(), // the one-word overall, e.g. Promising, Delightful, Solid
@@ -87,7 +89,7 @@ const reviews = defineCollection({
       easeOfUse: score,
       value: score, // pricing / value
     }),
-    screenshotAlt: z.string().optional(), // what's on screen in screenshot.png
+    screenshotAlt: z.string().optional(), // what's on screen in screenshot.png (and the other screens, for a phone)
     draft: z.boolean().default(false), // only shown on the dev server
   }),
 });

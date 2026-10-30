@@ -165,6 +165,80 @@
   }
 }
 
+/* a phone or iPad app's screens (DeviceScreens.astro): device frames on a slightly darker panel, so they read
+   as the app the way the browser frame does for a web app */
+.device-shots {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.device-shots-link {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 28px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--surface) 60%, var(--bg));
+  transition: border-color 0.2s;
+}
+.device-shots-link:hover {
+  border-color: var(--accent);
+}
+.device-shots-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.device-frame {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.device-screen {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--bg);
+}
+.device-shots-phone .device-frame {
+  flex: 0 1 200px;
+  padding: 6px;
+  border-radius: 34px;
+}
+.device-shots-phone .device-screen {
+  border-radius: 28px;
+}
+.device-shots-tablet .device-frame {
+  flex: 0 1 600px;
+  padding: 10px;
+  border-radius: 26px;
+}
+.device-shots-tablet .device-screen {
+  border-radius: 16px;
+}
+.device-shots figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px 12px;
+}
+/* three phones get tight on a phone: less padding around them */
+@media (max-width: 560px) {
+  .device-shots-link {
+    gap: 8px;
+    padding: 16px 10px;
+  }
+  .device-shots-phone .device-frame {
+    padding: 4px;
+    border-radius: 22px;
+  }
+  .device-shots-phone .device-screen {
+    border-radius: 18px;
+  }
+}
+
 /* scores: a status word in its colour, then five dots */
 .score-grid {
   margin: 0;

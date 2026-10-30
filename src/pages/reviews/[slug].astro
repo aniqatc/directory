@@ -2,11 +2,20 @@
 import { render } from 'astro:content';
 import '../../styles/reviews.css';
 import Detail from '../../layouts/Detail.astro';
+import DeviceScreens from '../../components/DeviceScreens.astro';
 import Facts from '../../components/Facts.astro';
 import PrevNext from '../../components/PrevNext.astro';
 import SiteScreenshot from '../../components/SiteScreenshot.astro';
 import { pad } from '../../lib/projects';
-import { fmtDay, getReviews, makerUrl, scoresFor, type Review } from '../../lib/reviews';
+import {
+  appLinkLabel,
+  appUrlFor,
+  fmtDay,
+  getReviews,
+  makerUrl,
+  scoresFor,
+  type Review,
+} from '../../lib/reviews';
 import { screenshotFor } from '../../lib/screenshots';
 
 // One page per review; older / newer go along the series.
@@ -26,9 +35,9 @@ interface Props {
 }
 
 const { review, total, older, newer } = Astro.props;
-const { app, maker, date, type, triedOn, live, post, summary, verdict } = review.data;
+const { app, maker, date, type, triedOn, device, post, summary, verdict } = review.data;
 const { Content } = await render(review);
-const appUrl = `https://${live}`;
+const appUrl = appUrlFor(review);
 const scores = scoresFor(review);
 const facts = [
   { label: 'Date', value: fmtDay(date) },
@@ -37,7 +46,7 @@ const facts = [
   { label: 'Tried on', value: triedOn },
   {
     label: 'Links',
-    value: [{ label: 'App ↗', href: appUrl }, ...(post ? [{ label: 'Post ↗', href: post }] : [])],
+    value: [{ label: appLinkLabel(review), href: appUrl }, ...(post ? [{ label: 'Post ↗', href: post }] : [])],
   },
   { label: 'Overall', value: verdict },
 ];
@@ -56,7 +65,11 @@ const facts = [
     App review <b>{pad(review.number)}</b>
   </Fragment>
   <Facts slot="facts" class="review-facts" items={facts} />
-  {screenshotFor(review) && <SiteScreenshot entry={review} />}
+  {device === 'browser' ? (
+    screenshotFor(review) && <SiteScreenshot entry={review} />
+  ) : (
+    <DeviceScreens review={review} device={device} />
+  )}
 
   <section class="sec review-scores" data-sec="scores">
     <h2 class="label">Scores</h2>
