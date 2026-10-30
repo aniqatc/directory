@@ -223,41 +223,61 @@
   content: 'I.' counter(n);
 }
 
-/* pictures in the notes: a screenshot or GIF under a point, in a frame like the case study screenshot, and
-   narrower than it so the one at the top stays the main one. Two in one paragraph sit side by side (phone
-   screens). A line of _italics_ right after is its caption, in small muted text so it doesn't read as a heading. */
-.d-rv .sec li img,
-.d-rv .sec li video,
-.d-rv .sec > div > p img {
+/* pictures in the notes: a screenshot or GIF under a point, in a frame narrower than the case study screenshot so
+   the one at the top stays the main one. The paragraph holding the picture is the frame. Two pictures in one
+   paragraph sit side by side (phone screens). A line of _italics_ right after is its caption, in a strip along
+   the bottom of the frame, so it reads as part of the picture rather than the review. */
+.d-rv .sec p:has(> img) {
+  max-width: 460px;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.d-rv .sec p:has(> img) > img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* phone screens: side by side, each with its own rounded frame */
+.d-rv .sec p:has(> img + img) {
+  gap: 12px;
+  padding: 14px;
+}
+.d-rv .sec p:has(> img + img) > img {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--bg);
+}
+.d-rv .sec p:has(> img) > em {
+  flex-basis: 100%;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  background: color-mix(in oklab, var(--surface) 60%, var(--bg));
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--muted);
+}
+/* the strip runs the full width of the frame, past the phone screens' padding */
+.d-rv .sec p:has(> img + img) > em {
+  margin: 2px -14px -14px;
+}
+/* a clip (<video>) under a point gets the same frame */
+.d-rv .sec li video {
   display: block;
   width: 100%;
   max-width: 460px;
-  height: auto;
   margin-top: 12px;
   border: 1px solid var(--line);
   border-radius: 12px;
   background: var(--surface);
-}
-.d-rv .sec p:has(> img + img) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.d-rv .sec p:has(> img + img) img {
-  width: auto;
-  flex: 0 1 180px;
-  min-width: 0;
-  border-radius: 22px;
-}
-.d-rv .sec img + em,
-.d-rv .sec video + em {
-  display: block;
-  flex-basis: 100%;
-  margin-top: 8px;
-  font-size: 12.5px;
-  font-style: normal;
-  line-height: 1.5;
-  color: var(--muted);
 }
 
 /* the closing block: send readers to the app and its maker */
