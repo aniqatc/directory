@@ -225,7 +225,7 @@
 
 /* pictures in the notes: a screenshot or GIF under a point, in a frame like the case study screenshot, and
    narrower than it so the one at the top stays the main one. Two in one paragraph sit side by side (phone
-   screens). A line of _italics_ right after is its caption. */
+   screens). A line of _italics_ right after is its caption, in small muted text so it doesn't read as a heading. */
 .d-rv .sec li img,
 .d-rv .sec li video,
 .d-rv .sec > div > p img {
@@ -254,10 +254,9 @@
   display: block;
   flex-basis: 100%;
   margin-top: 8px;
-  font: 500 10px/1.4 var(--font-mono);
+  font-size: 12.5px;
   font-style: normal;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  line-height: 1.5;
   color: var(--muted);
 }
 
