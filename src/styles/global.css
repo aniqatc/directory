@@ -535,10 +535,28 @@ footer a:hover {
   align-items: center;
   gap: 8px 18px;
 }
-.footer-start a {
+/* App reviews: a pill with the accent dot, the same height as the contact buttons, so it stands out from the © */
+.footer-reviews {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--fg);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+.footer-reviews:hover {
+  border-color: var(--accent);
+}
+.footer-reviews i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
 }
 
 @media (max-width: 860px) {

@@ -1,0 +1,36 @@
+---
+// /reviews: one app on the logo wall, its icon, name and number; the whole tile opens the review. The newest gets
+// a dot in the accent, and an app you're still using gets a star.
+import { Image } from 'astro:assets';
+import { logoFor, reviewNumber, type Review } from '../lib/reviews';
+
+interface Props {
+  review: Review;
+  newest?: boolean;
+}
+
+const { review, newest = false } = Astro.props;
+const { app, brand, stillUsing } = review.data;
+const logo = logoFor(review);
+---
+
+<li>
+  <a class="review-tile" href={`/reviews/${review.id}`}>
+    <span class="review-logo" style={`--brand: ${brand}`}>
+      {logo ? <Image src={logo} alt="" width={152} height={152} /> : <span aria-hidden="true">{app.charAt(0)}</span>}
+      {newest && <i class="review-new" title="Newest" />}
+      {stillUsing && (
+        <span class="review-star" title="Still using it">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" />
+          </svg>
+        </span>
+      )}
+    </span>
+    <span class="review-name">
+      {app}
+      {stillUsing && <span class="sr-only">, still using it</span>}
+    </span>
+    <span class="review-number">{reviewNumber(review)}</span>
+  </a>
+</li>

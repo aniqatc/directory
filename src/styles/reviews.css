@@ -44,6 +44,37 @@
   --cols: 3;
 }
 
+/* Still using, then All reviews: a heading on a line, with a short note on the right */
+.review-group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.review-group-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.review-group-head h2 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.review-group-head > span {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.review-group-star {
+  width: 10px;
+  height: 10px;
+  fill: var(--accent);
+}
+
 /* the logo wall: each app's icon, name and number; the whole tile opens the review */
 .review-wall {
   list-style: none;
@@ -78,6 +109,25 @@
   height: 100%;
   border-radius: inherit;
   object-fit: cover;
+}
+/* still using it: a star in the accent on the icon's bottom corner */
+.review-star {
+  position: absolute;
+  right: -6px;
+  bottom: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.review-star svg {
+  width: 10px;
+  height: 10px;
+  fill: var(--accent);
 }
 /* the newest review: a dot in the accent, ringed in the background so it sits on the icon's corner */
 .review-new {

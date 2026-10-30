@@ -20,7 +20,7 @@ My portfolio at aniqa.dev, with a lab of smaller experiments at aniqa.dev/lab. B
 
 - **Portfolio** (dark): selected projects with screenshot previews and case studies, and an intro with what I'm building now.
 - **Lab** (light): an archive of experiments with hover previews, a random-entry button, and likes (five per visitor).
-- **App reviews**: a weekly look at apps from solo founders at `/reviews`, each with scores, screenshots in a browser, phone or iPad frame, and a scorecard to post on X.
+- **App reviews**: apps from solo founders at `/reviews`, each with scores, screenshots in a browser, phone or iPad frame, and a scorecard to post on X.
 - **Everywhere**: a share card for each entry, a pet that follows you between pages and leaves a trail (a ghost, a bee, a snowball… one of twenty, changing through the year), and a 404 with a sleeping dot.
 
 ## Design

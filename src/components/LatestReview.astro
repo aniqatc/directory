@@ -1,8 +1,11 @@
 ---
-// Portfolio intro: the newest app review as a small card. Hides itself until there's a review.
-import { getLatestReview, reviewNumber } from '../lib/reviews';
+// Portfolio intro: the newest app review as a small card, with its logo on the left and its number by the arrow.
+// Hides itself until there's a review.
+import { Image } from 'astro:assets';
+import { getLatestReview, logoFor, reviewNumber } from '../lib/reviews';
 
 const latest = await getLatestReview();
+const logo = latest && logoFor(latest);
 ---
 
 {latest && (
@@ -10,13 +13,19 @@ const latest = await getLatestReview();
     <dt class="label">Reviewing</dt>
     <dd>
       <a class="latest-review" href={`/reviews/${latest.id}`}>
-        <span class="latest-review-text">
-          <b>{latest.data.app}</b>
-          <span>
-            by @{latest.data.maker} · {latest.data.verdict}
+        <span class="latest-review-app">
+          <span class="latest-review-logo" style={`--brand: ${latest.data.brand}`} aria-hidden="true">
+            {logo ? <Image src={logo} alt="" width={56} height={56} /> : latest.data.app.charAt(0)}
+          </span>
+          <span class="latest-review-text">
+            <b>{latest.data.app}</b>
+            <span>by @{latest.data.maker}</span>
           </span>
         </span>
-        <span class="latest-review-number">{reviewNumber(latest)} →</span>
+        <span class="latest-review-number">
+          {reviewNumber(latest)}
+          <span aria-hidden="true">→</span>
+        </span>
       </a>
     </dd>
   </div>
@@ -44,6 +53,31 @@ const latest = await getLatestReview();
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
+  .latest-review-app {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  /* the app's logo, or its first letter on its brand colour */
+  .latest-review-logo {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 13px/1 var(--font-display);
+    color: #fff;
+  }
+  .latest-review-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   .latest-review-text {
     min-width: 0;
     display: flex;
@@ -61,9 +95,16 @@ const latest = await getLatestReview();
   }
   .latest-review-number {
     flex: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font: 400 11px/1 var(--font-mono);
+    letter-spacing: 0.06em;
     color: var(--muted);
     transition: color 0.2s;
+  }
+  .latest-review-number span {
+    font-size: 13px;
   }
   .latest-review:hover .latest-review-number {
     color: var(--accent);

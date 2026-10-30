@@ -83,6 +83,7 @@ const reviews = defineCollection({
     verdict: z.string(), // the one-word overall, e.g. Promising, Delightful, Solid
     quote: z.string().optional(), // a short line beside the verdict on the scorecard, e.g. "Can't wait to see where this goes"
     cardTheme: z.enum(['night', 'day']).default('night'), // the scorecard's and link preview's look
+    stillUsing: z.boolean().default(false), // still using it since the review: a star, and a place in Still using
     brand: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a hex colour like #8b7cf6'), // the app's brand colour
     scores: z.object({
       firstImpression: score,

@@ -10,7 +10,12 @@ const hasReviews = (await getReviews()).length > 0;
   <div class="wrap">
     <span class="footer-start">
       <span>© {new Date().getFullYear()} Aniqa</span>
-      {hasReviews && <a href="/reviews">App reviews</a>}
+      {hasReviews && (
+        <a class="footer-reviews" href="/reviews">
+          <i aria-hidden="true" />
+          App reviews →
+        </a>
+      )}
     </span>
     <Contact variant="foot" />
   </div>

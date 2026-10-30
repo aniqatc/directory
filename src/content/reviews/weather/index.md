@@ -10,6 +10,7 @@ live: weather.aniqa.dev
 summary: A light and dark weather dashboard with live conditions and a 7-day forecast for any city.
 verdict: Solid
 brand: '#1e7fd0'
+stillUsing: true
 scores:
   firstImpression: 4
   onboarding: 4

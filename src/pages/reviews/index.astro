@@ -1,18 +1,20 @@
 ---
-import { Image } from 'astro:assets';
 import '../../styles/reviews.css';
 import Base from '../../layouts/Base.astro';
 import Facts from '../../components/Facts.astro';
+import ReviewTile from '../../components/ReviewTile.astro';
 import UpdatesSignup from '../../components/UpdatesSignup.astro';
 import { pad } from '../../lib/projects';
-import { fmtDay, getReviews, logoFor, reviewNumber } from '../../lib/reviews';
+import { fmtDay, getReviews } from '../../lib/reviews';
 
 // newest first; the newest one gets a dot on its logo
 const reviews = (await getReviews()).reverse();
 const newest = reviews[0];
+// the ones still in use since their review: a row of their own, and a star on the wall
+const stillUsing = reviews.filter((review) => review.data.stillUsing);
 const facts = [
   { label: 'Reviews', value: pad(reviews.length) },
-  { label: 'Cadence', value: 'Weekly' },
+  { label: 'Still using', value: pad(stillUsing.length) },
   { label: 'Latest', value: newest ? fmtDay(newest.data.date) : '—' },
 ];
 ---
@@ -20,7 +22,7 @@ const facts = [
 <Base
   mode="portfolio"
   title="App reviews"
-  description="Every week Aniqa tries an app made by a solo founder and writes up what she liked, plus a few small ideas."
+  description="Aniqa tries apps made by solo founders and writes up what she liked, plus a few small ideas."
 >
   <main class="wrap reviews">
     <section class="reviews-top" aria-labelledby="reviews-h">
@@ -29,34 +31,46 @@ const facts = [
           Reviews<span class="dot">.</span>
         </h1>
         <p class="lede">
-          Every week I try an app made by a solo founder and write up what I liked, plus a few small ideas.
+          I try apps made by solo founders and write up what I liked, plus a few small ideas.
         </p>
       </div>
       <Facts class="reviews-facts" items={facts} />
     </section>
 
     {reviews.length > 0 ? (
-      <ol class="review-wall" aria-label="Apps reviewed, newest first">
-        {reviews.map((review) => {
-          const logo = logoFor(review);
-          return (
-            <li>
-              <a class="review-tile" href={`/reviews/${review.id}`}>
-                <span class="review-logo" style={`--brand: ${review.data.brand}`}>
-                  {logo ? (
-                    <Image src={logo} alt="" width={152} height={152} />
-                  ) : (
-                    <span aria-hidden="true">{review.data.app.charAt(0)}</span>
-                  )}
-                  {review === newest && <i class="review-new" title="Newest" />}
-                </span>
-                <span class="review-name">{review.data.app}</span>
-                <span class="review-number">{reviewNumber(review)}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ol>
+      <>
+        {stillUsing.length > 0 && (
+          <section class="review-group" aria-labelledby="still-using-h">
+            <div class="review-group-head">
+              <h2 class="label" id="still-using-h">
+                <svg class="review-group-star" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" />
+                </svg>
+                Still using
+              </h2>
+              <span>Apps I've kept using since the review</span>
+            </div>
+            <ol class="review-wall">
+              {stillUsing.map((review) => (
+                <ReviewTile review={review} />
+              ))}
+            </ol>
+          </section>
+        )}
+        <section class="review-group" aria-labelledby="all-reviews-h">
+          <div class="review-group-head">
+            <h2 class="label" id="all-reviews-h">
+              All reviews
+            </h2>
+            <span>Newest first</span>
+          </div>
+          <ol class="review-wall">
+            {reviews.map((review) => (
+              <ReviewTile review={review} newest={review === newest} />
+            ))}
+          </ol>
+        </section>
+      </>
     ) : (
       <p class="reviews-empty">The first review is on its way.</p>
     )}

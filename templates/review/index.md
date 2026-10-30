@@ -19,6 +19,7 @@ summary: One line on what the app does, for the top of the page.
 verdict: Promising # one word for Overall: Promising, Delightful, Solid…
 # quote: Can't wait to see where this goes # optional: a short line beside the verdict on the scorecard
 # cardTheme: day # optional: the scorecard and link preview in the lab's light colours (night by default)
+# stillUsing: true # optional, later: you've kept using it; it gets a star and a place in Still using on /reviews
 brand: '#8b7cf6' # the app's brand colour, in quotes
 scores: # 1 to 5: 4–5 shows as Polished, 3 Getting there, 1–2 Needs love
   firstImpression: 4
