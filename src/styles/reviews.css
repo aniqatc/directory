@@ -244,6 +244,7 @@
 }
 /* phone screens: side by side, each with its own rounded frame */
 .d-rv .sec p:has(> img + img) {
+  align-items: flex-start;
   gap: 12px;
   padding: 14px;
 }
