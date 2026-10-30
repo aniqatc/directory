@@ -6,6 +6,7 @@ released: 2025-01
 live: define.aniqa.dev
 repo: define
 summary: A dictionary app with definitions, examples, pronunciation, related words and photos, in four themes and three typefaces.
+screenshotAlt: 'Define: a dictionary search showing the word “Hello” with three definitions as cards, a row of suggested words, and photos of the word below.'
 ---
 
 ## Why I built it

@@ -17,7 +17,7 @@ function watchErrors(page: Page) {
 async function allPages(page: Page) {
   await page.goto('/');
   // Get all work project links from the portfolio index page.
-  const work = await page.$$eval('.project h3 a', (a) => a.map((x) => x.getAttribute('href')!));
+  const work = await page.$$eval('.project-title a', (a) => a.map((x) => x.getAttribute('href')!));
   await page.goto('/lab');
   // Get all lab project links from the lab index page.
   const lab = await page.$$eval('.row .t a', (a) => a.map((x) => x.getAttribute('href')!));
@@ -32,10 +32,58 @@ test.describe('pages', () => {
     await page.goto('/');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'portfolio');
     await expect(page.locator('.project')).toHaveCount(5);
-    await expect(page.locator('.progress-now')).toContainText('01 / 05');
+    await expect(page.locator('.intro-role')).toHaveText('Software engineer in New York');
+    await expect(page.locator('.intro-row dt')).toHaveText(['Tinkering', 'Building', 'Say hi', 'Updates']);
     await expect(page.locator('.building li').first()).toBeVisible();
-    await expect(page.locator('.colophon')).toBeVisible();
+    // the rows have no drawings, and the old scroll counter, Latest in the lab and colophon are gone
+    await expect(page.locator('.project .pvbig, .progress, .latest, .colophon')).toHaveCount(0);
+    // each row's title link opens its case study
+    for (const link of await page.locator('.project-title a').all())
+      await expect(link).toHaveAttribute('href', /^\/work\/[\w-]+$/);
     expect(errors).toEqual([]);
+  });
+
+  // Test that a Building item with a full-URL href links out in a new tab with ↗, and items without one stay plain text.
+  test('a Building item with an href links out in a new tab', async ({ page }) => {
+    await page.goto('/');
+    const items = page.locator('.building li');
+    await expect(items.first()).toBeVisible();
+    const external = items.locator('b a[href^="http"]');
+    test.skip((await external.count()) === 0, 'no Building item in src/lib/now.ts has an href yet');
+    for (const link of await external.all()) {
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', 'noopener');
+      await expect(link).toContainText('↗');
+    }
+  });
+
+  // Test the updates sign-up in the portfolio intro: it only says thanks for now, and sends nothing.
+  test('the updates form thanks you without sending anything', async ({ page }) => {
+    await page.goto('/');
+    const requests: string[] = [];
+    page.on('request', (r) => r.method() !== 'GET' && requests.push(r.url()));
+    await page.fill('.updates-signup-email', 'someone@example.com');
+    await page.click('.updates-signup-button');
+    await expect(page.locator('.updates-signup-thanks')).toBeVisible();
+    await expect(page.locator('.updates-signup-fields')).toBeHidden();
+    expect(requests).toEqual([]);
+  });
+
+  // Test that hovering a Selected work row shows its screenshot (mouse only).
+  test('hovering a Selected work row shows its screenshot', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    const preview = page.locator('.work-preview');
+    await expect(preview).toHaveAttribute('aria-hidden', 'true');
+    await expect(preview.locator('img')).toHaveAttribute('alt', '');
+    const row = page.locator('.project').nth(1);
+    await row.hover();
+    await expect(preview).toHaveClass(/show/);
+    const expected = await row.getAttribute('data-preview');
+    expect(expected).toMatch(/webp/);
+    await expect(preview.locator('img')).toHaveAttribute('src', expected!);
+    await page.mouse.move(5, 5);
+    await expect(preview).not.toHaveClass(/show/);
   });
 
   // Test for the lab index page.
@@ -153,6 +201,42 @@ test.describe('interactions', () => {
   });
 });
 
+// Test suite for the case study pages.
+test.describe('case studies', () => {
+  // each case study and where its screenshot goes
+  const caseStudies = [
+    ['playground', 'https://playground.aniqa.dev'],
+    ['moji-canvas', 'https://moji.aniqa.dev'],
+    ['keyboard', 'https://keyboard.aniqa.dev'],
+    ['weather', 'https://weather.aniqa.dev'],
+    ['rflect-cli', 'https://www.npmjs.com/package/rflect'],
+  ];
+  for (const [slug, liveUrl] of caseStudies) {
+    // Test that a case study shows its screenshot, linked to the live site, and the four facts.
+    test(`${slug}: a screenshot that opens the live site, and the four facts`, async ({ page }) => {
+      await page.goto(`/work/${slug}`);
+      await expect(page.locator('.d-eyebrow')).toHaveText(/Selected work \d{2}/);
+      await expect(page.locator('.d-eyebrow')).not.toContainText('Case study');
+      await expect(page.locator('.d-head .facts dt')).toHaveText(['Released', 'Type', 'Stack', 'Links']);
+      for (const link of await page.locator('.d-head .facts dd a').all())
+        await expect(link).toHaveAttribute('target', '_blank');
+      // the screenshot replaces the drawing
+      await expect(page.locator('.pvbig')).toHaveCount(0);
+      const screenshotLink = page.locator('.screenshot-link');
+      await expect(screenshotLink).toHaveAttribute('href', liveUrl);
+      await expect(screenshotLink).toHaveAttribute('target', '_blank');
+      const image = screenshotLink.locator('img');
+      await expect(image).toBeVisible();
+      await expect(image).toHaveAttribute('alt', /\w{4}/);
+      expect(await image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(
+        true,
+      );
+      // Star on GitHub, without the count (the button hides itself when GitHub can't be reached)
+      await expect(page.locator('.star-btn b')).toHaveCount(0);
+    });
+  }
+});
+
 // Test suite for individual experiment pages.
 test.describe('experiment pages', () => {
   // Test that an individual experiment page has the expected elements and behaviors.
@@ -162,8 +246,8 @@ test.describe('experiment pages', () => {
     const errors = watchErrors(page);
     await page.goto('/lab/word-cycle');
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack', 'Links']);
-    // the top bar has Archive and the like button, but no position (No. 04 / 12)
-    await expect(page.locator('.d-top')).not.toContainText('No.');
+    // the top bar has Archive, the like button and the position (04 / 12)
+    await expect(page.locator('.d-top-r > span:last-child')).toHaveText(/^\d{2} \/ \d{2}$/);
     await expect(page.locator('.d-eyebrow .chip')).toHaveText('Updated');
     await expect(page.locator('.heads-up')).toHaveCount(0);
     // Links in the notes go to other sites, so they open in a new tab like Live and Code
@@ -211,7 +295,6 @@ test.describe('experiment pages', () => {
     await expect(page.locator('.d-head .facts dt')).toHaveText(['Made', 'Type', 'Stack', 'Links']);
     await expect(page.locator('.pvbig')).toBeVisible();
     await expect(page.locator('.entry-facts dd a')).toHaveText(['Live ↗', 'Code ↗']);
-    await expect(page.locator('.d-top')).not.toContainText('No.');
     await expect(page.locator('figcaption')).toHaveCount(0);
     await expect(page.locator('.heads-up, .stage')).toHaveCount(0);
   });
@@ -243,13 +326,12 @@ test.describe('page changes (view transitions)', () => {
     await expect(page.locator('.like-lg .lc')).toHaveText(/\d+/);
     await expect(page.locator('.pvbig')).toHaveAttribute('style', /--s:/);
 
-    // portfolio → lab → a lab note → back to the portfolio: the scroll counter and card drawings work again
+    // portfolio → lab → a lab note → back to the portfolio: the work rows' hover preview works again
     await page.click('.switch a[href="/"]');
     await expect(page.locator('html')).toHaveAttribute('data-mode', 'portfolio');
     expect(await sameDocument()).toBe(true);
-    await page.locator('.project').nth(2).scrollIntoViewIfNeeded();
-    await expect(page.locator('.progress-now b')).not.toHaveText('01 / 05');
-    await expect(page.locator('.project .pvbig').first()).toHaveAttribute('style', /--s:/);
+    await page.locator('.project').nth(2).hover();
+    await expect(page.locator('.work-preview')).toHaveClass(/show/);
     expect(errors).toEqual([]);
   });
 

@@ -7,6 +7,7 @@ live: nyc.aniqa.dev
 repo: nyc-travel
 updated: 2024-09
 summary: A travel guide for New York with live NYC time and weather, flight times from your airport, top destinations and a hotel guide.
+screenshotAlt: 'The NYC Travel landing page: “New York City” over a dark skyline, with cards for the time and weather in New York, a flight time from SFO to JFK, and a flight search bar.'
 ---
 
 ## Why I built it

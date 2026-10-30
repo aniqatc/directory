@@ -1,0 +1,50 @@
+---
+// A case study's or lab note's screenshot in a small browser frame; the whole thing opens the live site.
+// The image is src/content/<collection>/<slug>/screenshot.png, made by `npm run screenshots`.
+import { Image } from 'astro:assets';
+import type { Entry } from '../lib/projects';
+import { screenshotFor } from '../lib/screenshots';
+
+interface Props {
+  entry: Entry;
+}
+
+const { entry } = Astro.props;
+const { live, screenshotAlt } = entry.data;
+const screenshot = screenshotFor(entry);
+// a missing screenshot, alt text or live link fails the build
+if (!screenshot) throw new Error(`${entry.id}: no screenshot.png; run npm run screenshots -- ${entry.id}`);
+if (!screenshotAlt) throw new Error(`${entry.id}: add screenshotAlt to its index.md`);
+if (!live) throw new Error(`${entry.id}: the screenshot links to the live site, so it needs live`);
+const href = `https://${live}`;
+// the address in the frame and the caption, without www.
+const address = live.replace(/^www\./, '');
+---
+
+<figure class="screenshot">
+  <a class="screenshot-link" href={href} target="_blank" rel="noopener">
+    <span class="screenshot-bar" aria-hidden="true">
+      <span class="screenshot-dots">
+        <i></i>
+        <i></i>
+        <i></i>
+      </span>
+      <span class="screenshot-address label">{address}</span>
+    </span>
+    <span class="screenshot-view">
+      <Image
+        class="screenshot-image"
+        src={screenshot}
+        alt={screenshotAlt}
+        widths={[600, 900, 1440]}
+        sizes="(max-width: 940px) 100vw, 900px"
+      />
+    </span>
+  </a>
+  <figcaption class="label">
+    <span>Click the screenshot to open the live site</span>
+    <a class="screenshot-caption-link" href={href} target="_blank" rel="noopener">
+      {address} ↗
+    </a>
+  </figcaption>
+</figure>

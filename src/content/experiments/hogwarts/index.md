@@ -7,6 +7,7 @@ live: hogwarts.aniqa.dev
 repo: hogwarts
 updated: 2024-08
 summary: A fan landing page for Hogwarts with house profiles, a course list and an application form that sorts you into a house.
+screenshotAlt: 'The Hogwarts landing page: “Hogwarts School of Witchcraft and Wizardry” over a faded castle, with buttons to discover houses, discover courses, reserve a seat and check status.'
 ---
 
 ## Why I built it

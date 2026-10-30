@@ -1,21 +1,21 @@
 ---
 name: new-experiment
-description: Add an experiment to the aniqa.dev lab, either one that links out to its own site (a lab note) or one that runs on the page (a canvas, p5.js, Three.js or CSS art sketch, or a CSS / JS study with controls), with npm run new, its notes and its preview drawing. Use when the user wants to add something to the lab, start a sketch or experiment, or runs /new-experiment <repo, title or idea>.
+description: Add an experiment to the aniqa.dev lab, either one that links out to its own site (a lab note) or one that runs on the page (a canvas, p5.js, Three.js or CSS art sketch, or a CSS / JS study with controls), with npm run new, its notes and its screenshot. Use when the user wants to add something to the lab, start a sketch or experiment, or runs /new-experiment <repo, title or idea>.
 ---
 
 # New experiment (lab)
 
 An experiment is a folder, `src/content/experiments/<slug>/`. There are two kinds:
 
-| Kind                             | Files                                                      | Its page shows                                | Drawing shows on                   |
-| -------------------------------- | ---------------------------------------------------------- | --------------------------------------------- | ---------------------------------- |
-| **Links out** (like World Clock) | `index.md`, `preview.astro`                                | Lab note with Live / Code links               | Lab hover preview and the lab note |
-| **Runs on the page**             | `index.md`, `preview.astro`, `sketch.ts` or `sketch.astro` | The sketch, with Pause / Restart / Fullscreen | Lab hover preview only             |
-| **A study** (runs on the page)   | `index.md`, `preview.astro`, `sketch.astro`                | The study in a stage that grows to fit it     | Lab hover preview only             |
+| Kind                             | Files                                                       | Its page shows                                | Screenshot shows on                |
+| -------------------------------- | ----------------------------------------------------------- | --------------------------------------------- | ---------------------------------- |
+| **Links out** (like World Clock) | `index.md`, `screenshot.png`                                | Lab note with Live / Code links               | Lab hover preview and the lab note |
+| **Runs on the page**             | `index.md`, `screenshot.png`, `sketch.ts` or `sketch.astro` | The sketch, with Pause / Restart / Fullscreen | Lab hover preview only             |
+| **A study** (runs on the page)   | `index.md`, `screenshot.png`, `sketch.astro`                | The study in a stage that grows to fit it     | Lab hover preview only             |
 
 Every lab entry has the same header (Made / Type / Stack / Links under the lede). Optional fields: `v1` (the first version's full URL, like a CodePen, shown as v1 ↗ in Links), `themes: true` (a Day / Night switch in the top-right corner of the stage) and `headsUp` (a "Before you start" box, rare).
 
-Every experiment gets a drawing. `npm run new` copies the matching `templates/experiment*/` folder.
+Every experiment gets a screenshot (`npm run screenshots`), also used for its share card. `npm run new` copies the matching `templates/experiment*/` folder.
 
 ## 1. Which kind?
 
@@ -49,7 +49,7 @@ Go to section 4.
 npm run new -- --yes --kind experiment --sketch p5 --title "Zayn's Garden" --summary "…"
 ```
 
-This creates `index.md`, a placeholder `preview.astro`, and a starter sketch that already runs. The starter is `templates/experiment-<tool>/sketch.ts` for canvas, p5 and Three.js, or `sketch.astro` for CSS art.
+This creates `index.md` and a starter sketch that already runs. The starter is `templates/experiment-<tool>/sketch.ts` for canvas, p5 and Three.js, or `sketch.astro` for CSS art.
 
 1. **Install the library if needed** (the script says so): `npm i p5 && npm i -D @types/p5`, or `npm i three && npm i -D @types/three`. Then restart the dev server (`astro dev stop`, `astro dev --background`). Vite won't serve a newly installed package until it restarts.
 2. **Build the sketch with the user.**
@@ -59,17 +59,17 @@ This creates `index.md`, a placeholder `preview.astro`, and a starter sketch tha
    - **Extra files:** shaders and helpers can sit in the same folder.
 3. **Fill in `index.md`:** `hint` (one line shown under the stage, like "Move to stir · click to scatter"), `summary`, Idea and Notes (numbered, N.1, N.2…). If it started somewhere else (a CodePen), add a Revisited section with R.1 linking the first version as "v1". Write in Aniqa's voice. Leave bracketed placeholders for anything only she knows.
 
-## 4. Make the drawing
+## 4. Take the screenshot
 
-Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to replace the placeholder `preview.astro`. For a sketch, draw a still, simplified take on it, since the drawing is what people see when they hover over it in the lab.
+Run `npm run screenshots -- <slug>`. A lab note is shot from its live site at 1440 × 900 in light mode; a sketch or study is shot from its own stage on the dev server. Look at `screenshot.png`: if the site has its own theme toggle, a banner or a loading state in the shot, add an override for it in `OVERRIDES` in `scripts/screenshots.mjs` and run it again. Then write `screenshotAlt` in `index.md`: what's on screen, one sentence. A lab note without a screenshot or alt text fails the build.
 
 ## 5. Check
 
-1. Run `npm run og` to make the entry's link-preview card (it needs the finished drawing), then `npm run build`.
+1. Run `npm run og` to make the entry's link-preview card (it uses the screenshot), then `npm run build`.
 2. With the dev server running, open `/lab/<slug>` and screenshot it with Playwright.
    - **For a sketch:** check that it draws, that Pause / Play and Restart work, that Fullscreen opens and Esc closes it, and that it starts paused on a still frame with reduced motion (Playwright `reducedMotion: 'reduce'`).
    - **For a study:** check that the stage fits it at desktop and phone widths, that every control works by keyboard, and with `themes: true` that it reads well on Night.
-3. On `/lab`, hover the new row and check the drawing appears.
-4. **Not ready yet:** add `draft: true` to `index.md` to keep it off the portfolio and the lab. Its drawing still shows in `/dev/drawings`.
+3. On `/lab`, hover the new row and check the screenshot appears.
+4. **Not ready yet:** add `draft: true` to `index.md` to keep it off the portfolio and the lab. `npm run screenshots` skips drafts.
 
 Tell the user what you built, what's still a placeholder, and where. Don't commit unless they ask; when they do, use no Claude co-author line.

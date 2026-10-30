@@ -6,6 +6,7 @@ released: 2023-10
 live: css100.aniqa.dev
 repo: css-100
 summary: 'My version of the 100 Days of CSS challenge: one self-contained CSS piece a day.'
+screenshotAlt: '100 Days of CSS: a grid of colourful tiles, each one a small CSS challenge, like a loading spinner, stacked “Hover me” buttons and a toggle switch.'
 ---
 
 ## Why I built it

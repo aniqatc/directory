@@ -1,6 +1,6 @@
 ---
 name: new-project
-description: Add a portfolio project (Selected work) to aniqa.dev, with npm run new, a case study drafted from the repo's README in Aniqa's voice, and its preview drawing. Use when the user wants to add, write up or feature a project on the portfolio, or runs /new-project <repo or title>. For the lab, use new-experiment.
+description: Add a portfolio project (Selected work) to aniqa.dev, with npm run new, a case study drafted from the repo's README in Aniqa's voice, and its screenshot. Use when the user wants to add, write up or feature a project on the portfolio, or runs /new-project <repo or title>. For the lab, use new-experiment.
 ---
 
 # New project (portfolio)
@@ -8,9 +8,9 @@ description: Add a portfolio project (Selected work) to aniqa.dev, with npm run 
 A project is a folder, `src/content/projects/<slug>/`, holding:
 
 - `index.md`: frontmatter for the facts, `##` sections for the case study.
-- `preview.astro`: its drawing, shown on the portfolio card and the case study.
+- `screenshot.png`: the live site in dark mode, shown on the case study, the portfolio hover preview and its share card, with `screenshotAlt` describing it.
 
-`npm run new` copies `templates/project/` there and fills in the frontmatter. This skill gathers the facts, runs it, writes the case study and makes the drawing. Lab entries go through the **new-experiment** skill instead.
+`npm run new` copies `templates/project/` there and fills in the frontmatter. This skill gathers the facts, runs it, writes the case study and takes the screenshot. Lab entries go through the **new-experiment** skill instead.
 
 ## 1. Gather the facts
 
@@ -41,7 +41,7 @@ npm run new -- --yes --kind project --title "Weather" --type Dashboard --stack "
 ```
 
 - **`order`:** set automatically, to the end of Selected work. Change it in `index.md` if the user wants it higher.
-- **Not ready yet:** add `--draft` to keep it off the portfolio and the lab. Its drawing still shows in `/dev/drawings`.
+- **Not ready yet:** add `--draft` to keep it off the portfolio and the lab. `npm run screenshots` skips drafts.
 
 ## 3. Write the case study
 
@@ -59,12 +59,12 @@ Replace the template text in `index.md`. Match the voice of the existing entries
 
 **Don't invent facts.** If the README doesn't say, write a `[bracketed note for Aniqa]` and list those gaps in your reply. Delete optional sections with nothing real to say.
 
-## 4. Make the drawing
+## 4. Take the screenshot
 
-Follow the **new-drawing** skill (`.claude/skills/new-drawing/SKILL.md`) to replace the placeholder `preview.astro`.
+Run `npm run screenshots -- <slug>`. It shoots the live site at 1440 × 900 in dark mode. Look at `screenshot.png`: if the site has its own theme toggle, a banner or a loading state in the shot, or should fall back to an image in its repo, add an override for it in `OVERRIDES` in `scripts/screenshots.mjs` and run it again. Then write `screenshotAlt` in `index.md`: what's on screen, one sentence. A missing screenshot or alt text fails the build.
 
 ## 5. Check
 
-1. Run `npm run og` to make the entry's link-preview card (it needs the finished drawing), then `npm run build`. The schema catches bad dates and missing fields, and a missing `preview.astro` fails with the folder named.
-2. With the dev server running, screenshot `/` (the card) and `/work/<slug>` with Playwright.
+1. Run `npm run og` to make the entry's link-preview card (it uses the screenshot), then `npm run build`. The schema catches bad dates and missing fields, and a missing screenshot fails with the folder named.
+2. With the dev server running, screenshot `/` (the row and its hover preview) and `/work/<slug>` with Playwright.
 3. Tell the user what you filled in, what's still a placeholder, and where. If it was on "Now building" in `src/lib/now.ts`, remove it from `BUILDING`. Don't commit unless they ask; when they do, use no Claude co-author line.

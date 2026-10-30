@@ -7,6 +7,7 @@ live: valorant.aniqa.dev
 repo: valorant
 updated: 2024-08
 summary: A fan landing page for Valorant’s agents and maps, with light and dark themes and a quick quiz that matches you to an agent role.
+screenshotAlt: 'The Valorant fan page in light mode: a grid of map cards from Lotus to Breeze, and an Agents banner with character art and a Find Your Match button.'
 ---
 
 ## Why I built it

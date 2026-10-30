@@ -23,7 +23,8 @@
     "test": "playwright test",
     "new": "node scripts/new-project.mjs",
     "og": "node scripts/og.mjs",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "screenshots": "node scripts/screenshots.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.11",
@@ -44,6 +45,7 @@
     "eslint-plugin-astro": "^3.2.1",
     "prettier": "^3.9.10",
     "prettier-plugin-astro": "^1.1.1",
+    "sharp": "^0.35.5",
     "typescript-eslint": "^8.71.2"
   },
   "keywords": [

@@ -1,14 +1,15 @@
 ---
 // Dev-only: a 1200 × 630 link-preview card for one entry, screenshotted into public/og/<collection>/<slug>.png by
-// `npm run og` (scripts/og.mjs). Portfolio cards are dark, lab cards light; the drawing is the entry's real
-// preview.astro, frozen mid-animation. getStaticPaths returns nothing in a production build.
+// `npm run og` (scripts/og.mjs). Portfolio cards are dark, lab cards light; the picture is the entry's
+// screenshot.png, or none until it has one. getStaticPaths returns nothing in a production build.
 import '@fontsource-variable/bricolage-grotesque/opsz.css';
 import '@fontsource-variable/geist';
 import '@fontsource-variable/geist-mono';
 import '../../../../styles/tokens.css';
+import { getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import Preview from '../../../../components/Preview.astro';
 import { getLab, getSelected, pad, year, type Entry } from '../../../../lib/projects';
+import { screenshotFor } from '../../../../lib/screenshots';
 
 export async function getStaticPaths() {
   if (!import.meta.env.DEV) return [];
@@ -27,6 +28,9 @@ const { entry } = Astro.props;
 const isProject = entry.collection === 'projects';
 const { title, type, summary } = entry.data;
 const blurb = 'blurb' in entry.data ? entry.data.blurb : summary;
+const screenshot = screenshotFor(entry);
+// twice the size it shows at, so it stays sharp
+const picture = screenshot ? await getImage({ src: screenshot, width: 1040 }) : undefined;
 
 // the label in the top corner: "Selected work 02" or "Lab note No. 06"
 let label = isProject ? 'Selected work' : 'Lab';
@@ -62,7 +66,7 @@ if (isProject) {
           </p>
           <p class="blurb">{blurb}</p>
         </div>
-        <Preview entry={entry} scale={2.5} class="art" />
+        {picture && <img class="art" src={picture.src} alt="" width="520" height="325" />}
       </div>
     </main>
   </body>
@@ -155,12 +159,14 @@ if (isProject) {
   astro-dev-toolbar {
     display: none !important;
   }
-  /* the drawing: a fixed 500 × 350 board, frozen 1.2s into its animation (a more natural still than frame one) */
-  .art .pv * {
-    animation-delay: -1.2s !important;
-  }
+  /* the screenshot: 520 × 325 (16:10) in a thin frame */
   .art {
     flex: none;
+    display: block;
+    width: 520px;
+    height: 325px;
+    object-fit: cover;
+    border: 2px solid var(--line);
     border-radius: 20px;
     box-shadow: 0 24px 48px -24px rgba(22, 21, 27, 0.45);
   }

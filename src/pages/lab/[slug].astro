@@ -3,8 +3,8 @@ import { render } from 'astro:content';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import Detail from '../../layouts/Detail.astro';
 import Facts from '../../components/Facts.astro';
-import Preview from '../../components/Preview.astro';
 import PrevNext from '../../components/PrevNext.astro';
+import SiteScreenshot from '../../components/SiteScreenshot.astro';
 import LikeButton from '../../components/LikeButton.astro';
 import Badge from '../../components/Badge.astro';
 import '../../styles/demo.css';
@@ -19,6 +19,7 @@ export async function getStaticPaths() {
     params: { slug: entry.id },
     props: {
       entry,
+      total: lab.length,
       older: lab[i - 1],
       newer: lab[i + 1],
       badge: badgeFor(entry, updated),
@@ -28,12 +29,13 @@ export async function getStaticPaths() {
 
 interface Props {
   entry: LabEntry;
+  total: number;
   older?: LabEntry;
   newer?: LabEntry;
   badge: ReturnType<typeof badgeFor>;
 }
 
-const { entry, older, newer, badge } = Astro.props;
+const { entry, total, older, newer, badge } = Astro.props;
 const { title, type, stack, released, summary, example, hint, repo, stage, themes, headsUp, v1 } = entry.data;
 const { Content } = await render(entry);
 const no = `No. ${pad(entry.n)}`;
@@ -72,6 +74,7 @@ const entryLinks = [
   title={title}
   lede={summary}
   back={{ href: '/lab', label: '← Archive' }}
+  position={`${pad(entry.n)} / ${pad(total)}`}
 >
   <LikeButton slot="actions" slug={entry.id} title={title} big />
   <Fragment slot="eyebrow">
@@ -143,9 +146,7 @@ const entryLinks = [
     </>
   ) : (
     <>
-      <figure>
-        <Preview entry={entry} fit="width" />
-      </figure>
+      <SiteScreenshot entry={entry} />
       <Content />
     </>
   )}

@@ -7,6 +7,7 @@ live: omnifood.aniqa.dev
 repo: omnifood
 updated: 2023-11
 summary: My redesign of the Omnifood landing page from Jonas Schmedtmann’s HTML and CSS course, in my own colours and styling.
+screenshotAlt: 'The Omnifood landing page: “A healthy meal delivered to your door, every single day”, diet tags, Learn More and Get Started buttons, and a stack of colourful meal bowls.'
 ---
 
 ## Why I built it

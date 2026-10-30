@@ -144,7 +144,6 @@
   margin-top: 6px;
   padding: 12px 12px 12px 3px;
   border: 1px dashed var(--line);
-  border-radius: 10px;
   background: var(--surface);
 }
 .next-entry-number {
@@ -234,7 +233,12 @@
 .tip.show {
   opacity: 1;
 }
-.tip .pvbox {
+.tip-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
   border-radius: 9px;
 }
 .tip-cap {

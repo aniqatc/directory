@@ -1,19 +1,11 @@
 ---
-import Preview from './Preview.astro';
-import type { LabEntry } from '../lib/projects';
-
-interface Props {
-  entries: LabEntry[];
-}
-
-// One drawing per entry, all hidden; the script shows the one for the row under the cursor.
-const { entries } = Astro.props;
+// One floating card for the lab archive: the hovered row's screenshot and caption.
+// Each row carries a small WebP of its screenshot in data-preview; hover-preview.ts only loads them once
+// someone first hovers the archive, so the page stays light.
 ---
 
 <div class="tip" aria-hidden="true">
-  {entries.map((e) => (
-    <Preview entry={e} scale={1.1} data-slug={e.id} hidden />
-  ))}
+  <img class="tip-image" alt="" width="232" height="145" decoding="async" />
   <div class="tip-cap">
     <b></b>
     <span></span>

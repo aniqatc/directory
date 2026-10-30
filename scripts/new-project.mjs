@@ -24,7 +24,7 @@
 //   --draft      Mark the entry as a draft
 //   --yes        Skip prompts and use defaults for missing options
 //
-// Each entry gets an index.md and preview.astro file from its template.
+// Each entry gets an index.md file from its template (and a starter sketch for experiments that run on the page).
 // Template placeholders {{title}} and {{slug}} are replaced in other files.
 //
 // Projects appear in Selected Work; experiments appear in the Lab.
@@ -261,7 +261,7 @@ if (missing.length) {
 console.log(
   `  · Fill in ${dir}/index.md${values.summary ? '' : ', including summary'}${isProject && !blurb ? ' and blurb' : ''}`,
 );
-console.log(`  · Make the drawing: ${dir}/preview.astro (in Claude Code: /new-drawing ${slug})`);
 if (sketchFile) console.log(`  · Make the sketch: ${dir}/${sketchFile}`);
+console.log(`  · Take its screenshot: npm run screenshots -- ${slug}, then describe it in screenshotAlt`);
 console.log('  · Then make its link-preview card: npm run og');
-console.log(`  · Preview at http://localhost:4321${url}  ·  drawing at /dev/drawings?only=${slug}`);
+console.log(`  · Preview at http://localhost:4321${url}`);

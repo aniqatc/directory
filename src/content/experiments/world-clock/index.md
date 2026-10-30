@@ -7,6 +7,7 @@ live: clock.aniqa.dev
 repo: world-clock
 updated: 2026-10
 summary: An analog and digital clock for 500+ time zones. Pin cities, slide time forward or back, and see who’s awake.
+screenshotAlt: 'World Clock: an analog and digital clock for New York, a slider to shift time, pinned city cards for London, Lagos, Dhaka, Tokyo and Los Angeles, and more cities to explore.'
 ---
 
 ## Why I built it

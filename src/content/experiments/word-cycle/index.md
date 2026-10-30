@@ -9,6 +9,7 @@ themes: true
 v1: https://codepen.io/aniqatc/pen/xxJVMYK
 hint: Slide the split · switch the blend · swap or roll
 summary: A headline that cycles through nine words and changes colour as it crosses from a white page to a black one.
+screenshotAlt: 'Word Cycle’s stage in Day mode: Swap / Roll and blend mode controls above the headline “New York is evolving”, split between a white half and a black half.'
 ---
 
 ## Idea

@@ -1,7 +1,10 @@
 ---
-import Preview from './Preview.astro';
-import Stars from './Stars.astro';
+// One Selected work row: number, title, blurb, type · stack, then the year and links on the right.
+// The title link covers the whole row; the Live / Code links sit above it. data-preview is the small
+// screenshot the hover preview shows (work-preview.ts).
+import { getImage } from 'astro:assets';
 import { links, pad, year, type Project } from '../lib/projects';
+import { screenshotFor } from '../lib/screenshots';
 
 interface Props {
   project: Project;
@@ -10,34 +13,30 @@ interface Props {
 }
 
 const { project, n } = Astro.props;
-const { title, type, stack, blurb, repo } = project.data;
+const { title, type, stack, blurb } = project.data;
+const screenshot = screenshotFor(project);
+const preview = screenshot ? await getImage({ src: screenshot, width: 600, format: 'webp' }) : undefined;
 ---
 
-<li class="project" data-title={title}>
-  <Preview entry={project} fit="height" />
-  <div>
-    <h3>
-      <span class="n">{pad(n)}</span>
-      <a href={`/work/${project.id}`}>
-        {title}
-        <span class="arrow" aria-hidden="true">
-          →
-        </span>
-      </a>
+<li class="project" data-title={title} data-preview={preview?.src}>
+  <span class="project-number">{pad(n)}</span>
+  <div class="project-main">
+    <h3 class="project-title">
+      <a href={`/work/${project.id}`}>{title}</a>
     </h3>
-    <p>{blurb}</p>
-    <div class="meta">
-      <span>
-        {type} · {year(project)} · {stack}
-      </span>
-      <span class="l">
-        <Stars repo={repo} title={title} />
-        {links(project).map((l) => (
-          <a href={l.href} target="_blank" rel="noopener">
-            {l.label}
-          </a>
-        ))}
-      </span>
-    </div>
+    <p class="project-blurb">{blurb}</p>
+    <p class="project-meta">
+      {type} · {stack}
+    </p>
+  </div>
+  <div class="project-side">
+    <span class="project-year">{year(project)}</span>
+    <span class="l">
+      {links(project).map((l) => (
+        <a href={l.href} target="_blank" rel="noopener">
+          {l.label}
+        </a>
+      ))}
+    </span>
   </div>
 </li>

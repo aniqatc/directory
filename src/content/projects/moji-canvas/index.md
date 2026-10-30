@@ -8,6 +8,7 @@ repo: moji-canvas
 order: 2
 updated: 2026-10
 blurb: Arrange, animate and share sticker collages made from 4,000+ emoji illustrations.
+screenshotAlt: 'Moji Canvas: a pink dotted canvas with the “moji canvas” title surrounded by emoji, and a toolbar on the left for mode, theme, colours, motion, saving and sharing.'
 summary: An emoji sticker canvas where you arrange, animate and share collages made from over 4,000 OpenMoji illustrations.
 ---
 

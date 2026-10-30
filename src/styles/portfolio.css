@@ -1,34 +1,46 @@
 /* ---------- Portfolio home: pinned intro on the left, work on the right ---------- */
 .pf {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: 64px;
-  padding-block: 56px 64px;
+  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+  gap: 72px;
+  padding-block: 0 64px;
 }
+/* the intro stays put while the work scrolls, centred top to bottom in the space under the header */
 .intro {
   position: sticky;
-  /* scroll-counter.ts lowers this on short screens so the counter stays visible */
-  top: var(--intro-top, calc(var(--hdr) + 44px + env(safe-area-inset-top, 0px)));
+  top: var(--hdr);
   align-self: start;
+  min-height: calc(100svh - var(--hdr));
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  justify-content: safe center;
+  gap: 18px;
+  padding-block: 32px;
 }
-.about {
+.intro-role {
   margin: 0;
-  color: var(--muted);
-  max-width: 42ch;
 }
-.now {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* label on the left, content on the right, a hairline between rows and at the bottom */
+.intro-list {
+  margin: 6px 0 0;
+  border-bottom: 1px solid var(--line);
+  transition: border-color 0.6s;
 }
-/* intro groups after the chips get the same hairline as the counter */
-.intro .now ~ .now {
-  padding-top: 16px;
+.intro-row {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 16px;
+  align-items: baseline;
+  padding: 14px 0;
   border-top: 1px solid var(--line);
   transition: border-color 0.6s;
+}
+.intro-row dt {
+  margin: 0;
+}
+.intro-row dd {
+  margin: 0;
+  min-width: 0;
 }
 .chips {
   display: flex;
@@ -52,55 +64,10 @@
   transform: translateY(-2px);
 }
 
-/* scroll counter in the pinned intro */
-.progress {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-}
-.progress-now {
-  margin: 0;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font: 400 11.5px/1.3 var(--font-mono);
-  color: var(--fg);
-}
-.progress-now b {
-  font-weight: 500;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-.dots {
-  display: flex;
-  gap: 6px;
-}
-.dots button {
-  width: 30px;
-  padding: 7px 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-.dots button i {
-  display: block;
-  height: 3px;
-  border-radius: 2px;
-  background: var(--line);
-  transition: background 0.3s;
-}
-.dots button:hover i {
-  background: var(--muted);
-}
-.dots button[aria-current='true'] i {
-  background: var(--accent);
-}
-
 /* ---------- Work column ---------- */
 .work {
   min-width: 0;
+  padding-top: 56px;
 }
 .work-head {
   display: flex;
@@ -122,159 +89,108 @@
 }
 .projects {
   list-style: none;
-  margin: 8px 0 0;
+  margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
 }
+/* number / title, blurb and type · stack / year and links */
 .project {
   position: relative;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  gap: 4px 20px;
+  align-items: start;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+}
+.project-number {
+  padding-top: 10px;
+  font: 500 10.5px/1 var(--font-mono);
+  color: var(--accent);
+}
+.project-main {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 28px 0 32px;
-  border-bottom: 1px solid var(--line);
-  scroll-margin-top: calc(var(--hdr) + 24px + env(safe-area-inset-top, 0px));
+  gap: 8px;
+  min-width: 0;
 }
-.project .pvbig {
-  aspect-ratio: 16 / 7;
+.project-title {
+  margin: 0;
+  font: 700 28px/1.1 var(--font-display);
+  letter-spacing: -0.02em;
+  transition: color 0.2s;
 }
-.project:hover .pvbox {
-  transform: translateY(-4px);
-  border-color: var(--pop);
-}
-.project.on .pvbox {
-  border-color: #4a4558;
-}
-.project h3 {
-  margin: 0 0 4px;
-  font: 600 17.5px/1.25 var(--font-display);
-  letter-spacing: -0.01em;
-}
-/* the title link covers the whole card; the Live / Code links sit above it */
-.project h3 a::after {
+/* the title link covers the whole row; the Live / Code links sit above it */
+.project-title a::after {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 14px;
 }
-.project .n {
-  font: 500 10.5px/1 var(--font-mono);
-  color: var(--muted);
-  margin-right: 10px;
-  vertical-align: 3px;
-  transition: color 0.25s;
-}
-.project.on .n {
+/* keyboard focus: the site's ring on the title, which turns accent like on hover */
+.project:has(.project-title a:focus-visible) .project-title {
   color: var(--accent);
 }
-.project h3 .arrow {
-  font: 400 16px/1 var(--font-body);
-  color: var(--muted);
-  display: inline-block;
-  margin-left: 6px;
-  transition:
-    transform 0.25s,
-    color 0.25s;
-}
-.project:hover h3 .arrow {
-  transform: translateX(4px);
+.project:hover .project-title {
   color: var(--accent);
 }
-.project p {
-  margin: 0 0 10px;
-  color: var(--muted);
-  font-size: 13.5px;
+.project-blurb {
+  margin: 0;
   max-width: 52ch;
+  font-size: 14px;
+  color: var(--body);
 }
-/* type · year · stack on the left (wraps in its own column), stars + links pinned top-right on every card */
-.meta {
+.project-meta {
+  margin: 0;
+  font: 400 11px/1.5 var(--font-mono);
+  color: var(--muted);
+}
+.project-side {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  padding-top: 6px;
   font: 400 11px/1.4 var(--font-mono);
   color: var(--muted);
 }
-.meta > span:first-child {
-  flex: 1;
-  min-width: 0;
-}
-.meta .l {
-  flex: none;
-}
-
-/* ---------- Latest in the lab ---------- */
-.latest {
-  margin-top: 64px;
-}
-.lt {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.lt a {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 5.5rem 1rem;
-  gap: 16px;
-  align-items: center;
-  min-height: 44px;
-  border-bottom: 1px solid var(--line);
-  font-size: 14px;
-}
-.lt-k,
-.lt-d {
-  font: 400 10.5px/1 var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  white-space: nowrap;
-}
-.lt-d {
-  text-align: right;
+.project-year {
   font-variant-numeric: tabular-nums;
 }
-.lt-a {
-  color: var(--muted);
-  transition:
-    transform 0.2s,
-    color 0.2s;
-}
-.lt a:hover .lt-t {
-  color: var(--accent);
-}
-.lt a:hover .lt-a {
-  transform: translateX(3px);
-  color: var(--accent);
+.project-side .l {
+  position: relative;
+  z-index: 1;
 }
 
 @media (max-width: 860px) {
   .pf {
     grid-template-columns: minmax(0, 1fr);
-    gap: 56px;
+    gap: 24px;
     padding-block: 44px 56px;
   }
   .intro {
     position: static;
+    min-height: 0;
+    padding-block: 0;
   }
-  .progress {
-    display: none;
+  .work {
+    padding-top: 0;
   }
 }
 @media (max-width: 560px) {
   .project {
-    padding: 24px 0 28px;
-    gap: 14px;
+    grid-template-columns: 1.75rem minmax(0, 1fr);
+    padding: 24px 0;
   }
-  .project h3 {
-    font-size: 17px;
+  .project-title {
+    font-size: 24px;
   }
-  .lt a {
-    grid-template-columns: minmax(0, 1fr) 5rem 1rem;
-    gap: 10px;
-    font-size: 13.5px;
-  }
-  .lt-k {
-    display: none;
+  /* the year and links move under the text */
+  .project-side {
+    grid-column: 2;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 6px;
   }
 }

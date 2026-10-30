@@ -7,6 +7,7 @@ live: rflect.aniqa.dev
 repo: rflect-landing
 updated: 2026-10-19
 summary: The landing page for rflect. It walks through each command as a terminal session you scroll through.
+screenshotAlt: 'The Rflect landing page in dark mode: “Journal without leaving your terminal.” beside a terminal window running rflect write, with an npm install command below.'
 ---
 
 ## Why I built it

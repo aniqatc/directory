@@ -11,8 +11,8 @@ const monthOrDay = z.preprocess(
   (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v),
   z.string().regex(/^\d{4}-\d{2}(-\d{2})?$/, 'Use YYYY-MM or YYYY-MM-DD'),
 );
-// Every entry is a folder: <slug>/index.md (frontmatter = facts, ## sections = notes) and preview.astro (its
-// drawing). Experiments that run on the page also have sketch.ts or sketch.astro.
+// Every entry is a folder: <slug>/index.md (frontmatter = facts, ## sections = notes) and screenshot.png (from
+// `npm run screenshots`). Experiments that run on the page also have sketch.ts or sketch.astro.
 const folder = (base: string) =>
   glob({ pattern: '*/index.md', base, generateId: ({ entry }) => entry.replace(/\/index\.md$/, '') });
 
@@ -26,7 +26,8 @@ const base = z.object({
   repo: z.string().optional(), // the GitHub repository name under github.com/aniqatc
   summary: z.string(), // a brief summary or lede for the detail page
   updated: monthOrDay.optional(), // the last revisited date; the 3 newest get an "Updated" tag (shown as the month)
-  draft: z.boolean().default(false), // hidden from the portfolio and lab; /dev/drawings still lists it
+  draft: z.boolean().default(false), // hidden from the portfolio and lab
+  screenshotAlt: z.string().optional(), // what's on screen in screenshot.png
 });
 
 // Portfolio: src/content/projects/<slug>/ → /work/<slug>

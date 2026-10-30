@@ -24,12 +24,12 @@ My portfolio at aniqa.dev, with a lab of smaller experiments at aniqa.dev/lab. B
 
 ## Design
 
-Dark for the portfolio, light for the lab, with a cross-fade between them. One accent: mint on dark, a deeper teal on light. Every preview is a small HTML and CSS drawing rather than a screenshot, so it stays sharp at any size.
+Dark for the portfolio, light for the lab, with a cross-fade between them. One accent: mint on dark, a deeper teal on light. Every preview is a screenshot of the real thing: projects in dark mode, lab entries in light.
 
 ## Accessibility
 
 - Every link and button is reachable by keyboard and shows a focus ring (tested).
-- Reduced motion stops the drawings and the pet (tested).
+- Reduced motion stops the animations and the pet (tested).
 - The current page is marked with `aria-current`, and icon-only controls have labels.
 
 ## Project structure
@@ -39,9 +39,9 @@ src/
   content/      projects/ and experiments/, one folder per entry
   components/   previews, lab rows, cards, the like button, the pet
   pages/        home, case studies, lab, 404, and api/likes.ts
-  scripts/      likes, hover preview, scroll counter, pet, sketch runner
+  scripts/      likes, hover previews, pet, sketch runner
   lib/          content helpers, Redis client, GitHub stars, "now" lists
-  styles/       theme tokens, drawings, portfolio and lab styles
+  styles/       theme tokens, portfolio and lab styles
 templates/      starters for npm run new
 tests/          Playwright smoke tests
 ```
@@ -52,7 +52,7 @@ tests/          Playwright smoke tests
 - **Static, plus one function.** Only `/api/likes` runs on the server; every page is built ahead of time.
 - **Star counts at build time.** A daily rebuild keeps them current, so visitors never call GitHub.
 - **Likes in Redis.** A total per entry and a count per visitor; the sixth like is refused. Visitors are anonymous browser IDs.
-- **Drawings** are HTML and CSS on a 200 × 140 board, coloured with the theme tokens `--pf`, `--pm`, `--pl` and `--hi`.
+- **Screenshots** sit next to each entry as `screenshot.png`, made by `npm run screenshots` and served as WebP through `astro:assets`. The hover previews only load theirs on the first hover.
 - **Page scripts** set up in `onPage()` and clean up before the next page loads, since pages swap in place.
 - **The pet** is one behaviour (`src/scripts/pet.ts`) with swappable drawings in `src/lib/pets.ts`. `PET` is `'auto'`, which follows the `SEASONS` calendar there (a pet a month, plus birthdays and holidays, first match wins); set it to a pet's name to pin one.
 
@@ -86,9 +86,9 @@ Run `npm run new` and answer the prompts. It creates a folder from [`templates/`
 
 Optional fields for experiments: `themes: true` adds a Day / Night switch in the top-right corner of the stage, and `headsUp: "…"` adds a "Before you start" box (for any lab entry; use it rarely).
 
-Then, for any entry: replace the placeholder drawing in `preview.astro`, run `npm run og` for its share card, and check the page. Set `draft: true` to hide it until it's ready.
+Then, for any entry: run `npm run screenshots -- <slug>` and describe what's on screen in `screenshotAlt`, run `npm run og` for its share card, and check the page. If a site needs something before its shot (its own theme toggle, a hint to wait out, a repo image to fall back to), add it to `OVERRIDES` in [`scripts/screenshots.mjs`](scripts/screenshots.mjs). Set `draft: true` to hide it until it's ready.
 
-With Claude Code, `/new-project`, `/new-experiment` and `/new-drawing` do the writing and drawing for you.
+With Claude Code, `/new-project` and `/new-experiment` do the writing and the screenshot for you.
 
 ## Scripts
 
@@ -99,6 +99,7 @@ With Claude Code, `/new-project`, `/new-experiment` and `/new-drawing` do the wr
 | `npm test`                          | Playwright smoke tests           |
 | `npm run new`                       | Add a project or experiment      |
 | `npm run og`                        | Make share cards for every entry |
+| `npm run screenshots`               | Retake every entry's screenshot  |
 | `npm run check` / `lint` / `format` | Type-check, lint, format         |
 
 ## Changelog

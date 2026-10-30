@@ -7,6 +7,7 @@ live: code.aniqa.dev
 repo: ai-assistant
 updated: 2026-10-19
 summary: A coding chat that explains, refactors, debugs or converts a snippet in one click, with highlighted answers you can copy, save or download.
+screenshotAlt: 'The AI coding assistant: a “Your personal AI coding assistant” heading, four modes to pick from (Explain, Refactor, Debug and Convert), and an empty workspace for pasting code.'
 ---
 
 ## Why I built it

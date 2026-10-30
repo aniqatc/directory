@@ -5,21 +5,23 @@ import { BUILDING } from '../lib/now';
 ---
 
 {BUILDING.length > 0 && (
-  <div class="now">
-    <span class="label">Now building</span>
-    <ul class="building">
-      {BUILDING.map(({ title, blurb, href }) => (
-        <li>
-          <i class="dot-on" aria-hidden="true" />
-          <div>
-            <b>
-              <NowTitle title={title} href={href} />
-            </b>
-            <span>{blurb}</span>
-          </div>
-        </li>
-      ))}
-    </ul>
+  <div class="intro-row">
+    <dt class="label">Building</dt>
+    <dd>
+      <ul class="building">
+        {BUILDING.map(({ title, blurb, href }) => (
+          <li>
+            <i class="dot-on" aria-hidden="true" />
+            <div>
+              <b>
+                <NowTitle title={title} href={href} />
+              </b>
+              <span>{blurb}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </dd>
   </div>
 )}
 

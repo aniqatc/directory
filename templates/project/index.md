@@ -1,6 +1,6 @@
 ---
 # Portfolio project (Selected work) → /work/<slug>
-# src/content/projects/<slug>/index.md (this file) + preview.astro (its drawing)
+# src/content/projects/<slug>/index.md (this file) + screenshot.png (npm run screenshots)
 title: Project Name
 type: Web app # Full stack, Web app, Dashboard, CLI tool, Landing page…
 stack: React / TypeScript / Vite # " / " between each tool
@@ -11,6 +11,7 @@ order: 6 # position in Selected work (1 = first)
 # updated: 2026-10 # optional: last time you revisited it; the 3 newest get an "Updated" tag
 # draft: true # optional: hide it from the portfolio and lab until it's ready
 blurb: One line for the portfolio card, about 15 words.
+screenshotAlt: What's on screen in screenshot.png, for the case study. # take it with npm run screenshots
 summary: Two sentences for the top of the case study. What it is and what it does.
 ---
 

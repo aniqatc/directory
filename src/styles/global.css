@@ -112,7 +112,7 @@ h1:hover .dot {
   color: var(--accent);
 }
 
-/* ---------- Facts row (lab stats, detail page meta, colophon) ---------- */
+/* ---------- Facts row (lab stats, detail page meta) ---------- */
 .facts {
   --cols: 4;
   display: grid;

@@ -13,14 +13,14 @@ Aniqa's portfolio (`aniqa.dev`, dark) and lab (`aniqa.dev/lab`, light). One Astr
 ## Content
 
 - One folder per entry in `src/content/`; the folder name is the slug. `projects/` is Selected work (`/work/<slug>`), `experiments/` is the lab (`/lab/<slug>`). Schema: `src/content.config.ts`.
-- Every entry needs `index.md` and `preview.astro` (its drawing); a missing drawing fails the build. An experiment with `sketch.ts` or `sketch.astro` gets a live stage page; without one it's a note that links out.
+- Every entry needs `index.md` and `screenshot.png` (from `npm run screenshots`: projects in dark mode, lab entries in light), with `screenshotAlt` describing it. A case study or lab note without them fails the build. An experiment with `sketch.ts` or `sketch.astro` gets a live stage page; without one it's a note that links out.
 - Every lab entry has the same header: Made / Type / Stack / Links under the lede. Links is Live ↗ (or npm ↗), Code ↗, then v1 ↗ when the entry has a `v1` URL. An experiment's Code ↗ points at its folder in this repo (or its own `repo`).
 - Experiment stages: `stage: frame` (default, 16:9, square on phones, with Fullscreen) for canvas, p5, Three.js and CSS art; `stage: fit` (grows to its content, no Fullscreen) for studies, types `CSS study` / `JS study`, built from `templates/experiment-study/` with the shared parts in `src/styles/demo.css`.
 - `themes: true` adds Day / Night under the stage. Night puts `.night` on the stage, which gives it the portfolio's tokens (`tokens.css`); the rest of the page stays light. Sketches read colours with `colours(stage)` and return `recolor()` (`src/lib/sketch.ts`); CSS art and studies follow on their own.
 - `headsUp` is the "Before you start" box, for something the reader must know before using the page. Keep it rare; history like "first made on CodePen" goes in a Revisited section instead.
 - `draft: true` hides an entry everywhere. `example: true` marks a placeholder.
-- Scaffold with `npm run new` (copies from `templates/`). Follow the skills in `.claude/skills/` for new projects, experiments and drawings.
-- After adding an entry or changing a title, blurb or drawing, run `npm run og` and commit the images in `public/og/`. Vercel can't generate them, and a test fails if one is missing.
+- Scaffold with `npm run new` (copies from `templates/`). Follow the skills in `.claude/skills/` for new projects and experiments.
+- After adding an entry or changing a title, blurb or screenshot, run `npm run og` and commit the images in `public/og/`. Vercel can't generate them, and a test fails if one is missing.
 
 ## Gotchas
 

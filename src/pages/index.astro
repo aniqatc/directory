@@ -1,13 +1,12 @@
 ---
 import '../styles/portfolio.css';
 import Base from '../layouts/Base.astro';
-import Colophon from '../components/Colophon.astro';
 import Contact from '../components/Contact.astro';
-import LatestInLab from '../components/LatestInLab.astro';
 import NowBuilding from '../components/NowBuilding.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import ScrollCounter from '../components/ScrollCounter.astro';
-import { getLab, getSelected, latest, real } from '../lib/projects';
+import UpdatesSignup from '../components/UpdatesSignup.astro';
+import WorkPreview from '../components/WorkPreview.astro';
+import { getLab, getSelected, real } from '../lib/projects';
 import { TINKERING } from '../lib/now';
 
 const selected = await getSelected();
@@ -21,26 +20,34 @@ const lab = await getLab();
         Aniqa<span class="dot">.</span>
       </h1>
       <p class="lede">
-        I build small things for the web, and now I’m working toward ones that <em>solve real problems</em>.
+        I started building to see how things work. Now I build to <em>solve real problems</em>.
       </p>
-      <p class="about">
-        Software engineer in New York. I work full time and build in my free time, picking up new tech as I
-        go. These are the projects I’m proudest of. The rest live in the lab, my sketchbook.
-      </p>
-      <div class="now">
-        <span class="label">Currently tinkering with</span>
-        <ul class="chips">
-          {TINKERING.map((t) => (
-            <li>{t}</li>
-          ))}
-        </ul>
-      </div>
-      <NowBuilding />
-      <div class="now">
-        <span class="label">Say hi</span>
-        <Contact />
-      </div>
-      <ScrollCounter titles={selected.map((p) => p.data.title)} />
+      <p class="intro-role label">Software engineer in New York</p>
+      <dl class="intro-list">
+        <div class="intro-row">
+          <dt class="label">Tinkering</dt>
+          <dd>
+            <ul class="chips">
+              {TINKERING.map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+        <NowBuilding />
+        <div class="intro-row">
+          <dt class="label">Say hi</dt>
+          <dd>
+            <Contact only={['GitHub']} />
+          </dd>
+        </div>
+        <div class="intro-row">
+          <dt class="label">Updates</dt>
+          <dd>
+            <UpdatesSignup />
+          </dd>
+        </div>
+      </dl>
     </section>
 
     <section class="work" aria-labelledby="pf-work">
@@ -55,8 +62,7 @@ const lab = await getLab();
           <ProjectCard project={p} n={i + 1} />
         ))}
       </ol>
-      <LatestInLab entries={latest(lab)} />
-      <Colophon />
     </section>
   </main>
+  <WorkPreview />
 </Base>

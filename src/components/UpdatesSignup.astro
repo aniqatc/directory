@@ -1,0 +1,95 @@
+---
+// Portfolio intro: an email sign-up for new things.
+// For now the form only says thanks; nothing is sent or stored yet.
+---
+
+<form class="updates-signup" aria-label="Get updates" novalidate>
+  <span class="updates-signup-fields">
+    <input
+      class="updates-signup-email"
+      type="email"
+      name="email"
+      placeholder="Your email, for new things"
+      autocomplete="email"
+      aria-label="Your email, for new things"
+      required
+    />
+    <button class="updates-signup-button" type="submit">
+      Notify me
+    </button>
+  </span>
+  <span class="updates-signup-thanks" role="status" hidden></span>
+</form>
+
+<script>
+  import { onPage } from '../scripts/page';
+
+  // say thanks once there's a valid address; storing it comes later
+  onPage(() => {
+    const form = document.querySelector<HTMLFormElement>('.updates-signup');
+    if (!form) return;
+    const email = form.querySelector<HTMLInputElement>('.updates-signup-email')!;
+    const fields = form.querySelector<HTMLElement>('.updates-signup-fields')!;
+    const thanks = form.querySelector<HTMLElement>('.updates-signup-thanks')!;
+    form.addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      if (!email.checkValidity()) {
+        email.reportValidity();
+        return;
+      }
+      fields.hidden = true;
+      thanks.hidden = false;
+      thanks.textContent = 'Thanks! You’ll hear about new things.';
+    });
+  });
+</script>
+
+<style>
+  .updates-signup-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .updates-signup-fields[hidden] {
+    display: none;
+  }
+  .updates-signup-email {
+    flex: 1 1 180px;
+    min-width: 0;
+    height: 34px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--fg);
+    font: 400 13px var(--font-body);
+  }
+  .updates-signup-email::placeholder {
+    color: var(--muted);
+  }
+  .updates-signup-button {
+    height: 34px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--fg);
+    color: var(--bg);
+    font: 500 10.5px/1 var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .updates-signup-button:hover {
+    background: var(--accent);
+  }
+  .updates-signup-email:focus-visible,
+  .updates-signup-button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .updates-signup-thanks {
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>

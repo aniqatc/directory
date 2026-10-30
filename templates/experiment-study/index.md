@@ -1,6 +1,6 @@
 ---
 # Lab study that runs on the page → /lab/<slug>
-# src/content/experiments/<slug>/index.md (this file) + preview.astro (its drawing, shown on hover in the lab)
+# src/content/experiments/<slug>/index.md (this file) + screenshot.png (npm run screenshots)
 #   + sketch.astro (the study: markup, styles and script), shown in a stage that grows to fit it
 title: Study Name
 type: CSS study # CSS study or JS study
@@ -11,6 +11,7 @@ hint: Press Play · pick an easing # shown under the stage
 # themes: true # optional: a Day / Night switch in the top-right corner of the stage (studies follow it on their own)
 # headsUp: Made for a mouse. # optional, rare: a "Before you start" box above the figure
 # draft: true # optional: hide it from the portfolio and lab until it's ready
+screenshotAlt: What's on screen in screenshot.png. # take it with npm run screenshots
 summary: Two sentences for the top of the page. The one idea it shows, and how to play with it.
 ---
 

@@ -7,6 +7,7 @@ live: mini.weather.aniqa.dev
 repo: weather-mini
 updated: 2026-10
 summary: A small React weather app with current conditions and a 5-day forecast for any city or your current location.
+screenshotAlt: 'Weather Mini: a small weather card for New York with the temperature, humidity, wind, visibility, conditions and a five-day forecast.'
 ---
 
 ## Why I built it

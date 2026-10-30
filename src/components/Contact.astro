@@ -4,9 +4,11 @@ import { CONTACT } from '../lib/contact';
 interface Props {
   /** "intro" for the portfolio intro, "foot" for the footer */
   variant?: 'intro' | 'foot';
+  /** which links to show, e.g. ['GitHub']; all of them when left out */
+  only?: string[];
 }
 
-const { variant = 'intro' } = Astro.props;
+const { variant = 'intro', only } = Astro.props;
 // only the links set in contact.ts are shown
 const c: { github?: string; linkedin?: string; x?: string; email?: string; codepen?: string } = CONTACT;
 const links = (
@@ -16,7 +18,7 @@ const links = (
     ['LinkedIn', c.linkedin],
     ['X', c.x],
   ] as const
-).filter(([, url]) => url);
+).filter(([label, url]) => url && (!only || only.includes(label)));
 ---
 
 <ul class:list={['contact', { 'contact-f': variant === 'foot' }]} aria-label="Contact">
