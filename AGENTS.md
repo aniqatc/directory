@@ -20,6 +20,7 @@ Aniqa's portfolio (`aniqa.dev`, dark) and lab (`aniqa.dev/lab`, light). One Astr
 - `headsUp` is the "Before you start" box, for something the reader must know before using the page. Keep it rare; history like "first made on CodePen" goes in a Revisited section instead.
 - `draft: true` hides an entry everywhere. `example: true` marks a placeholder.
 - Scaffold with `npm run new` (copies from `templates/`). Follow the skills in `.claude/skills/` for new projects and experiments.
+- App reviews live in `reviews/` (`/reviews/<slug>`): `npm run new -- --kind review` makes one from `templates/review/` as a draft. Web apps get `screenshot.png` and `logo.png` from `npm run screenshots -- reviews/<slug>`; phone and iPad apps (`device: phone | tablet`) use screenshots from the device.
 - After adding an entry or changing a title, blurb or screenshot, run `npm run og` and commit the images in `public/og/`. Vercel can't generate them.
 
 ## Gotchas

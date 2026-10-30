@@ -8,7 +8,12 @@
 // server on port 4321 or a temporary one on 4399. If a site won't load, a project falls back to its repo's own
 // screenshot. Rflect CLI has no site, so it uses the help screen from its repo.
 //
+// App reviews (src/content/reviews) of web apps are shot in light mode, drafts included since a review is shot
+// before it goes up, and get logo.png from the site's icon if the folder has none. Phone and iPad apps are
+// skipped: their screenshots come from the device.
+//
 // Run `npm run screenshots` to redo them all, or `npm run screenshots -- weather word-cycle` for some.
+// A slug used twice (the Weather project and a Weather review) can be named in full: reviews/weather.
 // The pages render them with <Image>, which makes the WebP; these PNGs never go in public/.
 import { spawn } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -78,6 +83,28 @@ const entries = ['projects', 'experiments'].flatMap((collection) =>
     .filter((entry) => entry.url || entry.stagePath || entry.image),
 );
 
+// app reviews: a web app's site, with its icon as logo.png; a phone or iPad app is left for its own screenshots
+const plain = (value) => value?.replace(/\s+#.*$/, '').replace(/^['"]|['"]$/g, '');
+const reviews = existsSync('src/content/reviews')
+  ? readdirSync('src/content/reviews')
+      .filter((slug) => existsSync(`src/content/reviews/${slug}/index.md`))
+      .map((slug) => {
+        const text = readFileSync(`src/content/reviews/${slug}/index.md`, 'utf8');
+        const live = plain(field(text, 'live'));
+        const device = plain(field(text, 'device')) ?? 'browser';
+        if (device !== 'browser') return { collection: 'reviews', slug, onDevice: device };
+        return {
+          collection: 'reviews',
+          slug,
+          colorScheme: 'light',
+          url: live && (/^https?:\/\//.test(live) ? live : `https://${live}`),
+          withLogo: !existsSync(`src/content/reviews/${slug}/logo.png`),
+        };
+      })
+      .filter((entry) => entry.url || entry.onDevice)
+  : [];
+entries.push(...reviews);
+
 // ---------- helpers ----------
 const download = async (url) => {
   const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
@@ -100,7 +127,17 @@ const settle = async (page) => {
   await page.waitForTimeout(1500);
 };
 
-const shootSite = async (browser, { url, colorScheme, switchTheme, whenReady }) => {
+// the site's icon: its apple-touch-icon, else its largest icon, else /favicon.ico
+const findIcon = (page) =>
+  page.evaluate(() => {
+    const links = [...document.querySelectorAll('link[rel~="icon"], link[rel^="apple-touch-icon"]')];
+    const size = (link) => Number.parseInt(link.getAttribute('sizes') ?? '', 10) || 0;
+    const best =
+      links.find((link) => link.rel.startsWith('apple-touch-icon')) ?? links.sort((a, b) => size(b) - size(a))[0];
+    return new URL(best?.getAttribute('href') ?? '/favicon.ico', location.href).href;
+  });
+
+const shootSite = async (browser, { url, colorScheme, switchTheme, whenReady, withLogo }) => {
   const context = await browser.newContext({ viewport: SIZE, colorScheme });
   const page = await context.newPage();
   try {
@@ -112,7 +149,9 @@ const shootSite = async (browser, { url, colorScheme, switchTheme, whenReady }) 
       await settle(page);
     }
     if (whenReady) await whenReady(page);
-    return await page.screenshot();
+    const shot = await page.screenshot();
+    const iconUrl = withLogo ? await findIcon(page).catch(() => undefined) : undefined;
+    return { shot, iconUrl };
   } finally {
     await context.close();
   }
@@ -158,13 +197,21 @@ const devServer = async () => {
 
 // ---------- take, crop and save ----------
 const only = process.argv.slice(2);
-const chosen = entries.filter(({ slug }) => !only.length || only.includes(slug));
+const chosen = entries.filter(
+  ({ collection, slug }) => !only.length || only.includes(slug) || only.includes(`${collection}/${slug}`),
+);
 const browser = await chromium.launch();
 try {
   for (const entry of chosen) {
-    const out = `src/content/${entry.collection}/${entry.slug}/screenshot.png`;
+    const folder = `src/content/${entry.collection}/${entry.slug}`;
+    const out = `${folder}/screenshot.png`;
+    if (entry.onDevice) {
+      console.log(`– ${entry.collection}/${entry.slug} is a ${entry.onDevice} app: its screenshots come from the device`);
+      continue;
+    }
     let image;
     let source;
+    let iconUrl;
     try {
       if (entry.image) {
         image = await download(entry.image);
@@ -173,7 +220,7 @@ try {
         image = await shootStage(browser, await devServer(), entry);
         source = `its stage at ${entry.stagePath}`;
       } else {
-        image = await shootSite(browser, entry);
+        ({ shot: image, iconUrl } = await shootSite(browser, entry));
         source = entry.url;
       }
     } catch (err) {
@@ -198,6 +245,19 @@ try {
       .resize({ width: Math.min(cropWidth, SIZE.width) });
     writeFileSync(out, await cropped.png().toBuffer());
     console.log(`✓ ${out} from ${source}`);
+    // a review's logo.png: the site's icon, square at 300 × 300 (an .ico can't be read, so save that one by hand)
+    if (iconUrl) {
+      try {
+        const icon = await sharp(await download(iconUrl))
+          .resize(300, 300, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+          .png()
+          .toBuffer();
+        writeFileSync(`${folder}/logo.png`, icon);
+        console.log(`✓ ${folder}/logo.png from ${iconUrl}`);
+      } catch (err) {
+        console.warn(`! ${folder}/logo.png: couldn't use ${iconUrl} (${err.message.split('\n')[0]}); add it by hand`);
+      }
+    }
   }
 } finally {
   await browser.close();

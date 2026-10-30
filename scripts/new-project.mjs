@@ -7,9 +7,10 @@
 //   npm run new -- --kind experiment --title "World Clock" --live clock.aniqa.dev --repo world-clock
 //   npm run new -- --kind experiment --title "Zayn's Garden" --sketch p5
 //   npm run new -- --kind experiment --title "Easing Lanes" --sketch study
+//   npm run new -- --kind review --app "Tallyho" --maker tallyhoapp --live tallyho.app  (see new-review.mjs)
 //
 // Options:
-//   --kind       project | experiment
+//   --kind       project | experiment | review
 //   --sketch     none | canvas | p5 | three | css | study
 //   --title      Entry title (required)
 //   --slug       Folder name and URL slug (defaults to title)
@@ -100,10 +101,16 @@ async function ask(key, question, fallback = '') {
 
 // ---------- answers ----------
 // Collect user input for the new project or experiment.
-const rawKind = await ask('kind', 'Kind: project (portfolio) or experiment (lab)', 'experiment');
+const rawKind = await ask('kind', 'Kind: project (portfolio), experiment (lab) or review', 'experiment');
 const kind = ALIASES[rawKind] ?? rawKind;
+// app reviews have their own fields, so they're made by new-review.mjs
+if (kind === 'review') {
+  rl?.close();
+  await import('./new-review.mjs');
+  exit(0);
+}
 if (kind !== 'project' && kind !== 'experiment')
-  fail(`--kind must be project or experiment (got "${rawKind}")`);
+  fail(`--kind must be project, experiment or review (got "${rawKind}")`);
 const isProject = kind === 'project';
 
 /**
