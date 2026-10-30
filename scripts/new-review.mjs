@@ -106,4 +106,5 @@ if (device === 'browser') {
   console.log("  · The app's icon from its App Store page goes in logo.png");
 }
 console.log('  · Fill in the scores, verdict, brand colour and sections in index.md');
-console.log('  · Check it on npm run dev, then delete draft: true');
+console.log(`  · npm run scorecard -- ${slug}  for scorecard.png, the picture to post on X`);
+console.log('  · Check it on npm run dev, then delete draft: true and run npm run og for its link preview');

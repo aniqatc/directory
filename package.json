@@ -22,6 +22,7 @@
     "format:check": "prettier --check .",
     "new": "node scripts/new-project.mjs",
     "og": "node scripts/og.mjs",
+    "scorecard": "node scripts/scorecard.mjs",
     "start": "npm run dev",
     "screenshots": "node scripts/screenshots.mjs"
   },

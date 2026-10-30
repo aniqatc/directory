@@ -81,6 +81,8 @@ const reviews = defineCollection({
     post: z.url().optional(), // the review's post on X
     summary: z.string(), // one line on what the app does: the lede, and the card's description
     verdict: z.string(), // the one-word overall, e.g. Promising, Delightful, Solid
+    quote: z.string().optional(), // a short line beside the verdict on the scorecard, e.g. "Can't wait to see where this goes"
+    cardTheme: z.enum(['night', 'day']).default('night'), // the scorecard's and link preview's look
     brand: z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a hex colour like #8b7cf6'), // the app's brand colour
     scores: z.object({
       firstImpression: score,

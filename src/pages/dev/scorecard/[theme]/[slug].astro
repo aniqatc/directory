@@ -1,0 +1,305 @@
+---
+// Dev-only: one review's scorecard, the picture for its post on X and its link-preview card. It fills the window,
+// so `npm run scorecard` (scripts/scorecard.mjs) shoots it at 1200 × 675 into the review's folder as
+// scorecard.png, and `npm run og` (scripts/og.mjs) at 1200 × 630 into public/og/reviews/<slug>.png. Night is the
+// portfolio's colours, day the lab's; the logo tile and dots take the app's brand colour. getStaticPaths returns
+// nothing in a production build.
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '../../../../styles/tokens.css';
+import { getImage } from 'astro:assets';
+import { pad } from '../../../../lib/projects';
+import { getReviews, logoFor, scoresFor, type Review } from '../../../../lib/reviews';
+
+export async function getStaticPaths() {
+  if (!import.meta.env.DEV) return [];
+  const reviews = await getReviews();
+  return ['night', 'day'].flatMap((theme) =>
+    reviews.map((review) => ({ params: { theme, slug: review.id }, props: { review } })),
+  );
+}
+
+interface Props {
+  review: Review;
+}
+
+const { review } = Astro.props;
+const { theme } = Astro.params;
+const { app, maker, type, summary, verdict, quote, brand } = review.data;
+const scores = scoresFor(review);
+const logo = logoFor(review);
+// twice the size it shows at, so it stays sharp on a 2× screenshot
+const logoImage = logo ? await getImage({ src: logo, width: 160, height: 160 }) : undefined;
+---
+
+<!doctype html>
+<html lang="en" data-mode={theme === 'day' ? 'lab' : 'portfolio'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>{app} scorecard</title>
+  </head>
+  <body style={`--brand: ${brand}`}>
+    <main class="scorecard">
+      <p class="top">
+        <span>No. {pad(review.number)}</span>
+        <span aria-hidden="true">·</span>
+        <span>Review by <b>@aniqatc</b></span>
+        <span aria-hidden="true">·</span>
+        <span>{type}</span>
+      </p>
+
+      <div class="columns">
+        <div class="about">
+          <div class="app">
+            <div class="app-name">
+              <span class="logo">
+                {logoImage ? <img src={logoImage.src} alt="" /> : app.charAt(0)}
+              </span>
+              <div>
+                <h1>
+                  {app}
+                  <span class="full-stop">.</span>
+                </h1>
+                <p class="maker">by @{maker}</p>
+              </div>
+            </div>
+            <p class="summary">{summary}</p>
+          </div>
+          <div class="overall">
+            <p class="overall-label">Overall</p>
+            <div class="overall-row">
+              <p class="verdict">
+                {verdict}
+                <span class="full-stop">.</span>
+              </p>
+              {quote && <p class="quote">“{quote}”</p>}
+            </div>
+          </div>
+        </div>
+
+        <ul class="scores">
+          {scores.map((score) => (
+            <li>
+              <span class="score-text">
+                <span class="score-label">{score.label}</span>
+                <span class={`score-status score-${score.status}`}>{score.statusLabel}</span>
+              </span>
+              <span class="score-dots" aria-label={`${score.value} out of 5`}>
+                {[1, 2, 3, 4, 5].map((position) => (
+                  <i class:list={{ on: position <= score.value }} />
+                ))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  /* the score words: light enough for night, darker for day so they stay readable */
+  :root {
+    --score-polished: #7fd6a0;
+    --score-getting-there: #f2b766;
+    --score-needs-love: #f491b2;
+    --empty-dot: color-mix(in oklab, var(--line) 80%, var(--bg));
+  }
+  :root[data-mode='lab'] {
+    --score-polished: #2f7a4c;
+    --score-getting-there: #94580b;
+    --score-needs-love: #ad3866;
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+  /* the card fills the window: the scripts set its size */
+  body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  /* dev-only toolbar: keep it out of the screenshot */
+  astro-dev-toolbar {
+    display: none !important;
+  }
+  .scorecard {
+    height: 100%;
+    padding: 56px 72px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+  .top {
+    display: flex;
+    gap: 18px;
+    font: 500 15px/1.3 var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .top b {
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--fg);
+  }
+  .columns {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 72px;
+  }
+
+  /* left: the app, then the overall verdict */
+  .about {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .app {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .app-name {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .logo {
+    flex: none;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font: 800 36px/1 var(--font-display);
+    color: #fff;
+  }
+  .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font: 800 60px/0.92 var(--font-display);
+    letter-spacing: -0.045em;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .full-stop {
+    color: var(--brand);
+  }
+  .maker {
+    margin-top: 8px;
+    font: 400 18px/1.3 var(--font-mono);
+    color: var(--muted);
+  }
+  .summary {
+    max-width: 440px;
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--body);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .overall {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .overall-label {
+    font: 500 13px/1.3 var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .overall-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .verdict {
+    flex: none;
+    font: 800 56px/1 var(--font-display);
+    letter-spacing: -0.04em;
+  }
+  .quote {
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--body);
+  }
+
+  /* right: five scores, each a label, its status word and five dots */
+  .scores {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .scores li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .scores li:last-child {
+    border-bottom: 0;
+  }
+  .score-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .score-label {
+    font-size: 23px;
+    line-height: 1.2;
+  }
+  .score-status {
+    font: 500 13px/1.3 var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .score-polished {
+    color: var(--score-polished);
+  }
+  .score-getting-there {
+    color: var(--score-getting-there);
+  }
+  .score-needs-love {
+    color: var(--score-needs-love);
+  }
+  .score-dots {
+    display: flex;
+    gap: 9px;
+  }
+  .score-dots i {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--empty-dot);
+  }
+  .score-dots i.on {
+    background: var(--brand);
+  }
+</style>

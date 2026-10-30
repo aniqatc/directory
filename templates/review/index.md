@@ -6,6 +6,7 @@
 #                   for a phone or iPad app
 #   screenshot-2.png, screenshot-3.png  a phone app's second and third screens, shown side by side
 #   any other images you put under "What I liked"
+#   scorecard.png   the picture for the post on X, made by npm run scorecard -- <slug>
 app: App Name
 maker: handle # the maker's X handle, without the @
 date: 2026-10-30 # YYYY-MM-DD, the day the review goes up
@@ -16,6 +17,8 @@ device: browser # browser (a web app), phone or tablet: the frame around the scr
 # post: https://x.com/aniqatc/status/… # optional: the review's post on X
 summary: One line on what the app does, for the top of the page.
 verdict: Promising # one word for Overall: Promising, Delightful, Solid…
+# quote: Can't wait to see where this goes # optional: a short line beside the verdict on the scorecard
+# cardTheme: day # optional: the scorecard and link preview in the lab's light colours (night by default)
 brand: '#8b7cf6' # the app's brand colour, in quotes
 scores: # 1 to 5: 4–5 shows as Polished, 3 Getting there, 1–2 Needs love
   firstImpression: 4

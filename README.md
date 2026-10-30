@@ -20,6 +20,7 @@ My portfolio at aniqa.dev, with a lab of smaller experiments at aniqa.dev/lab. B
 
 - **Portfolio** (dark): selected projects with screenshot previews and case studies, and an intro with what I'm building now.
 - **Lab** (light): an archive of experiments with hover previews, a random-entry button, and likes (five per visitor).
+- **App reviews**: a weekly look at apps from solo founders at `/reviews`, each with scores, screenshots in a browser, phone or iPad frame, and a scorecard to post on X.
 - **Everywhere**: a share card for each entry, a pet that follows you between pages and leaves a trail (a ghost, a bee, a snowball… one of twenty, changing through the year), and a 404 with a sleeping dot.
 
 ## Design
@@ -36,9 +37,9 @@ Dark for the portfolio, light for the lab, with a cross-fade between them. One a
 
 ```text
 src/
-  content/      projects/ and experiments/, one folder per entry
+  content/      projects/, experiments/ and reviews/, one folder per entry
   components/   previews, lab rows, cards, the like button, the pet
-  pages/        home, case studies, lab, 404, and api/likes.ts
+  pages/        home, case studies, lab, reviews, 404, and api/likes.ts
   scripts/      likes, hover previews, pet, sketch runner
   lib/          content helpers, Redis client, GitHub stars, "now" lists
   styles/       theme tokens, portfolio and lab styles
@@ -57,7 +58,7 @@ templates/      starters for npm run new
 
 ## Setup
 
-Requires Node 22.22+. For `npm run screenshots` and `npm run og`, also run `npx playwright install chromium`.
+Requires Node 22.22+. For `npm run screenshots`, `npm run og` and `npm run scorecard`, also run `npx playwright install chromium`.
 
 ```bash
 git clone https://github.com/aniqatc/directory
@@ -89,16 +90,26 @@ Then, for any entry: run `npm run screenshots -- <slug>` and describe what's on 
 
 With Claude Code, `/new-project` and `/new-experiment` do the writing and the screenshot for you.
 
+### Add an app review
+
+Run `npm run new` and choose **review**, or `npm run new -- --kind review --app "Tally Ho" --maker tallyhoapp --live tallyho.app`. It creates `src/content/reviews/<slug>/` from [`templates/review/`](templates/review) as a draft, which only shows on `npm run dev`.
+
+- **Web app:** `npm run screenshots -- reviews/<slug>` takes `screenshot.png` and saves the site's icon as `logo.png`.
+- **Phone or iPad app:** set `device: phone` or `tablet`, put the App Store link in `live`, and add screenshots from the device: `screenshot.png`, plus `screenshot-2.png` and `screenshot-3.png` for a phone.
+
+Fill in the scores, verdict and sections, then run `npm run scorecard -- <slug>` for `scorecard.png`, the picture to post on X. When it's ready, delete `draft: true` and run `npm run og` so the review's link unfurls as its scorecard.
+
 ## Scripts
 
-| Command                             | What it does                     |
-| ----------------------------------- | -------------------------------- |
-| `npm run dev`                       | Local site at `localhost:4321`   |
-| `npm run build`                     | Type-check, then build           |
-| `npm run new`                       | Add a project or experiment      |
-| `npm run og`                        | Make share cards for every entry |
-| `npm run screenshots`               | Retake every entry's screenshot  |
-| `npm run check` / `lint` / `format` | Type-check, lint, format         |
+| Command                             | What it does                                |
+| ----------------------------------- | ------------------------------------------- |
+| `npm run dev`                       | Local site at `localhost:4321`              |
+| `npm run build`                     | Type-check, then build                      |
+| `npm run new`                       | Add a project, experiment or app review     |
+| `npm run og`                        | Make share cards for every entry and review |
+| `npm run scorecard`                 | Make each review's scorecard for X          |
+| `npm run screenshots`               | Retake every entry's screenshot             |
+| `npm run check` / `lint` / `format` | Type-check, lint, format                    |
 
 ## Changelog
 
@@ -108,6 +119,7 @@ With Claude Code, `/new-project` and `/new-experiment` do the writing and the sc
 - Added the lab, likes in Upstash, and build-time star counts.
 - Added the 404 page, the pet, page transitions and share cards.
 - Gave the pet twenty looks and a calendar: a pet for each month, plus birthdays and holidays.
+- Added app reviews, with a scorecard for each one to post on X.
 
 ### 2025
 

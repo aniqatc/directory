@@ -2,11 +2,13 @@
 // Generate Open Graph images and the Apple touch icon using the site's fonts and colours.
 //
 //   public/og/<collection>/<slug>.png  One card per published entry, rendered from /dev/og/<collection>/<slug>
+//   public/og/reviews/<slug>.png       One per published review: its scorecard at 1200 × 630, rendered from
+//                                      /dev/scorecard/<theme>/<slug> (npm run scorecard makes the one for X)
 //   public/og-portfolio.png            Fallback card for the home page and entries without a custom card
 //   public/og-lab.png                  Fallback card for the lab page and entries without a custom card
 //   public/apple-touch-icon.png        180 × 180 home-screen icon
 //
-// Run `npm run og` after adding an entry or changing its screenshot.
+// Run `npm run og` after adding an entry or review, or changing its screenshot or scores.
 // Uses Playwright's Chromium and reuses the dev server on port 4321 when available.
 // Otherwise, starts a temporary server on port 4399.
 import { spawn } from 'node:child_process';
@@ -104,8 +106,19 @@ const entries = ['projects', 'experiments'].flatMap((collection) =>
     .filter(
       (slug) => !/^draft:\s*true/m.test(readFileSync(`src/content/${collection}/${slug}/index.md`, 'utf8')),
     )
-    .map((slug) => ({ collection, slug })),
+    .map((slug) => ({ collection, slug, path: `/dev/og/${collection}/${slug}` })),
 );
+// reviews: the scorecard, in the review's own theme (night unless cardTheme says day)
+if (existsSync('src/content/reviews')) {
+  for (const slug of readdirSync('src/content/reviews')) {
+    const file = `src/content/reviews/${slug}/index.md`;
+    if (!existsSync(file)) continue;
+    const text = readFileSync(file, 'utf8');
+    if (/^draft:\s*true/m.test(text)) continue;
+    const theme = text.match(/^cardTheme:\s*['"]?(night|day)/m)?.[1] ?? 'night';
+    entries.push({ collection: 'reviews', slug, path: `/dev/scorecard/${theme}/${slug}` });
+  }
+}
 
 let server = null;
 let base = 'http://localhost:4321';
@@ -125,10 +138,10 @@ if (!(await up(`${base}/lab`))) {
 // ---------- clean up old cards and generate new ones ----------
 rmSync('public/og', { recursive: true, force: true }); // start clean, so deleted entries lose their cards
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-for (const { collection, slug } of entries) {
+for (const { collection, slug, path } of entries) {
   const out = `public/og/${collection}/${slug}.png`;
   mkdirSync(`public/og/${collection}`, { recursive: true });
-  const res = await page.goto(`${base}/dev/og/${collection}/${slug}`, { waitUntil: 'networkidle' });
+  const res = await page.goto(`${base}${path}`, { waitUntil: 'networkidle' });
   if (!res?.ok()) {
     console.error(`✗ ${out}: card page returned ${res?.status()}`);
     process.exitCode = 1;
