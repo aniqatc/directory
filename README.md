@@ -14,13 +14,13 @@ My portfolio at aniqa.dev, with a lab of smaller experiments at aniqa.dev/lab. B
 - **Upstash Redis** for likes, on **Vercel**
 - **Fontsource** for self-hosted Bricolage Grotesque and Geist
 - **p5.js** and **Three.js** for experiments that need them
-- **Playwright** for smoke tests
+- **Playwright** for the screenshots and share cards
 
 ## Features
 
-- **Portfolio** (dark): selected projects with case studies and GitHub star counts, and an intro with what I'm building now.
+- **Portfolio** (dark): selected projects with screenshot previews and case studies, and an intro with what I'm building now.
 - **Lab** (light): an archive of experiments with hover previews, a random-entry button, and likes (five per visitor).
-- **Everywhere**: a share card for each entry, a pet that follows you between pages (a ghost, a bee, a snowball… one of twenty, changing through the year), and a 404 with a sleeping dot.
+- **Everywhere**: a share card for each entry, a pet that follows you between pages and leaves a trail (a ghost, a bee, a snowball… one of twenty, changing through the year), and a 404 with a sleeping dot.
 
 ## Design
 
@@ -28,8 +28,8 @@ Dark for the portfolio, light for the lab, with a cross-fade between them. One a
 
 ## Accessibility
 
-- Every link and button is reachable by keyboard and shows a focus ring (tested).
-- Reduced motion stops the animations and the pet (tested).
+- Every link and button is reachable by keyboard and shows a focus ring.
+- Reduced motion stops the animations and the pet.
 - The current page is marked with `aria-current`, and icon-only controls have labels.
 
 ## Project structure
@@ -43,7 +43,6 @@ src/
   lib/          content helpers, Redis client, GitHub stars, "now" lists
   styles/       theme tokens, portfolio and lab styles
 templates/      starters for npm run new
-tests/          Playwright smoke tests
 ```
 
 ## Key concepts
@@ -54,11 +53,11 @@ tests/          Playwright smoke tests
 - **Likes in Redis.** A total per entry and a count per visitor; the sixth like is refused. Visitors are anonymous browser IDs.
 - **Screenshots** sit next to each entry as `screenshot.png`, made by `npm run screenshots` and served as WebP through `astro:assets`. The hover previews only load theirs on the first hover.
 - **Page scripts** set up in `onPage()` and clean up before the next page loads, since pages swap in place.
-- **The pet** is one behaviour (`src/scripts/pet.ts`) with swappable drawings in `src/lib/pets.ts`. `PET` is `'auto'`, which follows the `SEASONS` calendar there (a pet a month, plus birthdays and holidays, first match wins); set it to a pet's name to pin one.
+- **The pet** is one behaviour (`src/scripts/pet.ts`) with swappable drawings in `src/lib/pets.ts`, and comes out of the logo dot or the full stop in the page title. Its trail is in `src/scripts/pet-trail.ts`. `PET` is `'auto'`, which follows the `SEASONS` calendar there (a pet a month, plus birthdays and holidays, first match wins); set it to a pet's name to pin one.
 
 ## Setup
 
-Requires Node 22.22+. For the tests, also run `npx playwright install chromium`.
+Requires Node 22.22+. For `npm run screenshots` and `npm run og`, also run `npx playwright install chromium`.
 
 ```bash
 git clone https://github.com/aniqatc/directory
@@ -96,7 +95,6 @@ With Claude Code, `/new-project` and `/new-experiment` do the writing and the sc
 | ----------------------------------- | -------------------------------- |
 | `npm run dev`                       | Local site at `localhost:4321`   |
 | `npm run build`                     | Type-check, then build           |
-| `npm test`                          | Playwright smoke tests           |
 | `npm run new`                       | Add a project or experiment      |
 | `npm run og`                        | Make share cards for every entry |
 | `npm run screenshots`               | Retake every entry's screenshot  |

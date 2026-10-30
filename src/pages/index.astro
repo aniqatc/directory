@@ -1,7 +1,6 @@
 ---
 import '../styles/portfolio.css';
 import Base from '../layouts/Base.astro';
-import Contact from '../components/Contact.astro';
 import NowBuilding from '../components/NowBuilding.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import UpdatesSignup from '../components/UpdatesSignup.astro';
@@ -35,18 +34,6 @@ const lab = await getLab();
           </dd>
         </div>
         <NowBuilding />
-        <div class="intro-row">
-          <dt class="label">Say hi</dt>
-          <dd>
-            <Contact only={['GitHub']} />
-          </dd>
-        </div>
-        <div class="intro-row">
-          <dt class="label">Updates</dt>
-          <dd>
-            <UpdatesSignup />
-          </dd>
-        </div>
       </dl>
     </section>
 
@@ -62,6 +49,18 @@ const lab = await getLab();
           <ProjectCard project={p} n={i + 1} />
         ))}
       </ol>
+    </section>
+
+    {/* its own block: under the intro on desktop, after the work when the columns stack */}
+    <section class="updates" aria-label="Updates">
+      <dl class="intro-list updates-list">
+        <div class="intro-row">
+          <dt class="label">Updates</dt>
+          <dd>
+            <UpdatesSignup />
+          </dd>
+        </div>
+      </dl>
     </section>
   </main>
   <WorkPreview />

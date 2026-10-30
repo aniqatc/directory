@@ -5,8 +5,8 @@ Aniqa's portfolio (`aniqa.dev`, dark) and lab (`aniqa.dev/lab`, light). One Astr
 ## Commands
 
 - Dev server: `astro dev --background` (manage with `astro dev stop` / `status` / `logs`). Restart it after changing `package.json` or `astro.config.mjs`, or Vite serves "504 Outdated Optimize Dep".
-- `npm run dev` is `astro dev --ignore-lock` on purpose: Astro auto-backgrounds the server when it thinks an AI agent ran it, and VS Code's terminal can trip that detection (`TERM_PROGRAM=vscode` + `GIT_PAGER=cat`), so `npm run dev` would return straight away. `--ignore-lock` keeps a normal foreground server (Ctrl+C stops it) that `astro dev stop` / `status` don't track. Playwright's `webServer` and `npm run og` rely on it staying in the foreground.
-- `npm run build` (type-check + build), `npm test` (Playwright against the dev server), `npm run lint`, `npm run format`.
+- `npm run dev` is `astro dev --ignore-lock` on purpose: Astro auto-backgrounds the server when it thinks an AI agent ran it, and VS Code's terminal can trip that detection (`TERM_PROGRAM=vscode` + `GIT_PAGER=cat`), so `npm run dev` would return straight away. `--ignore-lock` keeps a normal foreground server (Ctrl+C stops it) that `astro dev stop` / `status` don't track. `npm run og` and `npm run screenshots` rely on it staying in the foreground.
+- `npm run build` (type-check + build), `npm run lint`, `npm run format`.
 - There is no `npm run preview`; the Vercel adapter doesn't support it.
 - Check changes in a real browser with Playwright screenshots, not just the build.
 
@@ -20,7 +20,7 @@ Aniqa's portfolio (`aniqa.dev`, dark) and lab (`aniqa.dev/lab`, light). One Astr
 - `headsUp` is the "Before you start" box, for something the reader must know before using the page. Keep it rare; history like "first made on CodePen" goes in a Revisited section instead.
 - `draft: true` hides an entry everywhere. `example: true` marks a placeholder.
 - Scaffold with `npm run new` (copies from `templates/`). Follow the skills in `.claude/skills/` for new projects and experiments.
-- After adding an entry or changing a title, blurb or screenshot, run `npm run og` and commit the images in `public/og/`. Vercel can't generate them, and a test fails if one is missing.
+- After adding an entry or changing a title, blurb or screenshot, run `npm run og` and commit the images in `public/og/`. Vercel can't generate them.
 
 ## Gotchas
 

@@ -1,21 +1,44 @@
-/* ---------- Portfolio home: pinned intro on the left, work on the right ---------- */
+/* ---------- Portfolio home: intro on the left, work on the right ---------- */
+/* the intro and Updates share the left column (intro above, Updates below, meeting in the middle), and the work
+   spans both rows on the right. The two sides share the width and are centred against each other (not each
+   against the window), so their middles line up at every size. */
 .pf {
   display: grid;
-  grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
-  gap: 72px;
-  padding-block: 0 64px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-areas:
+    'intro work'
+    'updates work';
+  column-gap: clamp(40px, 6vw, 80px);
+  row-gap: 0;
+  align-content: center;
+  padding-block: 28px;
 }
-/* the intro stays put while the work scrolls, centred top to bottom in the space under the header */
-.intro {
-  position: sticky;
-  top: var(--hdr);
-  align-self: start;
-  min-height: calc(100svh - var(--hdr));
+/* one screen on desktop, no scrollbar: header, the two sides centred in what's left, then the footer */
+body:has(.pf) {
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
-  justify-content: safe center;
+}
+body:has(.pf) > main {
+  flex: 1;
+  width: 100%;
+}
+.intro {
+  grid-area: intro;
+  align-self: end;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
-  padding-block: 32px;
+}
+.intro h1 {
+  font-size: clamp(44px, 6vw, 72px);
+}
+.intro .lede {
+  font-size: 17px;
+}
+.pf .label {
+  font-size: 10px;
 }
 .intro-role {
   margin: 0;
@@ -28,7 +51,7 @@
 }
 .intro-row {
   display: grid;
-  grid-template-columns: 84px minmax(0, 1fr);
+  grid-template-columns: 92px minmax(0, 1fr);
   gap: 16px;
   align-items: baseline;
   padding: 14px 0;
@@ -51,7 +74,7 @@
   padding: 0;
 }
 .chips li {
-  font: 400 11.5px/1 var(--font-mono);
+  font: 400 11px/1 var(--font-mono);
   padding: 6px 9px;
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -64,10 +87,33 @@
   transform: translateY(-2px);
 }
 
+/* ---------- Updates: under the intro, its closing line the top of this row ---------- */
+.updates {
+  grid-area: updates;
+  align-self: start;
+  max-width: 440px;
+}
+/* no line under the email form */
+.updates-list {
+  margin: 0;
+  border-bottom: 0;
+}
+.updates-list .intro-row {
+  border-top: 0;
+}
+/* the field and button stay on one line however narrow the column: the field gives way, never the button */
+.pf .updates .updates-signup-fields {
+  flex-wrap: nowrap;
+}
+.pf .updates .updates-signup-email {
+  flex-basis: 0;
+}
+
 /* ---------- Work column ---------- */
 .work {
+  grid-area: work;
+  align-self: center;
   min-width: 0;
-  padding-top: 56px;
 }
 .work-head {
   display: flex;
@@ -81,116 +127,101 @@
   margin: 0;
 }
 .work-head a {
-  font: 400 11.5px/1 var(--font-mono);
+  font: 400 11px/1 var(--font-mono);
   color: var(--muted);
 }
 .work-head a:hover {
   color: var(--accent);
 }
+
+/* ---------- The list: number, title and blurb, year; the whole row opens the case study ---------- */
 .projects {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
 }
-/* number / title, blurb and type · stack / year and links */
-.project {
-  position: relative;
+.project-link {
   display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
-  gap: 4px 20px;
-  align-items: start;
-  padding: 28px 0;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 14px 0;
 }
-.project-number {
-  padding-top: 10px;
-  font: 500 10.5px/1 var(--font-mono);
-  color: var(--accent);
+.project-number,
+.project-year {
+  align-self: start;
+  padding-top: 6px;
+  font: 500 10px/1 var(--font-mono);
+  color: var(--muted);
+  transition: color 0.2s;
 }
-.project-main {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.project-year {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+.project-text {
   min-width: 0;
 }
 .project-title {
   margin: 0;
-  font: 700 28px/1.1 var(--font-display);
-  letter-spacing: -0.02em;
+  font: 500 16px/1.3 var(--font-display);
+  letter-spacing: -0.01em;
   transition: color 0.2s;
 }
-/* the title link covers the whole row; the Live / Code links sit above it */
-.project-title a::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-}
-/* keyboard focus: the site's ring on the title, which turns accent like on hover */
-.project:has(.project-title a:focus-visible) .project-title {
-  color: var(--accent);
-}
-.project:hover .project-title {
-  color: var(--accent);
-}
 .project-blurb {
-  margin: 0;
-  max-width: 52ch;
-  font-size: 14px;
-  color: var(--body);
-}
-.project-meta {
-  margin: 0;
-  font: 400 11px/1.5 var(--font-mono);
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.5;
   color: var(--muted);
 }
-.project-side {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-  padding-top: 6px;
-  font: 400 11px/1.4 var(--font-mono);
-  color: var(--muted);
-}
-.project-year {
-  font-variant-numeric: tabular-nums;
-}
-.project-side .l {
-  position: relative;
-  z-index: 1;
+.project-link:hover .project-title,
+.project-link:focus-visible .project-title,
+.project-link:hover .project-number {
+  color: var(--accent);
 }
 
-@media (max-width: 860px) {
-  .pf {
+/* Tinkering, Building and Updates: on small screens (650px and under) the label sits above its content */
+@media (max-width: 650px) {
+  .intro .intro-row,
+  .updates .intro-row {
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-    padding-block: 44px 56px;
-  }
-  .intro {
-    position: static;
-    min-height: 0;
-    padding-block: 0;
-  }
-  .work {
-    padding-top: 0;
+    gap: 10px;
   }
 }
-@media (max-width: 560px) {
-  .project {
-    grid-template-columns: 1.75rem minmax(0, 1fr);
-    padding: 24px 0;
+/* under 950px the work column would get cramped, so the columns stack: intro, work, then Updates */
+@media (max-width: 950px) {
+  .pf {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'intro'
+      'work'
+      'updates';
+    align-content: start;
+    padding-block: 44px 56px;
   }
-  .project-title {
-    font-size: 24px;
+  /* room between the intro and the work, and a little before Updates */
+  .work {
+    margin-top: 64px;
   }
-  /* the year and links move under the text */
-  .project-side {
-    grid-column: 2;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 6px;
+  /* a line between the end of the work and the email form */
+  .updates {
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    transition: border-color 0.6s;
+  }
+  /* stacked, everything runs the full width, so their lines match */
+  .intro,
+  .updates {
+    align-self: start;
+    max-width: none;
+  }
+  /* one divider between the intro and the work, not two: the intro ends on its last row, and the Selected
+     work header's line starts the new section */
+  .intro-list {
+    border-bottom: 0;
+  }
+  .intro .intro-row:last-child {
+    padding-bottom: 0;
   }
 }

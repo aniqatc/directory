@@ -1,14 +1,18 @@
-// Easter egg: the dot by aniqa.dev is alive. Click it and it grows into a little face that follows you around.
+// Easter egg: the dot by aniqa.dev is alive (and so is the full stop in the page title). Click it and it grows
+// into a little face that follows you around.
 // It looks toward your cursor, blinks, squishes as it moves, falls asleep when you stop, hops with a heart when
 // clicked, and shrinks back into the logo on double-click or Esc. On touch screens it follows your taps.
 // It comes with you between pages: it lives in #pet-layer, which survives page changes (view transitions); on a
 // full reload its spot is saved for this tab and it reappears there.
 // Which pet comes out (a ghost, a bee, the plain dot…) is set in src/lib/pets.ts.
 import { onPage } from './page';
+import { petTrail } from './pet-trail';
 import { currentPet, petMarkup } from '../lib/pets';
 
 // the header (and so the dot) is replaced on every page change, so look it up each time
 const dot = () => document.querySelector<HTMLElement>('.brand i');
+// the full stop in the page title ("Aniqa.", "Lab."): the pet can come out of it too
+const stop = () => document.querySelector<HTMLElement>('h1 .dot');
 
 {
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -17,6 +21,7 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
   let pet: HTMLDivElement | null = null;
   let shadow: HTMLDivElement | null = null;
   let parts: { body: SVGGElement; face: SVGGElement; eyes: SVGGElement[] } | null = null;
+  let trail: ReturnType<typeof petTrail> | null = null; // the marks it leaves as it moves (pet-trail.ts)
   let x = 0; // where it is
   let y = 0;
   let tx = 0; // where it's heading
@@ -31,15 +36,19 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
   let blinkUntil = 0;
   let hopAt = -1e9;
   let lid = 1;
+  // where it came out: the logo dot, or the title's full stop. It goes back there, or to the logo on a page
+  // without one, and that spot stays hidden while it's out.
+  let from: 'logo' | 'stop' = 'logo';
+  const origin = () => (from === 'stop' && stop()) || dot();
 
   const home = () => {
-    const b = dot()?.getBoundingClientRect();
+    const b = origin()?.getBoundingClientRect();
     return b ? [b.left + b.width / 2, b.top + b.height / 2] : [x, y];
   };
   const wake = () => (lastMove = performance.now());
   // where the pet was when you left the last page (this tab only)
   const KEY = 'aniqa-pet';
-  type Saved = { x: number; y: number; px: number; py: number };
+  type Saved = { x: number; y: number; px: number; py: number; from?: 'logo' | 'stop' };
   const load = (): Saved | null => {
     try {
       return JSON.parse(sessionStorage.getItem(KEY) ?? 'null');
@@ -73,7 +82,8 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
   };
 
   /** Out of the logo, or straight back where it was on the last page (already full size, staying put). */
-  function release(saved?: Saved) {
+  function release(saved?: Saved, start: 'logo' | 'stop' = 'logo') {
+    from = saved?.from ?? start;
     if (saved) {
       x = tx = clamp(saved.x, 16, innerWidth - 16);
       y = ty = clamp(saved.y, 16, innerHeight - 16);
@@ -110,7 +120,8 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
       face: pet.querySelector('.f')!,
       eyes: [...pet.querySelectorAll<SVGGElement>('.e')],
     };
-    dot()?.classList.add('out');
+    if (!still) trail = petTrail(pet);
+    origin()?.classList.add('out');
 
     // Click anywhere to make the pet hop with a heart
     document.addEventListener('click', (ev) => {
@@ -128,8 +139,11 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
     cancelAnimationFrame(raf);
     pet?.remove();
     shadow?.remove();
+    trail?.clear();
     pet = shadow = parts = null;
+    trail = null;
     dot()?.classList.remove('out');
+    stop()?.classList.remove('out');
     save(null);
   }
 
@@ -142,6 +156,8 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
     const nx = x + (tx - x) * k;
     const ny = y + (ty - y) * k;
     const speed = Math.min(Math.hypot(nx - x, ny - y) / 14, 0.22);
+    const dx = nx - x;
+    const dy = ny - y;
     x = nx;
     y = ny;
     const dist = Math.hypot(tx - x, ty - y);
@@ -185,20 +201,34 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
     pet.style.transform = `translate(${(x - 16).toFixed(1)}px,${(y - 16 - lift * 14).toFixed(1)}px) scale(${sc.toFixed(3)})`;
     shadow.style.transform = `translate(${(x - 12).toFixed(1)}px,${(y + 8.5).toFixed(1)}px) scale(${((1 - lift * 0.45) * sc).toFixed(3)})`;
     shadow.style.opacity = ((1 - lift * 0.55) * (homing ? shrink : 1)).toFixed(2);
+    // a trail from its feet while it wanders; none on the way home
+    if (trail && !homing) trail.step(x, y + 10, dx, dy, lift > 0.05);
 
     if (homing && dist < 1.2) return settle();
     raf = requestAnimationFrame(tick);
   }
 
-  // the dot sits inside the home link: catch the click first (capture), so the page doesn't change
+  // the tease: hover the dot (or the title's full stop) and two eyes blink open in it for a moment, a hint that
+  // something lives there. Mouse only, never with reduced motion or with the pet already out.
+  document.addEventListener('pointerover', (ev) => {
+    if (ev.pointerType !== 'mouse' || pet || still) return;
+    const spot = (ev.target as Element).closest<HTMLElement>('.brand i, h1 .dot');
+    if (!spot || spot.classList.contains('peek')) return;
+    spot.classList.add('peek');
+    spot.addEventListener('animationend', () => spot.classList.remove('peek'), { once: true });
+  });
+
+  // the dot sits inside the home link: catch the click first (capture), so the page doesn't change.
+  // The title's full stop works the same way.
   document.addEventListener(
     'click',
     (ev) => {
-      if (!(ev.target as Element).closest('.brand i')) return;
+      const spot = (ev.target as Element).closest('.brand i, h1 .dot');
+      if (!spot) return;
       ev.preventDefault();
       ev.stopPropagation();
       if (pet) goHome();
-      else release();
+      else release(undefined, spot.matches('h1 .dot') ? 'stop' : 'logo');
     },
     { capture: true },
   );
@@ -231,11 +261,11 @@ const dot = () => document.querySelector<HTMLElement>('.brand i');
   });
 
   // a full reload or leaving the site: remember where it is, unless it's on its way home
-  addEventListener('pagehide', () => save(pet && !homing ? { x, y, px, py } : null));
+  addEventListener('pagehide', () => save(pet && !homing ? { x, y, px, py, from } : null));
 
   onPage(() => {
     if (pet) {
-      dot()?.classList.add('out'); // still out from the last page: keep the new header's dot hidden
+      origin()?.classList.add('out'); // still out from the last page: keep the new page's spot hidden
       return;
     }
     const saved = load();

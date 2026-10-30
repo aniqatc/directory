@@ -9,6 +9,7 @@ onPage(() => {
   if (!tip || !archive) return;
 
   const image = tip.querySelector<HTMLImageElement>('.tip-image')!;
+  const sketches = [...tip.querySelectorAll<HTMLElement>('.tip-sketch')];
   const capTitle = tip.querySelector('.tip-cap b')!;
   const capInfo = tip.querySelector('.tip-cap span')!;
   let current: string | undefined;
@@ -21,8 +22,11 @@ onPage(() => {
   const fill = (row: HTMLElement) => {
     if (row.dataset.slug === current) return;
     current = row.dataset.slug;
-    if (row.dataset.preview) image.src = row.dataset.preview;
-    image.hidden = !row.dataset.preview;
+    // an entry that isn't a website shows its sketch, running; the rest show their screenshot
+    const sketch = sketches.find((s) => s.dataset.sketchSlug === current);
+    sketches.forEach((s) => (s.hidden = s !== sketch));
+    if (!sketch && row.dataset.preview) image.src = row.dataset.preview;
+    image.hidden = Boolean(sketch) || !row.dataset.preview;
     capTitle.textContent = row.dataset.t ?? '';
     capInfo.textContent = row.dataset.u ?? '';
   };

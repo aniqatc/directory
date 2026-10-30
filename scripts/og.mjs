@@ -6,7 +6,7 @@
 //   public/og-lab.png                  Fallback card for the lab page and entries without a custom card
 //   public/apple-touch-icon.png        180 × 180 home-screen icon
 //
-// Run `npm run og` after adding an entry or changing a drawing.
+// Run `npm run og` after adding an entry or changing its screenshot.
 // Uses Playwright's Chromium and reuses the dev server on port 4321 when available.
 // Otherwise, starts a temporary server on port 4399.
 import { spawn } from 'node:child_process';
@@ -22,7 +22,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { chromium } from '@playwright/test';
+import { chromium } from 'playwright';
 
 // ---------- fonts and themes ----------
 const font = (pkg, file) =>
@@ -113,14 +113,13 @@ const up = (url) =>
   fetch(url)
     .then((r) => r.ok)
     .catch(() => false);
-if (!(await up(`${base}/dev/drawings`))) {
+if (!(await up(`${base}/lab`))) {
   base = 'http://localhost:4399';
   server = spawn('npx', ['astro', 'dev', '--port', '4399', '--ignore-lock'], {
     stdio: 'ignore',
     detached: true,
   });
-  for (let i = 0; i < 60 && !(await up(`${base}/dev/drawings`)); i++)
-    await new Promise((r) => setTimeout(r, 1000));
+  for (let i = 0; i < 60 && !(await up(`${base}/lab`)); i++) await new Promise((r) => setTimeout(r, 1000));
 }
 
 // ---------- clean up old cards and generate new ones ----------

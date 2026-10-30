@@ -1,7 +1,7 @@
 /* One site, two moods. Portfolio + case studies = night; lab archive, lab notes + experiments = day.
    Base.astro sets data-mode on <html>. */
 :root {
-  /* --pop is the accent on dark pages and in drawings; --pop-lab is the same hue darkened for text on the light lab */
+  /* --pop is the accent on dark pages and on the pet; --pop-lab is the same hue darkened for text on the light lab */
   --pop: #79d3e6;
   --pop-lab: #177282; /* lagoon */
   --pet: var(--pop);

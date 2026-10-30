@@ -1,4 +1,18 @@
 /* ---------- Lab archive ---------- */
+/* the same type scale as the portfolio home: heading, lede and labels match it */
+.wrap.lab h1 {
+  font-size: clamp(44px, 6vw, 72px);
+}
+.wrap.lab .lede {
+  font-size: 17px;
+}
+.wrap.lab .label,
+.wrap.lab .facts dt {
+  font-size: 10px;
+}
+.wrap.lab .facts dd {
+  font-size: 11.5px;
+}
 /* .wrap.lab so the 800px beats .wrap's 1080px from global.css, which loads later */
 .wrap.lab {
   max-width: 800px;
@@ -80,7 +94,7 @@
   padding-left: 12px;
 }
 .row .n {
-  font: 400 10.5px/1 var(--font-mono);
+  font: 400 10px/1 var(--font-mono);
   color: var(--muted);
   font-variant-numeric: tabular-nums;
 }
@@ -92,7 +106,7 @@
   align-items: center;
   gap: 8px;
   min-width: 0;
-  font: 500 15px/1.2 var(--font-body);
+  font: 500 14.5px/1.2 var(--font-body);
   letter-spacing: -0.01em;
 }
 .row .t a {
@@ -107,7 +121,7 @@
   color: var(--accent);
 }
 .row .k {
-  font: 400 10.5px/1 var(--font-mono);
+  font: 400 10px/1 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -116,14 +130,14 @@
   text-overflow: ellipsis;
 }
 .row .y {
-  font: 400 11px/1 var(--font-mono);
+  font: 400 10.5px/1 var(--font-mono);
   color: var(--muted);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 .row .l {
   justify-content: flex-end;
-  font: 400 10.5px/1 var(--font-mono);
+  font: 400 10px/1 var(--font-mono);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -147,7 +161,7 @@
   background: var(--surface);
 }
 .next-entry-number {
-  font: 400 10.5px/1 var(--font-mono);
+  font: 400 10px/1 var(--font-mono);
   color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
@@ -158,12 +172,12 @@
   min-width: 0;
 }
 .next-entry-title {
-  font: 500 15px/1.2 var(--font-body);
+  font: 500 14.5px/1.2 var(--font-body);
   letter-spacing: -0.01em;
   white-space: nowrap;
 }
 .next-entry-note {
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.4;
   color: var(--muted);
   white-space: nowrap;
@@ -181,7 +195,7 @@
   border-radius: 999px;
   background: var(--bg);
   color: var(--fg);
-  font: 400 13px var(--font-body);
+  font: 400 12.5px var(--font-body);
 }
 .next-entry-email::placeholder {
   color: var(--muted);
@@ -198,7 +212,7 @@
   border-radius: 999px;
   background: var(--fg);
   color: var(--bg);
-  font: 500 10.5px/1 var(--font-mono);
+  font: 500 10px/1 var(--font-mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -209,7 +223,7 @@
   background: var(--accent);
 }
 .next-entry-thanks {
-  font: 500 11px/1.4 var(--font-mono);
+  font: 500 10.5px/1.4 var(--font-mono);
   letter-spacing: 0.04em;
   color: var(--accent);
 }
@@ -241,12 +255,31 @@
   object-fit: cover;
   border-radius: 9px;
 }
+/* a sketch, drawn at the entry page's 800px stage width and shrunk into the card (220 / 800), top 16:10 showing */
+.tip-sketch {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--fg);
+}
+.tip-sketch[hidden] {
+  display: none;
+}
+.tip-sketch-stage {
+  width: 800px;
+  padding: 24px;
+  transform: scale(0.275);
+  transform-origin: top left;
+}
 .tip-cap {
   display: flex;
   justify-content: space-between;
   gap: 10px;
   padding: 8px 4px 2px;
-  font: 400 10.5px/1.2 var(--font-mono);
+  font: 400 10px/1.2 var(--font-mono);
   letter-spacing: 0.06em;
   color: #9690a3;
   white-space: nowrap;

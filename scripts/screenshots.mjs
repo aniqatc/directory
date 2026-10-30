@@ -12,7 +12,7 @@
 // The pages render them with <Image>, which makes the WebP; these PNGs never go in public/.
 import { spawn } from 'node:child_process';
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { chromium } from '@playwright/test';
+import { chromium } from 'playwright';
 import sharp from 'sharp';
 
 const SIZE = { width: 1440, height: 900 };
@@ -125,8 +125,12 @@ const shootStage = async (browser, base, { stagePath, colorScheme }) => {
   try {
     await page.goto(`${base}${stagePath}`, { waitUntil: 'networkidle', timeout: 45000 });
     await settle(page);
-    // keep the dev toolbar, the sticky header and the pet out of the shot
-    await page.addStyleTag({ content: 'astro-dev-toolbar, .hdr, .pet { display: none !important; }' });
+    // keep the dev toolbar, the sticky header and the pet out of the shot, and the stage's frame: the crop would
+    // cut it off at the sides of a 16:9 stage
+    await page.addStyleTag({
+      content:
+        'astro-dev-toolbar, .hdr, .pet { display: none !important; } .stage { border: 0 !important; border-radius: 0 !important; }',
+    });
     return await page.locator('.stage').screenshot();
   } finally {
     await context.close();

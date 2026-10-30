@@ -13,7 +13,11 @@ export const BUILDING: NowItem[] = [
     blurb:
       'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
   },
-  { title: 'For Zayn', blurb: 'A gallery of CSS art, each one something that reminds me of my son.' },
+  {
+    title: 'For Zayn',
+    blurb: 'A gallery of CSS art, each one something that reminds me of my son.',
+    href: 'https://zayn.aniqa.dev',
+  },
   // next up:
   // {
   //   title: 'unsent.day',

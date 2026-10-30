@@ -67,10 +67,6 @@ button:focus-visible {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.ph {
-  color: var(--muted);
-  font-style: italic;
-}
 .chip {
   display: inline-block;
   flex: none;
@@ -100,6 +96,105 @@ h1 {
 }
 h1:hover .dot {
   transform: translateY(-0.18em) scale(1.25);
+}
+/* the full stop is a way to let the pet out too (pet.ts); it hides while the pet is out of it */
+h1 .dot {
+  position: relative;
+  cursor: pointer;
+  /* the middle of the dot itself, not of the tall text box, so it pops and wiggles in place */
+  transform-origin: 0.11em 0.7em;
+}
+h1 .dot.out {
+  opacity: 0;
+}
+
+/* ---------- The tease (pet.ts): on hover, eyes blink open in the dot ---------- */
+.brand i::before,
+h1 .dot::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 46%, var(--ink) 0 12%, transparent 13%),
+    radial-gradient(circle at 68% 46%, var(--ink) 0 12%, transparent 13%);
+  opacity: 0;
+  pointer-events: none;
+}
+.brand i::before {
+  inset: 0;
+}
+/* where the dot sits in the full stop's text box */
+h1 .dot::before {
+  left: 0.021em;
+  top: 0.61em;
+  width: 0.186em;
+  height: 0.186em;
+}
+.brand i.peek {
+  animation: peek-grow 0.9s ease-in-out;
+}
+h1 .dot.peek {
+  animation: peek-wiggle 0.9s ease-in-out;
+}
+.peek::before {
+  animation: peek-eyes 0.9s ease-in-out;
+}
+/* the logo dot is tiny, so it swells while the eyes are open */
+@keyframes peek-grow {
+  0%,
+  100% {
+    scale: 1;
+    rotate: 0deg;
+  }
+  20%,
+  70% {
+    scale: 2.2;
+  }
+  30% {
+    rotate: -14deg;
+  }
+  45% {
+    rotate: 12deg;
+  }
+  60% {
+    rotate: 0deg;
+  }
+}
+@keyframes peek-wiggle {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  25% {
+    rotate: -12deg;
+  }
+  45% {
+    rotate: 10deg;
+  }
+  65% {
+    rotate: 0deg;
+  }
+}
+/* open, look, blink, close */
+@keyframes peek-eyes {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  50% {
+    transform: none;
+  }
+  55% {
+    transform: scaleY(0.15);
+  }
+  62% {
+    transform: none;
+  }
 }
 .lede {
   margin: 0;
@@ -271,7 +366,6 @@ h1:hover .dot {
   font: 500 11.5px/1 var(--font-mono);
 }
 .contact a,
-.contact .ph-link,
 .copy {
   display: inline-flex;
   align-items: center;
@@ -286,11 +380,6 @@ h1:hover .dot {
 .copy:hover {
   color: var(--accent);
   border-color: var(--accent);
-}
-.contact .ph-link {
-  color: var(--muted);
-  border-bottom-style: dashed;
-  cursor: help;
 }
 .copy {
   padding: 0;
@@ -314,9 +403,6 @@ h1:hover .dot {
 }
 .contact-f a,
 .contact-f .copy,
-.contact-f .ph-link {
-  border-bottom-color: transparent;
-}
 
 /* ---------- Footer ---------- */
 footer {

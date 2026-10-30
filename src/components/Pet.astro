@@ -38,6 +38,177 @@
   :root[data-mode='lab'] .pet-shadow {
     background: radial-gradient(closest-side, rgba(0, 0, 0, 0.2), transparent);
   }
+
+  /* ---- the trail (src/scripts/pet-trail.ts): marks under the pet that fade on their own ---- */
+  .pet-trail {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 48;
+    pointer-events: none;
+    font-style: normal;
+    line-height: 1;
+  }
+  /* soft dots that shrink away (the dot, mochi) */
+  .pet-trail-dots {
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--pet);
+    animation: trail-shrink 0.9s ease-out forwards;
+  }
+  /* a bee's dotted flight path, which lingers */
+  .pet-trail-flight {
+    width: 3px;
+    height: 3px;
+    margin: -1.5px 0 0 -1.5px;
+    border-radius: 50%;
+    background: var(--pet-shade);
+    animation: trail-fade 1.6s ease-in forwards;
+  }
+  /* footprints, left and right of the path, pointing the way it walked */
+  .pet-trail-prints {
+    width: 5px;
+    height: 3.5px;
+    margin: -1.75px 0 0 -2.5px;
+    border-radius: 50%;
+    background: var(--muted);
+    transform: translateY(var(--side));
+    animation: trail-print 1.8s ease-in forwards;
+  }
+  /* small leaves that drift down and turn */
+  .pet-trail-leaves {
+    width: 8px;
+    height: 5px;
+    margin: -2.5px 0 0 -4px;
+    border-radius: 0 100% 0 100%;
+    background: var(--pet-leaf);
+    animation: trail-fall 1.6s ease-in forwards;
+  }
+  /* a ghost's soft wisps, rising */
+  .pet-trail-wisps {
+    width: 12px;
+    height: 12px;
+    margin: -6px 0 0 -6px;
+    border-radius: 50%;
+    background: color-mix(in oklab, var(--pet) 55%, var(--pet-light));
+    filter: blur(3px);
+    animation: trail-rise 1.2s ease-out forwards;
+  }
+  /* snowflakes, falling */
+  .pet-trail-snow {
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    border-radius: 50%;
+    background: #fff;
+    animation: trail-fall 1.6s ease-in forwards;
+  }
+  /* white flakes would vanish on the light lab, so they get the pet's lightest shade and a faint edge */
+  :root[data-mode='lab'] .pet-trail-snow {
+    background: var(--pet-light);
+    box-shadow: 0 0 0 0.5px color-mix(in srgb, var(--ink) 25%, transparent);
+  }
+  /* tiny hearts, floating up */
+  .pet-trail-hearts::before {
+    content: '♥';
+    display: block;
+    margin: -5px 0 0 -4px;
+    font-size: 9px;
+    color: var(--blush);
+    animation: trail-rise 1.3s ease-out forwards;
+  }
+  .pet-trail-hearts {
+    animation: trail-hold 1.3s forwards;
+  }
+  /* confetti, falling and turning */
+  .pet-trail-confetti {
+    width: 5px;
+    height: 3px;
+    margin: -1.5px 0 0 -2.5px;
+    border-radius: 1px;
+    background: var(--c);
+    animation: trail-fall 1.3s ease-in forwards;
+  }
+  /* sparkles, twinkling */
+  .pet-trail-sparkles::before {
+    content: '✦';
+    display: block;
+    margin: -5px 0 0 -4px;
+    font-size: 9px;
+    color: var(--pet);
+    animation: trail-twinkle 1s ease-in-out forwards;
+  }
+  .pet-trail-sparkles {
+    animation: trail-hold 1s forwards;
+  }
+  @keyframes trail-shrink {
+    from {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.3);
+    }
+  }
+  @keyframes trail-fade {
+    from {
+      opacity: 0.8;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes trail-print {
+    from {
+      opacity: 0.5;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes trail-fall {
+    from {
+      opacity: 0.85;
+      transform: translateY(0) rotate(0deg);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(18px) rotate(var(--turn, 0deg));
+    }
+  }
+  @keyframes trail-rise {
+    from {
+      opacity: 0.6;
+      transform: translateY(0) scale(0.8);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-16px) scale(1.4);
+    }
+  }
+  @keyframes trail-twinkle {
+    0% {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+    35% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.2) rotate(45deg);
+    }
+  }
+  /* keeps a mark whose pseudo-element does the animating around until it's done */
+  @keyframes trail-hold {
+    to {
+      opacity: 1;
+    }
+  }
   .pet-z {
     position: absolute;
     left: 24px;
