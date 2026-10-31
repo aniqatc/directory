@@ -7,4 +7,6 @@ export const CONTACT = {
   codepen: 'https://codepen.io/aniqatc',
   medium: '',
   discord: '',
+  // the Buttondown username the sign-up forms send to; empty, they only say thanks
+  buttondown: '',
 };

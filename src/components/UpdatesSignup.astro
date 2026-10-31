@@ -1,20 +1,40 @@
 ---
 // An email sign-up: new things on the portfolio intro, new reviews on /reviews.
-// For now the form only says thanks; nothing is sent or stored yet.
+// It subscribes the address to the Buttondown newsletter set in contact.ts (`buttondown`), tagged so you can tell
+// the lists apart, then says thanks. With no username set it only says thanks, and nothing is sent.
+// Without JavaScript the form posts to Buttondown itself, which shows its own confirmation page.
+import { CONTACT } from '../lib/contact';
+
 interface Props {
   /** the field's placeholder, also its label for screen readers */
   placeholder?: string;
   /** what the form says once an address is in */
   thanks?: string;
+  /** the Buttondown tag for these subscribers, e.g. "reviews" */
+  tag?: string;
 }
 
+const action = CONTACT.buttondown
+  ? `https://buttondown.com/api/emails/embed-subscribe/${CONTACT.buttondown}`
+  : undefined;
 const {
   placeholder = 'Your email, for new things',
-  thanks = 'Thanks! You’ll hear about new things from me soon',
+  // Buttondown emails a link to confirm the address, so the thanks points there
+  thanks = action ? 'Thanks! Check your inbox to confirm' : 'Thanks! You’ll hear about new things from me soon',
+  tag = 'updates',
 } = Astro.props;
 ---
 
-<form class="updates-signup" aria-label="Get updates" data-thanks={thanks} novalidate>
+<form
+  class="updates-signup"
+  aria-label="Get updates"
+  action={action}
+  method="post"
+  data-thanks={thanks}
+  novalidate
+>
+  <input type="hidden" name="embed" value="1" />
+  <input type="hidden" name="tag" value={tag} />
   <span class="updates-signup-fields">
     <input
       class="updates-signup-email"
@@ -36,7 +56,7 @@ const {
   import { onPage } from '../scripts/page';
   import { sendOff } from '../scripts/send-off';
 
-  // say thanks once there's a valid address; storing it comes later
+  // send a valid address to Buttondown (when the form has one), then say thanks
   onPage(() => {
     const form = document.querySelector<HTMLFormElement>('.updates-signup');
     if (!form) return;
@@ -44,11 +64,21 @@ const {
     const fields = form.querySelector<HTMLElement>('.updates-signup-fields')!;
     const thanks = form.querySelector<HTMLElement>('.updates-signup-thanks')!;
     const button = form.querySelector<HTMLElement>('.updates-signup-button')!;
-    form.addEventListener('submit', (ev) => {
+    form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
       if (!email.checkValidity()) {
         email.reportValidity();
         return;
+      }
+      if (form.getAttribute('action')) {
+        try {
+          // no-cors: Buttondown doesn't let pages read its reply, so a sent request counts as done
+          await fetch(form.action, { method: 'POST', body: new FormData(form), mode: 'no-cors' });
+        } catch {
+          // offline or blocked: let the browser post the form itself instead
+          form.submit();
+          return;
+        }
       }
       // send-off first: it measures the button before the fields go
       sendOff(form, button, thanks, form.dataset.thanks ?? 'Thanks!');
