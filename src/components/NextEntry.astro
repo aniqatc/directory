@@ -1,6 +1,9 @@
 ---
 // End of the lab archive: the next entry's number and an email sign-up for when it lands.
-// For now the form only says thanks; nothing is sent or stored yet.
+// It subscribes the address to the Buttondown newsletter set in contact.ts, tagged `updates` like the portfolio
+// sign-up, then says thanks; with no username set it only says thanks. Without JavaScript the form posts to
+// Buttondown itself, which shows its own confirmation page.
+import { CONTACT } from '../lib/contact';
 import { pad } from '../lib/projects';
 
 interface Props {
@@ -9,9 +12,23 @@ interface Props {
 }
 
 const { number } = Astro.props;
+const action = CONTACT.buttondown
+  ? `https://buttondown.com/api/emails/embed-subscribe/${CONTACT.buttondown}`
+  : undefined;
+// Buttondown emails a link to confirm the address, so the thanks points there
+const thanks = action ? 'Thanks! Check your inbox to confirm.' : 'Thanks! You’ll hear when it lands.';
 ---
 
-<form class="next-entry" aria-labelledby="next-entry-title" novalidate>
+<form
+  class="next-entry"
+  aria-labelledby="next-entry-title"
+  action={action}
+  method="post"
+  data-thanks={thanks}
+  novalidate
+>
+  <input type="hidden" name="embed" value="1" />
+  <input type="hidden" name="tag" value="updates" />
   <span class="next-entry-number">{pad(number)}</span>
   <span class="next-entry-text">
     <span class="next-entry-title" id="next-entry-title">
@@ -40,7 +57,7 @@ const { number } = Astro.props;
   import { onPage } from '../scripts/page';
   import { sendOff } from '../scripts/send-off';
 
-  // say thanks once there's a valid address; storing it comes later
+  // send a valid address to Buttondown (when the form has one), then say thanks
   onPage(() => {
     const form = document.querySelector<HTMLFormElement>('.next-entry');
     if (!form) return;
@@ -48,14 +65,24 @@ const { number } = Astro.props;
     const fields = form.querySelector<HTMLElement>('.next-entry-form')!;
     const thanks = form.querySelector<HTMLElement>('.next-entry-thanks')!;
     const button = form.querySelector<HTMLElement>('.next-entry-button')!;
-    form.addEventListener('submit', (ev) => {
+    form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
       if (!email.checkValidity()) {
         email.reportValidity();
         return;
       }
+      if (form.getAttribute('action')) {
+        try {
+          // no-cors: Buttondown doesn't let pages read its reply, so a sent request counts as done
+          await fetch(form.action, { method: 'POST', body: new FormData(form), mode: 'no-cors' });
+        } catch {
+          // offline or blocked: let the browser post the form itself instead
+          form.submit();
+          return;
+        }
+      }
       // send-off first: it measures the button before the fields go
-      sendOff(form, button, thanks, 'Thanks! You’ll hear when it lands.');
+      sendOff(form, button, thanks, form.dataset.thanks ?? 'Thanks!');
       fields.hidden = true;
     });
   });

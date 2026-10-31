@@ -75,7 +75,7 @@ The site builds without any keys; likes and faster star counts need these:
 | `GITHUB_TOKEN`                                       | Star counts (optional, avoids the rate limit) | A read-only GitHub token                                                                             |
 | `VERCEL_DEPLOY_HOOK`                                 | Daily star refresh (Actions secret)           | Vercel → Settings → Git → Deploy Hooks                                                               |
 
-The email sign-ups on the home page and `/reviews` send to [Buttondown](https://buttondown.com): set your username as `buttondown` in [`src/lib/contact.ts`](src/lib/contact.ts). Subscribers are tagged `updates` or `reviews`, so you can email each list on its own. Left empty, the forms only say thanks.
+The email sign-ups on the home page, the lab and `/reviews` send to [Buttondown](https://buttondown.com): set your username as `buttondown` in [`src/lib/contact.ts`](src/lib/contact.ts). Subscribers are tagged `updates` (home page and lab) or `reviews`, so you can email each list on its own. Left empty, the forms only say thanks.
 
 ### Add an entry
 
