@@ -2,9 +2,11 @@
 import '../../styles/reviews.css';
 import Base from '../../layouts/Base.astro';
 import Facts from '../../components/Facts.astro';
+import PrivateTile from '../../components/PrivateTile.astro';
 import ReviewTile from '../../components/ReviewTile.astro';
 import UpdatesSignup from '../../components/UpdatesSignup.astro';
 import { pad } from '../../lib/projects';
+import { getPrivateFeedback } from '../../lib/private-feedback';
 import { fmtDay, getReviews } from '../../lib/reviews';
 
 // newest first; the newest one gets a dot on its logo
@@ -12,6 +14,8 @@ const reviews = (await getReviews()).reverse();
 const newest = reviews[0];
 // the ones still in use since their review: a row of their own, and a star on the wall
 const stillUsing = reviews.filter((review) => review.data.stillUsing);
+// apps whose feedback went straight to the maker: shown, but with no review to open
+const privateFeedback = getPrivateFeedback();
 const facts = [
   { label: 'Reviews', value: pad(reviews.length) },
   { label: 'Still using', value: pad(stillUsing.length) },
@@ -73,6 +77,26 @@ const facts = [
       </>
     ) : (
       <p class="reviews-empty">The first review is on its way.</p>
+    )}
+
+    {privateFeedback.length > 0 && (
+      <section class="review-group" aria-labelledby="private-feedback-h">
+        <div class="review-group-head">
+          <h2 class="label" id="private-feedback-h">
+            <svg class="review-group-lock" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="5" y="11" width="14" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
+            Feedback given privately
+          </h2>
+          <span>Notes sent to the maker, review waived</span>
+        </div>
+        <ul class="review-wall">
+          {privateFeedback.map((item) => (
+            <PrivateTile item={item} />
+          ))}
+        </ul>
+      </section>
     )}
 
     <dl class="reviews-rows">

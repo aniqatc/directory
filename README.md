@@ -97,7 +97,9 @@ Run `npm run new` and choose **review**, or `npm run new -- --kind review --app 
 - **Web app:** `npm run screenshots -- reviews/<slug>` takes `screenshot.png` and saves the site's icon as `logo.png`.
 - **Phone or iPad app:** set `device: phone` or `tablet`, put the App Store link in `live`, and add screenshots from the device: `screenshot.png`, plus `screenshot-2.png` and `screenshot-3.png` for a phone.
 
-Fill in the scores, verdict and sections, then run `npm run scorecard -- <slug>` for `scorecard.png`, the picture to post on X. When it's ready, delete `draft: true` and run `npm run og` so the review's link unfurls as its scorecard.
+Fill in the scores, verdict and sections, then run `npm run scorecard -- <slug>` for `scorecard.png`, the picture to post on X. When it's ready, delete `draft: true` and run `npm run og` so the review's link unfurls as its scorecard. Add `stillUsing: true` later if you keep using the app.
+
+For feedback you send the maker privately instead, add the app to `PRIVATE_FEEDBACK` in [`src/lib/private-feedback.ts`](src/lib/private-feedback.ts) (its logo, if you have one, goes in `src/assets/private-feedback/`). It shows under "Feedback given privately" on `/reviews`, with no page of its own.
 
 ## Scripts
 

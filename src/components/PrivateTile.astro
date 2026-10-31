@@ -1,0 +1,28 @@
+---
+// /reviews: an app I gave feedback on privately. The same tile as the logo wall, faded, with a lock and the month
+// instead of a number, and no link, since there's no review to open.
+import { Image } from 'astro:assets';
+import { fmtMonth } from '../lib/projects';
+import { privateLogoFor, type PrivateFeedback } from '../lib/private-feedback';
+
+interface Props {
+  item: PrivateFeedback;
+}
+
+const { item } = Astro.props;
+const logo = privateLogoFor(item);
+---
+
+<li class="review-tile review-tile-private">
+  <span class="review-logo" style={`--brand: ${item.brand}`}>
+    {logo ? <Image src={logo} alt="" width={152} height={152} /> : <span aria-hidden="true">{item.app.charAt(0)}</span>}
+    <span class="review-lock" title="Feedback given privately">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </svg>
+    </span>
+  </span>
+  <span class="review-name">{item.app}</span>
+  <span class="review-number">{fmtMonth(item.month)}</span>
+</li>
