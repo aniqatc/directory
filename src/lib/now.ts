@@ -4,18 +4,17 @@
 export type NowItem = { title: string; blurb: string; href?: string };
 
 /** "Currently tinkering with" chips in the portfolio intro. */
-export const TINKERING = ['TypeScript', 'p5.js', 'React', 'Next.js', 'Astro', 'Agentic coding'];
+export const TINKERING = ['TypeScript', 'Next.js', 'Astro', 'CSS art', 'Agentic coding'];
 
 /** "Now building" in the portfolio intro */
 export const BUILDING: NowItem[] = [
   {
     title: 'huckleberry.csv',
-    blurb:
-      'Turns a Huckleberry baby-tracker export into charts, with each day drawn as a ring on a 24-hour clock.',
+    blurb: 'Turns a Huckleberry baby-tracker export into charts.',
   },
   {
     title: 'For Zayn',
-    blurb: 'A gallery of CSS art, each one something that reminds me of my son.',
+    blurb: 'A CSS art gallery of things that reminds me of my son.',
     href: 'https://zayn.aniqa.dev',
   },
   // next up:
