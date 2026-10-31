@@ -9,3 +9,6 @@ dist/
 .idea/
 npm-debug.log*
 .vscode/
+
+# review scorecards (npm run scorecard): for posting on X, not used by the site
+src/content/reviews/*/scorecard.png
