@@ -17,7 +17,11 @@ const logo = logoFor(review);
 <li>
   <a class="review-tile" href={`/reviews/${review.id}`}>
     <span class="review-logo" style={`--brand: ${brand}`}>
-      {logo ? <Image src={logo} alt="" width={152} height={152} /> : <span aria-hidden="true">{app.charAt(0)}</span>}
+      {logo ? (
+        <Image src={logo} alt="" width={152} height={152} />
+      ) : (
+        <span aria-hidden="true">{app.charAt(0)}</span>
+      )}
       {newest && <i class="review-new" title="Newest" />}
       {stillUsing && (
         <span class="review-star" title="Still using it">

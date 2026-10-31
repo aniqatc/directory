@@ -11,7 +11,9 @@ export const PRIVATE_FEEDBACK: PrivateFeedback[] = [
   // { app: 'Tally Ho', month: '2026-11', brand: '#8b7cf6' },
 ];
 
-const logos = import.meta.glob<{ default: ImageMetadata }>('../assets/private-feedback/*.png', { eager: true });
+const logos = import.meta.glob<{ default: ImageMetadata }>('../assets/private-feedback/*.png', {
+  eager: true,
+});
 
 /** "Tally Ho" → "tally-ho", the name of its logo file */
 const slugFor = (app: string) =>
@@ -27,7 +29,8 @@ export const privateLogoFor = (item: PrivateFeedback) =>
 /** Every app, newest first. Months are checked here, since this list isn't a content collection. */
 export function getPrivateFeedback(): PrivateFeedback[] {
   for (const item of PRIVATE_FEEDBACK) {
-    if (!/^\d{4}-\d{2}$/.test(item.month)) throw new Error(`private feedback for ${item.app}: use YYYY-MM for month`);
+    if (!/^\d{4}-\d{2}$/.test(item.month))
+      throw new Error(`private feedback for ${item.app}: use YYYY-MM for month`);
   }
   return [...PRIVATE_FEEDBACK].sort((a, b) => b.month.localeCompare(a.month));
 }

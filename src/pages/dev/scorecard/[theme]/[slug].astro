@@ -45,7 +45,9 @@ const logoImage = logo ? await getImage({ src: logo, width: 160, height: 160 }) 
       <p class="top">
         <span>No. {pad(review.number)}</span>
         <span aria-hidden="true">·</span>
-        <span>Review by <b>@aniqatc</b></span>
+        <span>
+          Review by <b>@aniqatc</b>
+        </span>
         <span aria-hidden="true">·</span>
         <span>{type}</span>
       </p>
@@ -54,9 +56,7 @@ const logoImage = logo ? await getImage({ src: logo, width: 160, height: 160 }) 
         <div class="about">
           <div class="app">
             <div class="app-name">
-              <span class="logo">
-                {logoImage ? <img src={logoImage.src} alt="" /> : app.charAt(0)}
-              </span>
+              <span class="logo">{logoImage ? <img src={logoImage.src} alt="" /> : app.charAt(0)}</span>
               <div>
                 <h1>
                   {app}

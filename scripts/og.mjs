@@ -128,6 +128,7 @@ const up = (url) =>
     .catch(() => false);
 if (!(await up(`${base}/lab`))) {
   base = 'http://localhost:4399';
+  console.log('… no dev server on 4321, starting one on 4399 (stopped again at the end)');
   server = spawn('npx', ['astro', 'dev', '--port', '4399', '--ignore-lock'], {
     stdio: 'ignore',
     detached: true,

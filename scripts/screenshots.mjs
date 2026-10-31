@@ -133,7 +133,8 @@ const findIcon = (page) =>
     const links = [...document.querySelectorAll('link[rel~="icon"], link[rel^="apple-touch-icon"]')];
     const size = (link) => Number.parseInt(link.getAttribute('sizes') ?? '', 10) || 0;
     const best =
-      links.find((link) => link.rel.startsWith('apple-touch-icon')) ?? links.sort((a, b) => size(b) - size(a))[0];
+      links.find((link) => link.rel.startsWith('apple-touch-icon')) ??
+      links.sort((a, b) => size(b) - size(a))[0];
     return new URL(best?.getAttribute('href') ?? '/favicon.ico', location.href).href;
   });
 
@@ -206,7 +207,9 @@ try {
     const folder = `src/content/${entry.collection}/${entry.slug}`;
     const out = `${folder}/screenshot.png`;
     if (entry.onDevice) {
-      console.log(`– ${entry.collection}/${entry.slug} is a ${entry.onDevice} app: its screenshots come from the device`);
+      console.log(
+        `– ${entry.collection}/${entry.slug} is a ${entry.onDevice} app: its screenshots come from the device`,
+      );
       continue;
     }
     let image;
@@ -255,7 +258,9 @@ try {
         writeFileSync(`${folder}/logo.png`, icon);
         console.log(`✓ ${folder}/logo.png from ${iconUrl}`);
       } catch (err) {
-        console.warn(`! ${folder}/logo.png: couldn't use ${iconUrl} (${err.message.split('\n')[0]}); add it by hand`);
+        console.warn(
+          `! ${folder}/logo.png: couldn't use ${iconUrl} (${err.message.split('\n')[0]}); add it by hand`,
+        );
       }
     }
   }

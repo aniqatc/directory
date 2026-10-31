@@ -15,7 +15,11 @@ const logo = privateLogoFor(item);
 
 <li class="review-tile review-tile-private">
   <span class="review-logo" style={`--brand: ${item.brand}`}>
-    {logo ? <Image src={logo} alt="" width={152} height={152} /> : <span aria-hidden="true">{item.app.charAt(0)}</span>}
+    {logo ? (
+      <Image src={logo} alt="" width={152} height={152} />
+    ) : (
+      <span aria-hidden="true">{item.app.charAt(0)}</span>
+    )}
     <span class="review-lock" title="Feedback given privately">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <rect x="5" y="11" width="14" height="10" rx="2" />

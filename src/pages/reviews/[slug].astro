@@ -46,7 +46,10 @@ const facts = [
   { label: 'Tried on', value: triedOn },
   {
     label: 'Links',
-    value: [{ label: appLinkLabel(review), href: appUrl }, ...(post ? [{ label: 'Post ↗', href: post }] : [])],
+    value: [
+      { label: appLinkLabel(review), href: appUrl },
+      ...(post ? [{ label: 'Post ↗', href: post }] : []),
+    ],
   },
   { label: 'Overall', value: verdict },
 ];
@@ -103,12 +106,14 @@ const facts = [
       <p class="label">Try it yourself</p>
       <h2 id="try-it-h">{app} is built by one person.</h2>
       <p>
-        Give it a go, and if you like it, tell @{maker}. Early feedback means a lot when you’re building on your
-        own.
+        Give it a go, and if you like it, tell @{maker}. Early feedback means a lot when you’re building on
+        your own.
       </p>
     </div>
     <div class="try-it-actions">
-      <a class="try-it-button" href={appUrl} target="_blank" rel="noopener">Try {app} ↗</a>
+      <a class="try-it-button" href={appUrl} target="_blank" rel="noopener">
+        Try {app} ↗
+      </a>
     </div>
   </aside>
 

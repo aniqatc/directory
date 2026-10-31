@@ -28,7 +28,8 @@ const reviews = readdirSync('src/content/reviews')
     return { slug, theme };
   });
 for (const slug of only) {
-  if (!reviews.some((review) => review.slug === slug)) console.error(`✗ no review at src/content/reviews/${slug}`);
+  if (!reviews.some((review) => review.slug === slug))
+    console.error(`✗ no review at src/content/reviews/${slug}`);
 }
 
 // ---------- the dev server: reuse one on 4321, or start one on 4399 (stopped at the end) ----------

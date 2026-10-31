@@ -20,7 +20,9 @@ const action = CONTACT.buttondown
 const {
   placeholder = 'Your email, for new things',
   // Buttondown emails a link to confirm the address, so the thanks points there
-  thanks = action ? 'Thanks! Check your inbox to confirm' : 'Thanks! You’ll hear about new things from me soon',
+  thanks = action
+    ? 'Thanks! Check your inbox to confirm'
+    : 'Thanks! You’ll hear about new things from me soon',
   tag = 'updates',
 } = Astro.props;
 ---
