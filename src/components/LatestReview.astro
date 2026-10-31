@@ -1,5 +1,5 @@
 ---
-// Portfolio intro: the newest app review as a small card, with its logo on the left and its number by the arrow.
+// Portfolio intro: the newest app review as a one-line card: its logo, name and maker, then its number by the arrow.
 // Hides itself until there's a review.
 import { Image } from 'astro:assets';
 import { getLatestReview, logoFor, reviewNumber } from '../lib/reviews';
@@ -15,7 +15,7 @@ const logo = latest && logoFor(latest);
       <a class="latest-review" href={`/reviews/${latest.id}`}>
         <span class="latest-review-app">
           <span class="latest-review-logo" style={`--brand: ${latest.data.brand}`} aria-hidden="true">
-            {logo ? <Image src={logo} alt="" width={56} height={56} /> : latest.data.app.charAt(0)}
+            {logo ? <Image src={logo} alt="" width={44} height={44} /> : latest.data.app.charAt(0)}
           </span>
           <span class="latest-review-text">
             <b>{latest.data.app}</b>
@@ -62,15 +62,15 @@ const logo = latest && logoFor(latest);
   /* the app's logo, or its first letter on its brand colour */
   .latest-review-logo {
     flex: none;
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
     overflow: hidden;
     background: var(--brand);
     display: flex;
     align-items: center;
     justify-content: center;
-    font: 800 13px/1 var(--font-display);
+    font: 800 11px/1 var(--font-display);
     color: #fff;
   }
   .latest-review-logo img {
@@ -78,17 +78,22 @@ const logo = latest && logoFor(latest);
     height: 100%;
     object-fit: cover;
   }
+  /* name and maker on one line; the maker gives way first on a narrow screen */
   .latest-review-text {
     min-width: 0;
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: baseline;
+    gap: 8px;
+    white-space: nowrap;
   }
   .latest-review-text b {
     font: 500 12px/1.4 var(--font-mono);
     color: var(--fg);
   }
   .latest-review-text span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 12.5px;
     line-height: 1.5;
     color: var(--muted);
