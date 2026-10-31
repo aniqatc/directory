@@ -212,6 +212,22 @@ body:has(.pf) > main {
   color: var(--accent);
 }
 
+/* shorter laptop screens (under 820px tall): tighten the intro so the home page still fits one screen */
+@media (min-width: 951px) and (max-height: 820px) {
+  .pf {
+    padding-block: 16px;
+  }
+  .intro {
+    gap: 12px;
+  }
+  .intro h1 {
+    font-size: clamp(44px, 5vw, 60px);
+  }
+  .intro-row {
+    padding-block: 10px;
+  }
+}
+
 /* Tinkering, Building and Updates: on small screens (650px and under) the label sits above its content */
 @media (max-width: 650px) {
   .intro .intro-row,
