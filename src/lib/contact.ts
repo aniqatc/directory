@@ -8,5 +8,5 @@ export const CONTACT = {
   medium: '',
   discord: '',
   // the Buttondown username the sign-up forms send to; empty, they only say thanks
-  buttondown: '',
+  buttondown: 'aniqa',
 };
