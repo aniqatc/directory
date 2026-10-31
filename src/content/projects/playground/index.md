@@ -5,7 +5,7 @@ stack: Sass / Tailwind / JS / Webpack / Node / Express / MongoDB
 released: 2023-12
 live: playground.aniqa.dev
 repo: playground
-order: 1
+order: 3
 updated: 2026-10
 blurb: Eight full-stack widgets in one app, from a graphing calculator to a community bookmark board.
 screenshotAlt: 'The Playground home page in dark mode: the headline “Seven small apps. One big playground.”, an index of the widgets with their like counts, and a GitHub activity grid.'

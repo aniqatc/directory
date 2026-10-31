@@ -5,7 +5,7 @@ stack: HTML / CSS / JS / Marked
 released: 2023-01
 live: keyboard.aniqa.dev
 repo: keyboard
-order: 3
+order: 4
 updated: 2026-10
 blurb: A themed virtual keyboard with light shows, paired with a live Markdown editor.
 screenshotAlt: 'Virtual Keyboard in its dark Nebula theme: a split Markdown editor with the source on the left and the preview on the right, above a full on-screen keyboard.'

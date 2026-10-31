@@ -5,7 +5,7 @@ stack: Node / Commander / Inquirer
 released: 2024-12
 live: www.npmjs.com/package/rflect
 repo: rflect-cli
-order: 5
+order: 2
 blurb: Guided journaling in the terminal, with streaks, moods and stats. Published on npm.
 screenshotAlt: 'Rflect’s help screen in a macOS Terminal window, listing its options and commands: write, show, prompts, tags, moods, init, config, stats, delete, upcoming and help.'
 summary: A command-line journal with guided prompts, moods, streaks and writing stats. Published on npm.

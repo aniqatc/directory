@@ -5,7 +5,7 @@ stack: React / Framer Motion / Supabase
 released: 2025-01
 live: moji.aniqa.dev
 repo: moji-canvas
-order: 2
+order: 1
 updated: 2026-10
 blurb: Arrange, animate and share sticker collages made from 4,000+ emoji illustrations.
 screenshotAlt: 'Moji Canvas: a pink dotted canvas with the “moji canvas” title surrounded by emoji, and a toolbar on the left for mode, theme, colours, motion, saving and sharing.'
